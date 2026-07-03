@@ -16,8 +16,8 @@ class BattleArenaScreen extends ConsumerWidget {
     final battleState = ref.watch(quizBattleProvider);
     final userProfile = ref.watch(userProfileProvider);
 
-    final myName = userProfile.displayName;
-    final myAvatar = userProfile.avatarUrl.isNotEmpty ? userProfile.avatarUrl : 'assets/images/avatars/octopus.svg';
+    final myName = userProfile?.displayName ?? 'Guest';
+    final myAvatar = userProfile?.avatarAsset.isNotEmpty == true ? userProfile!.avatarAsset : 'assets/images/avatars/octopus.svg';
 
     ref.listen<BattleState>(quizBattleProvider, (previous, next) {
       if (next.status == MatchStatus.finished) {

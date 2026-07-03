@@ -1,3 +1,7 @@
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="40" fill="#A8E063" /><ellipse cx="35" cy="45" rx="10" ry="15" fill="black" /><ellipse cx="65" cy="45" rx="10" ry="15" fill="black" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="45" fill="#F87171" />
+  <circle cx="35" cy="40" r="5" fill="#FFFFFF" />
+  <circle cx="65" cy="40" r="5" fill="#FFFFFF" />
+  <path d="M 35 60 Q 50 75 65 60" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" />
+  <text x="50" y="85" font-family="Arial" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">alien</text>
+</svg>

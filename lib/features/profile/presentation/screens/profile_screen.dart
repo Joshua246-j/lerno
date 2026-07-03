@@ -17,8 +17,8 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userProfileProvider);
-    final userName = profile.displayName;
-    final avatar = profile.avatarUrl.isNotEmpty ? profile.avatarUrl : 'assets/images/avatars/octopus.svg';
+    final userName = profile?.displayName ?? 'Guest';
+    final avatar = profile?.avatarAsset.isNotEmpty == true ? profile!.avatarAsset : 'assets/images/avatars/octopus.svg';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FB),
@@ -118,7 +118,7 @@ class ProfileScreen extends ConsumerWidget {
                               color: AppTheme.textDark))
                       .animate()
                       .fadeIn(delay: 300.ms),
-                  Text('ID: ${profile.studentId} • Grade ${profile.grade}',
+                  Text('${profile?.age ?? 0} Years Old',
                           style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,
@@ -126,7 +126,7 @@ class ProfileScreen extends ConsumerWidget {
                       .animate()
                       .fadeIn(delay: 300.ms),
                   const SizedBox(height: 8),
-                  Text('Level ${profile.level}',
+                  Text('Level ${profile?.stats.level ?? 1}',
                           style: const TextStyle(
                               color: AppTheme.primaryBlue,
                               fontWeight: FontWeight.w800,
@@ -141,7 +141,7 @@ class ProfileScreen extends ConsumerWidget {
                     child: Row(
                       children: [
                         _buildStatCard(
-                            '${profile.currentStreak}',
+                            '${profile?.stats.currentStreak ?? 0}',
                             'Streak',
                             Icons.local_fire_department,
                             AppTheme.pastelPurple,
@@ -175,7 +175,7 @@ class ProfileScreen extends ConsumerWidget {
                                           backgroundColor: Colors.white,
                                           strokeWidth: 5),
                                     ),
-                                    Text('${profile.level}',
+                                    Text('${profile?.stats.level ?? 1}',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w900,
                                             fontSize: 16,
@@ -197,13 +197,13 @@ class ProfileScreen extends ConsumerWidget {
                           onTap: () async {
                             final board = await ref
                                 .read(gamificationRepositoryProvider)
-                                .fetchLeagueLeaderboard(profile.league);
+                                .fetchLeagueLeaderboard(profile?.stats.league ?? 'Bronze');
                             if (context.mounted) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => LeagueLeaderboardScreen(
-                                          currentLeague: profile.league,
+                                          currentLeague: profile?.stats.league ?? 'Bronze',
                                           leaderboard: board)));
                             }
                           },
@@ -226,7 +226,7 @@ class ProfileScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: LeagueShieldWidget(
                                     league: LeagueTier.getLeagueForTrophies(
-                                        profile.trophies),
+                                        profile?.stats.trophies ?? 0),
                                     size: 50,
                                     showName: false,
                                   ),
@@ -236,12 +236,12 @@ class ProfileScreen extends ConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('${profile.trophies}',
+                                    Text('${profile?.stats.trophies ?? 0}',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w900,
                                             fontSize: 18,
                                             color: AppTheme.textDark)),
-                                    Text(profile.league,
+                                    Text(profile?.stats.league ?? 'Bronze',
                                         style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
@@ -265,21 +265,21 @@ class ProfileScreen extends ConsumerWidget {
                     child: Row(
                       children: [
                         _buildStatCard(
-                            '${profile.totalXP}',
+                            '${profile?.stats.xp ?? 0}',
                             'Total XP',
                             Icons.star,
                             const Color(0xFFFEF3C7),
                             const Color(0xFFF59E0B)),
                         const SizedBox(width: 15),
                         _buildStatCard(
-                            '${profile.completedLessons}',
+                            '0',
                             'Lessons',
                             Icons.menu_book,
                             const Color(0xFFE0E7FF),
                             const Color(0xFF4F46E5)),
                         const SizedBox(width: 15),
                         _buildStatCard(
-                            '${profile.coins}',
+                            '${profile?.stats.coins ?? 0}',
                             'Coins',
                             Icons.monetization_on,
                             const Color(0xFFDCFCE7),
@@ -288,78 +288,7 @@ class ProfileScreen extends ConsumerWidget {
                     ).animate().slideY(begin: 0.2, delay: 450.ms).fadeIn(),
                   ),
 
-                  const SizedBox(height: 40),
-
-                  // Recent Activity
-                  if (profile.matchHistory.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Recent Activity',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: AppTheme.textDark)),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Column(
-                        children: profile.matchHistory.map((match) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withValues(alpha: 0.08),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4))
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: match.contains('Victory') ||
-                                            match.contains('Completed')
-                                        ? AppTheme.pastelGreen
-                                        : AppTheme.pastelPurple,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                      match.contains('Victory') ||
-                                              match.contains('Completed')
-                                          ? Icons.star
-                                          : Icons.bolt,
-                                      color: match.contains('Victory') ||
-                                              match.contains('Completed')
-                                          ? Colors.green
-                                          : Colors.orange,
-                                      size: 20),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Text(match,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                          color: AppTheme.textDark)),
-                                ),
-                              ],
-                            ),
-                          ).animate().fadeIn().slideX();
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                  ],
+                  // Match history is handled differently now, omitting for now
 
                   // My Badges
                   const Padding(

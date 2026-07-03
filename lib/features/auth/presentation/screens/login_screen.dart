@@ -27,11 +27,65 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       ref.read(audioManagerProvider).playClick();
-      await ref.read(authProvider.notifier).login(_phoneController.text);
-      if (mounted && ref.read(authProvider).error == null) {
-        context.go('/verify?phone=${_phoneController.text}');
+      
+      final phone = _phoneController.text.trim();
+      final otp = await ref.read(authProvider.notifier).login(phone);
+      
+      if (mounted && otp != null) {
+        _showMockOtpDialog(otp, phone);
       }
     }
+  }
+
+  void _showMockOtpDialog(String otp, String phone) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.security, color: AppTheme.primaryBlue),
+            SizedBox(width: 10),
+            Text('Mock Verification', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Your Mock OTP Code is:', style: TextStyle(color: AppTheme.textLight)),
+            const SizedBox(height: 15),
+            Text(
+              otp,
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 5,
+                color: AppTheme.primaryBlue,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              '(Use this code to log in)',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.push('/verify?phone=$phone');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryGreen,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Continue', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

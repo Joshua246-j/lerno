@@ -42,10 +42,10 @@ class SyncService {
     for (final action in queue) {
       debugPrint('Pushing action: ${action.type}');
       if (action.type == 'gain_xp') {
-        await repository.syncGameResults(
-            userId: action.payload['userId'],
-            xpEarned: action.payload['xpEarned'],
-            trophiesEarned: action.payload['trophiesEarned']);
+        // await repository.syncGameResults(
+        //     userId: action.payload['userId'],
+        //     xpEarned: action.payload['xpEarned'],
+        //     trophiesEarned: action.payload['trophiesEarned']);
       }
     }
 

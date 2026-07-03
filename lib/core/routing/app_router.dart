@@ -21,6 +21,7 @@ import 'package:lerno/features/profile/presentation/screens/edit_profile_screen.
 import 'package:lerno/features/social/presentation/screens/friends_screen.dart';
 import 'package:lerno/features/social/presentation/screens/chat_screen.dart';
 import 'package:lerno/features/social/presentation/providers/friends_provider.dart';
+import 'package:lerno/features/store/presentation/screens/avatar_store_screen.dart' as lerno_store;
 import 'package:flutter/material.dart'; // Needed for Scaffold fallback
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -125,6 +126,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/achievements',
         builder: (context, state) => const AchievementsScreen(),
+      ),
+      GoRoute(
+        path: '/store',
+        builder: (context, state) => const lerno_store.AvatarStoreScreen(),
       ),
       GoRoute(
         path: '/friends',

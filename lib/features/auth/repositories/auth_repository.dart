@@ -1,48 +1,105 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
+import '../../../core/local_storage/hive_boxes.dart';
+import '../../../core/models/user_model.dart';
+import '../../../core/models/gamification_stats.dart';
 
 abstract class AuthRepository {
   Future<bool> checkSession();
-  Future<void> login(String phoneNumber);
-  Future<bool> verifyOtp(String otp);
+  Future<String> login(String phoneNumber);
+  Future<bool> verifyOtp(String phoneNumber, String otp);
+  Future<String> register(String name, String phoneNumber, int age, String avatarAsset);
   Future<void> logout();
+  Future<UserModel?> getCurrentUser();
 }
 
 class MockAuthRepository implements AuthRepository {
-  static const String _sessionKey = 'auth_session_token';
+  static const String _sessionKey = 'active_session_phone';
+  
+  // In-memory storage for the current mock OTP
+  String? _currentMockOtp;
 
   @override
   Future<bool> checkSession() async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(_sessionKey);
   }
 
   @override
-  Future<void> login(String phoneNumber) async {
-    // Simulate network delay for sending OTP
-    await Future.delayed(const Duration(seconds: 1));
+  Future<String> login(String phoneNumber) async {
+    // Check if user exists in Hive
+    final box = HiveBoxes.getUsersBox();
+    if (!box.containsKey(phoneNumber)) {
+      throw Exception('No account found. Please create an account.');
+    }
+
+    // Generate random 4-digit Mock OTP
+    final random = Random();
+    _currentMockOtp = (1000 + random.nextInt(9000)).toString();
+    
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 800));
+    
+    return _currentMockOtp!;
   }
 
   @override
-  Future<bool> verifyOtp(String otp) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
+  Future<bool> verifyOtp(String phoneNumber, String otp) async {
+    await Future.delayed(const Duration(milliseconds: 800));
     
-    // Accept any 4-digit OTP for the mock
-    if (otp.length == 4) {
+    if (otp == _currentMockOtp) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_sessionKey, 'mock_token_123');
+      await prefs.setString(_sessionKey, phoneNumber);
+      _currentMockOtp = null; // clear after use
       return true;
     }
     return false;
   }
 
   @override
+  Future<String> register(String name, String phoneNumber, int age, String avatarAsset) async {
+    final box = HiveBoxes.getUsersBox();
+    if (box.containsKey(phoneNumber)) {
+      throw Exception('Phone number is already registered. Please login.');
+    }
+
+    // Create complete profile with default gamification stats
+    final newUser = UserModel(
+      phoneNumber: phoneNumber,
+      displayName: name,
+      age: age,
+      avatarAsset: avatarAsset,
+      stats: GamificationStats(), // Defaults to 0 XP, Bronze, etc.
+    );
+
+    // Save to Hive
+    await box.put(phoneNumber, newUser);
+
+    // Generate Mock OTP for initial verification
+    final random = Random();
+    _currentMockOtp = (1000 + random.nextInt(9000)).toString();
+    
+    await Future.delayed(const Duration(milliseconds: 800));
+    return _currentMockOtp!;
+  }
+
+  @override
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_sessionKey);
+  }
+
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final activePhone = prefs.getString(_sessionKey);
+    
+    if (activePhone != null) {
+      final box = HiveBoxes.getUsersBox();
+      return box.get(activePhone);
+    }
+    return null;
   }
 }
 

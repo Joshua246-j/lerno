@@ -1,129 +1,99 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lerno/features/gamification/domain/models/gamification_models.dart';
-import 'package:lerno/shared/models/user_profile.dart';
-import 'package:lerno/core/providers/network_provider.dart';
-import 'package:lerno/data/local/local_database_service.dart';
+import 'package:lerno/core/models/user_model.dart';
+import 'package:lerno/core/models/gamification_stats.dart';
 
 final gamificationRepositoryProvider = Provider((ref) {
-  final isOnline = ref.watch(networkProvider);
-  final localDb = ref.watch(localDatabaseProvider);
-  return GamificationRepository(isOnline, localDb);
+  return GamificationRepository();
 });
 
 class GamificationRepository {
-  final bool _isOnline;
-  final LocalDatabaseService _localDb;
+  /// Resolves a Solo Mini-game match. Awards XP and Coins ONLY. Does NOT affect Trophies.
+  UserModel resolveSoloGame(UserModel user, {required bool isWin, required int score}) {
+    final xpEarned = isWin ? 20 + (score ~/ 10) : 5;
+    final coinsEarned = isWin ? 10 + (score ~/ 20) : 2;
+    
+    user.stats.xp += xpEarned;
+    user.stats.coins += coinsEarned;
+    user.stats.level = 1 + (user.stats.xp ~/ 100);
+    
+    user.save();
+    return user;
+  }
 
-  GamificationRepository(this._isOnline, this._localDb);
+  /// Resolves a Ranked Quiz Battle. Awards XP, Coins, and changes Trophies/League.
+  UserModel resolveRankedBattle(UserModel user, {required bool isWin, required int score}) {
+    final xpEarned = isWin ? 30 : 10;
+    final coinsEarned = isWin ? 15 : 5;
+    final trophiesDelta = isWin ? 25 : -15;
 
-  /// Fetch user's current gamification data (XP, League, Trophies)
-  Future<UserProfile> fetchUserGamificationData(String userId) async {
-    // If offline, attempt to get from cache
-    if (!_isOnline) {
-      final cached = await _localDb.getProfile();
-      if (cached != null) return cached;
-      // If no cache, return default mock
+    user.stats.xp += xpEarned;
+    user.stats.coins += coinsEarned;
+    user.stats.level = 1 + (user.stats.xp ~/ 100);
+    
+    user.stats.trophies += trophiesDelta;
+    if (user.stats.trophies < 0) user.stats.trophies = 0;
+
+    // League thresholds
+    if (user.stats.trophies > 1000) {
+      user.stats.league = 'Legend';
+    } else if (user.stats.trophies > 500) {
+      user.stats.league = 'Gold';
+    } else if (user.stats.trophies > 200) {
+      user.stats.league = 'Silver';
+    } else {
+      user.stats.league = 'Bronze';
     }
 
+    user.save();
+    return user;
+  }
+
+  Future<List<UserModel>> fetchLeagueLeaderboard(String leagueName) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final profile = UserProfile(
-      id: userId,
-      displayName: 'AstroKid7',
-      phoneNumber: '1234567890',
-      totalXP: 450,
-      level: 4,
-      trophies: 120,
-      league: 'Silver',
-      streakFreezes: 1,
+    return [
+      _createMockUser('1', 'Player One', 500, leagueName, 'assets/images/avatars/astronaut.svg'),
+      _createMockUser('2', 'Player Two', 450, leagueName, 'assets/images/avatars/robot.svg'),
+      _createMockUser('3', 'AstroKid7', 120, leagueName, 'assets/images/avatars/octopus.svg'),
+      _createMockUser('4', 'CyberNinja', 100, leagueName, 'assets/images/avatars/alien.svg'),
+    ];
+  }
+
+  Future<List<UserModel>> fetchGlobalLeaderboard() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return [
+      _createMockUser('10', 'Grandmaster Q', 5000, 'Legend', 'assets/images/avatars/robot.svg'),
+      _createMockUser('11', 'StarLord', 4800, 'Grand Champion', 'assets/images/avatars/astronaut.svg'),
+      _createMockUser('12', 'GalaxyBrain', 4200, 'Champion', 'assets/images/avatars/alien.svg'),
+      _createMockUser('3', 'AstroKid7', 120, 'Silver I', 'assets/images/avatars/octopus.svg'),
+    ];
+  }
+
+  Future<List<UserModel>> fetchFriendsLeaderboard() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return [
+      _createMockUser('20', 'Bestie Bob', 800, 'Gold III', 'assets/images/avatars/robot.svg'),
+      _createMockUser('3', 'AstroKid7', 120, 'Silver I', 'assets/images/avatars/octopus.svg'),
+      _createMockUser('21', 'Slowpoke', 50, 'Bronze I', 'assets/images/avatars/alien.svg'),
+    ];
+  }
+
+  UserModel _createMockUser(String phone, String name, int trophies, String league, String avatar) {
+    return UserModel(
+      phoneNumber: phone,
+      displayName: name,
+      age: 10,
+      avatarAsset: avatar,
+      stats: GamificationStats(trophies: trophies, league: league),
     );
-    await _localDb.saveProfile(profile);
-    return profile;
   }
 
-  /// Syncs newly earned XP and Trophies after a game
-  Future<void> syncGameResults({
-    required String userId,
-    required int xpEarned,
-    required int trophiesEarned,
-  }) async {
-    if (!_isOnline) {
-      // Queue it up for later!
-      final action = SyncAction(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: 'gain_xp',
-        payload: {
-          'userId': userId,
-          'xpEarned': xpEarned,
-          'trophiesEarned': trophiesEarned,
-        },
-        timestamp: DateTime.now(),
-      );
-      await _localDb.enqueueSyncAction(action);
-      return;
-    }
-
-    // Simulating server sync
-    await Future.delayed(const Duration(milliseconds: 300));
-  }
-
-  /// Fetch weekly leaderboard for current league
-  Future<List<UserProfile>> fetchLeagueLeaderboard(String leagueName) async {
-    if (!_isOnline) return [];
-    await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      UserProfile(
-          id: '1', displayName: 'Player One', phoneNumber: '', trophies: 500, league: leagueName, avatarUrl: 'assets/images/avatars/astronaut.svg'),
-      UserProfile(
-          id: '2', displayName: 'Player Two', phoneNumber: '', trophies: 450, league: leagueName, avatarUrl: 'assets/images/avatars/robot.svg'),
-      UserProfile(
-          id: '3', displayName: 'AstroKid7', phoneNumber: '', trophies: 120, league: leagueName, avatarUrl: 'assets/images/avatars/octopus.svg'),
-      UserProfile(
-          id: '4', displayName: 'CyberNinja', phoneNumber: '', trophies: 100, league: leagueName, avatarUrl: 'assets/images/avatars/alien.svg'),
-    ];
-  }
-
-  Future<List<UserProfile>> fetchGlobalLeaderboard() async {
-    if (!_isOnline) return [];
-    await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      UserProfile(
-          id: '10', displayName: 'Grandmaster Q', phoneNumber: '', trophies: 5000, league: 'Legend', avatarUrl: 'assets/images/avatars/robot.svg'),
-      UserProfile(
-          id: '11', displayName: 'StarLord', phoneNumber: '', trophies: 4800, league: 'Grand Champion', avatarUrl: 'assets/images/avatars/astronaut.svg'),
-      UserProfile(
-          id: '12', displayName: 'GalaxyBrain', phoneNumber: '', trophies: 4200, league: 'Champion', avatarUrl: 'assets/images/avatars/alien.svg'),
-      UserProfile(
-          id: '3', displayName: 'AstroKid7', phoneNumber: '', trophies: 120, league: 'Silver I', avatarUrl: 'assets/images/avatars/octopus.svg'),
-    ];
-  }
-
-  Future<List<UserProfile>> fetchFriendsLeaderboard() async {
-    if (!_isOnline) return [];
-    await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      UserProfile(
-          id: '20', displayName: 'Bestie Bob', phoneNumber: '', trophies: 800, league: 'Gold III', avatarUrl: 'assets/images/avatars/robot.svg'),
-      UserProfile(
-          id: '3', displayName: 'AstroKid7', phoneNumber: '', trophies: 120, league: 'Silver I', avatarUrl: 'assets/images/avatars/octopus.svg'),
-      UserProfile(
-          id: '21', displayName: 'Slowpoke', phoneNumber: '', trophies: 50, league: 'Bronze I', avatarUrl: 'assets/images/avatars/alien.svg'),
-    ];
-  }
-
-  /// Fetch daily tasks for the user
   Future<List<TaskProgress>> fetchDailyTasks(String userId) async {
-    if (!_isOnline) {
-      final cached = await _localDb.getTasks();
-      if (cached.isNotEmpty) return cached;
-    }
     await Future.delayed(const Duration(milliseconds: 300));
-    final tasks = [
+    return [
       const TaskProgress(taskId: 'task_math_3', currentValue: 1),
       const TaskProgress(taskId: 'task_earn_100_xp', currentValue: 50),
-      const TaskProgress(
-          taskId: 'task_streak_5', currentValue: 5, isCompleted: true),
+      const TaskProgress(taskId: 'task_streak_5', currentValue: 5, isCompleted: true),
     ];
-    await _localDb.saveTasks(tasks);
-    return tasks;
   }
 }

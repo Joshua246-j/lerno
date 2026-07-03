@@ -30,7 +30,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 4) {
       ref.read(audioManagerProvider).playClick();
-      final success = await ref.read(authProvider.notifier).verifyOtp(otp);
+      final success = await ref.read(authProvider.notifier).verifyOtp(widget.phoneNumber, otp);
       if (success && mounted) {
         context.go('/main');
       }

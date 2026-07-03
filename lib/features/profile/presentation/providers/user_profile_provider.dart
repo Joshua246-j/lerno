@@ -1,42 +1,59 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lerno/shared/models/user_profile.dart';
-import 'package:lerno/core/mock/mock_data.dart';
+import 'package:lerno/core/models/user_model.dart';
+import 'package:lerno/features/auth/repositories/auth_repository.dart';
 
-class UserProfileNotifier extends StateNotifier<UserProfile> {
-  UserProfileNotifier() : super(_defaultProfile);
-
-  static final UserProfile _defaultProfile = UserProfile(
-    id: 'user_1',
-    phoneNumber: '7723451234',
-    displayName: 'Edvyin',
-    avatarUrl: 'assets/images/avatars/octopus.svg',
-    level: MockData.currentLevel,
-    currentStreak: 4,
-    trophies: 15,
-    totalXP: MockData.initialXP,
-    studentId: 'STU-102938',
-    completedLessons: 12,
-    matchHistory: [
-      'Quiz Battle - Victory (+20 XP)',
-      'Word Hunt - Completed (+15 XP)',
-      'Math Arena - Defeat (+5 XP)',
-      'Memory Match - Completed (+10 XP)',
-    ],
-  );
-
-  void createAccount(String username, String avatarPath) {
-    state = state.copyWith(
-      displayName: username,
-      avatarUrl: avatarPath,
-    );
+class UserProfileNotifier extends StateNotifier<UserModel?> {
+  final AuthRepository _authRepository;
+  
+  UserProfileNotifier(this._authRepository) : super(null) {
+    _loadUser();
   }
 
-  void updateProfile(UserProfile profile) {
-    state = profile;
+  Future<void> _loadUser() async {
+    final user = await _authRepository.getCurrentUser();
+    state = user;
+  }
+
+  void refreshProfile() {
+    _loadUser();
+  }
+
+  Future<void> addXpAndCoins(int xp, int coins) async {
+    if (state != null) {
+      final user = state!;
+      user.stats.xp += xp;
+      user.stats.coins += coins;
+      
+      // Level up logic (every 100 XP = 1 Level)
+      user.stats.level = 1 + (user.stats.xp ~/ 100);
+      
+      await user.save(); // Save to Hive
+      state = user; // Trigger UI rebuild
+    }
+  }
+
+  Future<void> updateTrophies(int trophiesDelta) async {
+    if (state != null) {
+      final user = state!;
+      user.stats.trophies += trophiesDelta;
+      if (user.stats.trophies < 0) user.stats.trophies = 0;
+      
+      // Simple League logic
+      if (user.stats.trophies > 500) {
+        user.stats.league = 'Gold';
+      } else if (user.stats.trophies > 200) {
+        user.stats.league = 'Silver';
+      } else {
+        user.stats.league = 'Bronze';
+      }
+
+      await user.save(); // Save to Hive
+      state = user;
+    }
   }
 }
 
-final userProfileProvider =
-    StateNotifierProvider<UserProfileNotifier, UserProfile>((ref) {
-  return UserProfileNotifier();
+final userProfileProvider = StateNotifierProvider<UserProfileNotifier, UserModel?>((ref) {
+  final authRepo = ref.watch(authRepositoryProvider);
+  return UserProfileNotifier(authRepo);
 });

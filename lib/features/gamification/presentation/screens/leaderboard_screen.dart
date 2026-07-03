@@ -5,7 +5,7 @@ import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/gamification/data/repositories/gamification_repository.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
-import 'package:lerno/shared/models/user_profile.dart';
+import 'package:lerno/core/models/user_model.dart';
 import 'package:lerno/features/gamification/domain/models/league_system.dart';
 import 'package:lerno/features/gamification/presentation/widgets/league_shield_widget.dart';
 
@@ -20,9 +20,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   
-  List<UserProfile> _leaguePlayers = [];
-  List<UserProfile> _globalPlayers = [];
-  List<UserProfile> _friendsPlayers = [];
+  List<UserModel> _leaguePlayers = [];
+  List<UserModel> _globalPlayers = [];
+  List<UserModel> _friendsPlayers = [];
   bool _isLoading = true;
 
   @override
@@ -35,7 +35,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   Future<void> _loadData() async {
     final repo = ref.read(gamificationRepositoryProvider);
     final profile = ref.read(userProfileProvider);
-    final currentLeague = profile.league;
+    final currentLeague = profile?.stats.league ?? 'Bronze';
 
     final leagueData = await repo.fetchLeagueLeaderboard(currentLeague);
     final globalData = await repo.fetchGlobalLeaderboard();
@@ -43,9 +43,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
     if (mounted) {
       setState(() {
-        _leaguePlayers = leagueData..sort((a, b) => b.trophies.compareTo(a.trophies));
-        _globalPlayers = globalData..sort((a, b) => b.trophies.compareTo(a.trophies));
-        _friendsPlayers = friendsData..sort((a, b) => b.trophies.compareTo(a.trophies));
+        _leaguePlayers = leagueData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
+        _globalPlayers = globalData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
+        _friendsPlayers = friendsData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
         _isLoading = false;
       });
     }
@@ -100,7 +100,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildList(List<UserProfile> players) {
+  Widget _buildList(List<UserModel> players) {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 20, bottom: 100, left: 16, right: 16),
       itemCount: players.length,
@@ -110,9 +110,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildPlayerCard(UserProfile player, int rank) {
-    final isCurrentUser = player.id == ref.read(userProfileProvider).id;
-    final league = LeagueTier.getLeagueForTrophies(player.trophies);
+  Widget _buildPlayerCard(UserModel player, int rank) {
+    final profile = ref.read(userProfileProvider);
+    final isCurrentUser = profile != null && player.phoneNumber == profile.phoneNumber;
+    final league = LeagueTier.getLeagueForTrophies(player.stats.trophies);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -147,8 +148,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           CircleAvatar(
             backgroundColor: AppTheme.pastelBlue,
             child: SvgPicture.asset(
-              player.avatarUrl.isNotEmpty
-                  ? player.avatarUrl
+              player.avatarAsset.isNotEmpty
+                  ? player.avatarAsset
                   : 'assets/images/avatars/astronaut.svg',
               width: 24,
             ),
@@ -166,7 +167,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                       color: AppTheme.textDark),
                 ),
                 Text(
-                  player.league,
+                  player.stats.league,
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
@@ -180,7 +181,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   const Icon(Icons.emoji_events, color: Color(0xFFFBBF24), size: 16),
                   const SizedBox(width: 4),
                   Text(
-                    '${player.trophies}',
+                    '${player.stats.trophies}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -199,14 +200,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
   Widget _buildStickyBottomBanner() {
     final profile = ref.watch(userProfileProvider);
+    if (profile == null) return const SizedBox.shrink();
 
     // Just show a mock rank for demonstration, or find actual rank
     // Find current rank in the active tab (using a getter or just mock it)
     int mockRank = _tabController.index == 0
-        ? _leaguePlayers.indexWhere((p) => p.id == profile.id) + 1
+        ? _leaguePlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1
         : (_tabController.index == 1
-            ? _globalPlayers.indexWhere((p) => p.id == profile.id) + 1
-            : _friendsPlayers.indexWhere((p) => p.id == profile.id) + 1);
+            ? _globalPlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1
+            : _friendsPlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1);
             
     if (mockRank <= 0) mockRank = 42; // arbitrary off-screen mock
 

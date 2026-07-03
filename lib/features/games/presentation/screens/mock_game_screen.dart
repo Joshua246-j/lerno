@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
-import 'package:lerno/features/gamification/application/gamification_engine.dart';
+import 'package:lerno/features/gamification/data/repositories/gamification_repository.dart';
 
 class MockGameScreen extends ConsumerStatefulWidget {
   final String courseId;
@@ -21,16 +21,14 @@ class _MockGameScreenState extends ConsumerState<MockGameScreen> {
       _isPlaying = false;
     });
     
-    // Reward player using Gamification Engine
-    final engine = GamificationEngine();
+    // Reward player using Gamification Repository
+    final repo = ref.read(gamificationRepositoryProvider);
     final profile = ref.read(userProfileProvider);
-    final updatedProfile = engine.processGameRewards(
-      profile,
-      xpEarned: 150,
-      coinsEarned: 20,
-      trophiesEarned: 1,
-    );
-    ref.read(userProfileProvider.notifier).updateProfile(updatedProfile);
+    
+    if (profile != null) {
+      repo.resolveSoloGame(profile, isWin: true, score: 1500); // Simulated win score
+      ref.read(userProfileProvider.notifier).refreshProfile();
+    }
   }
 
   @override

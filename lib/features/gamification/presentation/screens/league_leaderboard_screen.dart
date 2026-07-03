@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lerno/shared/models/user_profile.dart';
+import 'package:lerno/core/models/user_model.dart';
 
 class LeagueLeaderboardScreen extends StatelessWidget {
   final String currentLeague;
-  final List<UserProfile> leaderboard;
+  final List<UserModel> leaderboard;
 
   const LeagueLeaderboardScreen({
     super.key,
@@ -59,7 +59,7 @@ class LeagueLeaderboardScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${user.trophies}',
+                        '${user.stats.trophies}',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),

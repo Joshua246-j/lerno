@@ -44,7 +44,7 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen>
   @override
   Widget build(BuildContext context) {
     final userProfile = ref.watch(userProfileProvider);
-    final myAvatar = userProfile.avatarUrl.isNotEmpty ? userProfile.avatarUrl : 'assets/images/avatars/octopus.svg';
+    final myAvatar = userProfile?.avatarAsset.isNotEmpty == true ? userProfile!.avatarAsset : 'assets/images/avatars/octopus.svg';
 
     ref.listen<BattleState>(quizBattleProvider, (previous, next) {
       if (next.status == MatchStatus.playing) {

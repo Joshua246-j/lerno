@@ -26,6 +26,7 @@ subprojects {
     project.afterEvaluate {
         val androidExt = project.extensions.findByName("android")
         if (androidExt != null && androidExt is com.android.build.gradle.LibraryExtension) {
+            androidExt.compileSdk = 36
             androidExt.compileOptions {
                 sourceCompatibility = JavaVersion.VERSION_17
                 targetCompatibility = JavaVersion.VERSION_17

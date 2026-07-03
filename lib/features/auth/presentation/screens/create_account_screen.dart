@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
-import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
+import 'package:lerno/features/auth/presentation/providers/auth_provider.dart';
 
 class CreateAccountScreen extends ConsumerStatefulWidget {
   const CreateAccountScreen({super.key});
@@ -15,6 +16,8 @@ class CreateAccountScreen extends ConsumerStatefulWidget {
 
 class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
 
   final List<String> _avatars = [
     'assets/images/avatars/octopus.svg',
@@ -28,11 +31,88 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _phoneController.dispose();
+    _ageController.dispose();
     super.dispose();
+  }
+
+  void _handleRegister() async {
+    final name = _nameController.text.trim();
+    final phone = _phoneController.text.trim();
+    final ageStr = _ageController.text.trim();
+
+    if (name.isEmpty || phone.isEmpty || ageStr.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
+      return;
+    }
+
+    final age = int.tryParse(ageStr) ?? 10;
+    ref.read(audioManagerProvider).playClick();
+    
+    final otp = await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatar);
+    
+    if (mounted && otp != null) {
+      _showMockOtpDialog(otp, phone);
+    }
+  }
+
+  void _showMockOtpDialog(String otp, String phone) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.security, color: AppTheme.primaryBlue),
+            SizedBox(width: 10),
+            Text('Mock Verification', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Your Mock OTP Code is:', style: TextStyle(color: AppTheme.textLight)),
+            const SizedBox(height: 15),
+            Text(
+              otp,
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 5,
+                color: AppTheme.primaryBlue,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              '(Use this code to log in)',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.go('/verify?phone=$phone');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryGreen,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Continue', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
@@ -107,13 +187,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
             ),
 
             const SizedBox(height: 30),
-            const Text(
-              'Your Name',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textDark),
-            ),
+            const Text('Your Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
             const SizedBox(height: 10),
             TextField(
               controller: _nameController,
@@ -121,47 +195,68 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                 hintText: 'e.g. AstroKid7',
                 filled: true,
                 fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              ),
+            ),
+            
+            const SizedBox(height: 20),
+            const Text('Phone Number', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                hintText: '77 2345 1234',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               ),
             ),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
+            const Text('Age', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _ageController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'e.g. 10',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              ),
+            ),
+
+            if (authState.error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Center(
+                  child: Text(
+                    authState.error!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 40),
 
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: () {
-                  final name = _nameController.text.trim().isEmpty
-                      ? 'Guest'
-                      : _nameController.text.trim();
-
-                  ref.read(audioManagerProvider).playSuccess();
-
-                  // Save user profile state
-                  ref
-                      .read(userProfileProvider.notifier)
-                      .createAccount(name, _selectedAvatar);
-
-                  // Navigate to main nav screen
-                  Navigator.pushReplacementNamed(context, '/main');
-                },
+                onPressed: authState.isLoading ? null : _handleRegister,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   elevation: 5,
                 ),
-                child: const Text('Start Journey',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                child: authState.isLoading 
+                  ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : const Text('Start Journey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               ),
             ),
           ],

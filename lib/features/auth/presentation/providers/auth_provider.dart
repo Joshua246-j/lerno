@@ -52,29 +52,47 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> login(String phoneNumber) async {
+  Future<String?> login(String phoneNumber) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      await _authRepository.login(phoneNumber);
+      final otp = await _authRepository.login(phoneNumber);
       state = state.copyWith(isLoading: false);
+      return otp;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      // Remove Exception string prefix for cleaner UI errors
+      final msg = e.toString().replaceAll('Exception: ', '');
+      state = state.copyWith(isLoading: false, error: msg);
+      return null;
     }
   }
 
-  Future<bool> verifyOtp(String otp) async {
+  Future<String?> register(String name, String phoneNumber, int age, String avatarAsset) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final success = await _authRepository.verifyOtp(otp);
+      final otp = await _authRepository.register(name, phoneNumber, age, avatarAsset);
+      state = state.copyWith(isLoading: false);
+      return otp;
+    } catch (e) {
+      final msg = e.toString().replaceAll('Exception: ', '');
+      state = state.copyWith(isLoading: false, error: msg);
+      return null;
+    }
+  }
+
+  Future<bool> verifyOtp(String phoneNumber, String otp) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final success = await _authRepository.verifyOtp(phoneNumber, otp);
       if (success) {
         state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
         return true;
       } else {
-        state = state.copyWith(isLoading: false, error: 'Invalid OTP');
+        state = state.copyWith(isLoading: false, error: 'Invalid Code');
         return false;
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      final msg = e.toString().replaceAll('Exception: ', '');
+      state = state.copyWith(isLoading: false, error: msg);
       return false;
     }
   }

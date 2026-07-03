@@ -140,10 +140,7 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
                       ref.read(audioManagerProvider).playSuccess();
                       ref.read(dailyRewardsProvider.notifier).claimDailyReward();
                       
-                      final profile = ref.read(userProfileProvider);
-                      ref.read(userProfileProvider.notifier).updateProfile(
-                        profile.copyWith(coins: profile.coins + 50),
-                      );
+                      ref.read(userProfileProvider.notifier).addXpAndCoins(0, 50);
                       
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -234,10 +231,7 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
                 ref.read(audioManagerProvider).playSuccess();
                 ref.read(dailyRewardsProvider.notifier).completeMission(index);
                 
-                final profile = ref.read(userProfileProvider);
-                ref.read(userProfileProvider.notifier).updateProfile(
-                  profile.copyWith(totalXP: profile.totalXP + 20),
-                );
+                ref.read(userProfileProvider.notifier).addXpAndCoins(20, 0);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.pastelBlue,
