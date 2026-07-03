@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/widgets/mountain_background.dart';
@@ -130,17 +131,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             top: MediaQuery.of(context).size.height * 0.35,
             left: 0, right: 0, bottom: 0,
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.95),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
+                boxShadow: AppTheme.modernShadow,
               ),
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+                  padding: const EdgeInsets.fromLTRB(30, 50, 30, 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -268,9 +270,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)),
-                          ),
+                          ).animate().scale(delay: 200.ms),
                         ),
-                      ),
+                      ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
                       const SizedBox(height: 60),
                       Column(
                         children: [
@@ -284,7 +286,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 ref.read(audioManagerProvider).playClick();
-                                // context.push('/create_account');
+                                if (context.mounted) {
+                                  context.push('/create_account');
+                                }
                               },
                               child: const Text(
                                 "Create",

@@ -26,8 +26,9 @@ class HomeScreen extends ConsumerWidget {
     final userName = user.displayName;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      body: SafeArea(
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
           child: Column(
@@ -85,11 +86,11 @@ class HomeScreen extends ConsumerWidget {
                         children: [
                           Text(
                             'Level ${user.stats.level} • ${user.stats.xp} XP',
-                            style: const TextStyle(color: AppTheme.textLight, fontSize: 13, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             userName,
-                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: AppTheme.textDark),
+                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: Colors.white),
                           ),
                         ],
                       ),
@@ -105,14 +106,9 @@ class HomeScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4)),
-                        ],
+                        boxShadow: AppTheme.modernShadow,
                       ),
                       child: Row(
                         children: [
@@ -149,7 +145,7 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 35),
 
               // Daily Rewards & Store
-              const Text('Daily & Rewards', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+              const Text('Daily & Rewards', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
               const SizedBox(height: 15),
               Row(
                 children: [
@@ -168,16 +164,14 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 35),
 
               // Solo Minigames
-              const Text('Quick Play (Solo)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+              const Text('Quick Play (Solo)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
               const SizedBox(height: 15),
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.withValues(alpha: 0.08), blurRadius: 15, offset: const Offset(0, 8))
-                  ],
+                  boxShadow: AppTheme.modernShadow,
                 ),
                 child: GridView.count(
                   crossAxisCount: 2,
@@ -208,11 +202,9 @@ class HomeScreen extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(color: Colors.grey.withValues(alpha: 0.08), blurRadius: 15, offset: const Offset(0, 8))
-        ],
+        boxShadow: AppTheme.modernShadow,
       ),
       child: Row(
         children: [
@@ -266,9 +258,9 @@ class HomeScreen extends ConsumerWidget {
       child: Container(
         height: 80,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.08), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: AppTheme.modernShadow,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -297,9 +289,9 @@ class HomeScreen extends ConsumerWidget {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.4), width: 1.5),
+          border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.2), width: 1.5),
           borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
+          color: AppTheme.primaryLight.withValues(alpha: 0.5),
         ),
         alignment: Alignment.center,
         child: Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),

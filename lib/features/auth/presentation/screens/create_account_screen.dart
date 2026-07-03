@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
@@ -114,152 +115,176 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppTheme.textDark),
-        title: const Text('Create Account',
-            style: TextStyle(color: AppTheme.textDark)),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Choose your Avatar',
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textDark),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Pick a character to represent you!',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-
-            // Avatar grid
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-              ),
-              itemCount: _avatars.length,
-              itemBuilder: (context, index) {
-                final avatar = _avatars[index];
-                final isSelected = _selectedAvatar == avatar;
-                return GestureDetector(
-                  onTap: () {
-                    ref.read(audioManagerProvider).playClick();
-                    setState(() {
-                      _selectedAvatar = avatar;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.primaryLight : Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppTheme.primaryBlue
-                            : Colors.transparent,
-                        width: 3,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                        ),
-                      ],
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Custom App Bar inside SafeArea
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    padding: const EdgeInsets.all(15),
-                    child: SvgPicture.asset(avatar),
+                    const Text('Create Account',
+                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                  ],
+                ).animate().fadeIn().slideY(begin: -0.5),
+                const SizedBox(height: 20),
+                
+                Container(
+                  padding: const EdgeInsets.all(24.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: AppTheme.modernShadow,
                   ),
-                );
-              },
-            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Choose your Avatar',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.textDark),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Pick a character to represent you!',
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                      const SizedBox(height: 20),
 
-            const SizedBox(height: 30),
-            const Text('Your Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                hintText: 'e.g. AstroKid7',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              ),
-            ),
-            
-            const SizedBox(height: 20),
-            const Text('Phone Number', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                hintText: '77 2345 1234',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              ),
-            ),
+                      // Avatar grid
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                        ),
+                        itemCount: _avatars.length,
+                        itemBuilder: (context, index) {
+                          final avatar = _avatars[index];
+                          final isSelected = _selectedAvatar == avatar;
+                          return GestureDetector(
+                            onTap: () {
+                              ref.read(audioManagerProvider).playClick();
+                              setState(() {
+                                _selectedAvatar = avatar;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: isSelected ? AppTheme.primaryLight : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppTheme.primaryBlue
+                                      : Colors.transparent,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(15),
+                              child: SvgPicture.asset(avatar),
+                            ),
+                          );
+                        },
+                      ),
 
-            const SizedBox(height: 20),
-            const Text('Age', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _ageController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: 'e.g. 10',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              ),
-            ),
+                      const SizedBox(height: 30),
+                      const Text('Your Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          hintText: 'e.g. AstroKid7',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 20),
+                      const Text('Phone Number', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          hintText: '77 2345 1234',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        ),
+                      ),
 
-            if (authState.error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: Center(
-                  child: Text(
-                    authState.error!,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
+                      const SizedBox(height: 20),
+                      const Text('Age', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _ageController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'e.g. 10',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        ),
+                      ),
+
+                      if (authState.error != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Center(
+                            child: Text(
+                              authState.error!,
+                              style: const TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+
+                      const SizedBox(height: 40),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: authState.isLoading ? null : _handleRegister,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryGreen,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            elevation: 5,
+                          ),
+                          child: authState.isLoading 
+                            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                            : const Text('Start Journey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                        ).animate().scale(delay: 400.ms),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-
-            const SizedBox(height: 40),
-
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                onPressed: authState.isLoading ? null : _handleRegister,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryGreen,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  elevation: 5,
-                ),
-                child: authState.isLoading 
-                  ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : const Text('Start Journey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-              ),
+                ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
