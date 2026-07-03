@@ -16,9 +16,9 @@ class CreateAccountScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController(text: "AstroKid");
+  final TextEditingController _phoneController = TextEditingController(text: "7723451234");
+  final TextEditingController _ageController = TextEditingController(text: "10");
 
   final List<String> _avatars = [
     'assets/images/avatars/octopus.svg',
