@@ -18,7 +18,7 @@ Lerno is a cross-platform children's learning application designed to make educa
 - **State Management**: Riverpod (`flutter_riverpod`)
 - **Routing**: GoRouter (`go_router`)
 - **Game Engine**: Flame (`flame`)
-- **Backend Services**: Firebase (Auth, Firestore, Realtime Database)
+- **Backend Services**: Firebase (Auth, Firestore, Realtime local database (Hive))
 - **Local Storage**: Shared Preferences & Secure Storage
 
 ## 🏛 Architecture Summary
@@ -71,7 +71,7 @@ For detailed technical implementation and architecture guidelines, refer to the 
 - [04_Project_Structure](04_Project_Structure.md)
 - [05_Frontend_Architecture](05_Frontend_Architecture.md)
 - [06_Backend_Architecture](06_Backend_Architecture.md)
-- [07_Database_Design](07_Database_Design.md)
+- [07_local database (Hive)_Design](07_local database (Hive)_Design.md)
 - [08_API_Design](08_API_Design.md)
 - [09_Authentication_System](09_Authentication_System.md)
 - [10_Navigation_Flow](10_Navigation_Flow.md)

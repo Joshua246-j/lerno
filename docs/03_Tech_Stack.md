@@ -36,13 +36,13 @@
 |---------|---------|---------|
 | `firebase_core` | `^2.24.2` | Core initialization for Firebase services. |
 | `firebase_auth` | `^4.15.3` | Handles user authentication (Email/Password, Social Login). |
-| `cloud_firestore` | `^4.13.6` | NoSQL database for long-term user data and leaderboards. |
-| `firebase_database` | `^10.4.0` | Real-time database for 1v1 matchmaking and active quiz battles. |
+| `cloud_firestore` | `^4.13.6` | NoSQL local database (Hive) for long-term user data and leaderboards. |
+| `firebase_local database (Hive)` | `^10.4.0` | Real-time local database (Hive) for 1v1 matchmaking and active quiz battles. |
 
 ## 🔐 Security & Networking
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `dio` | `^5.4.3` | Powerful HTTP client used for REST API calls (planned for production backend). |
+| `dio` | `^5.4.3` | Powerful HTTP client used for Mock Data Providers calls (planned for production backend). |
 | `flutter_secure_storage`| `^9.0.0` | Encrypts and securely stores sensitive data (e.g., JWT tokens). |
 | `shared_preferences` | `^2.2.2` | Stores non-sensitive, simple key-value pairs (e.g., user theme preference). |
 

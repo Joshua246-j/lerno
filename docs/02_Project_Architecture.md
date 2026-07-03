@@ -64,7 +64,7 @@ graph TD
     RM -->|Calls Methods| Repos[Repository Layer]
     
     Repos -->|Reads/Writes| LocalCache[(Local SQLite/Prefs)]
-    Repos -->|HTTP/REST| RemoteAPI[Remote Backend Server]
+    Repos -->|HTTP/REST| RemoteAPI[offline mock architecture Server]
     Repos -->|SDK Integration| Firebase[Firebase Services]
     
     subgraph Core Services

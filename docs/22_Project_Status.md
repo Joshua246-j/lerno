@@ -30,4 +30,4 @@ The core UI/UX and architectural foundations are solid. The app currently runs o
 ## 🚀 Next Development Milestones
 1. Finalize Flame Engine mini-game states.
 2. Integrate Firebase Authentication.
-3. Deploy Node.js REST API for secure XP/Coin transaction verification.
+3. Deploy Node.js Mock Data Providers for secure XP/Coin transaction verification.

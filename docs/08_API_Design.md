@@ -1,12 +1,12 @@
 # 08 - API Design
 
-## 🌐 Production REST API Overview
+## 🌐 Production Mock Data Providers Overview
 The planned production backend will expose a RESTful API over HTTPS. All endpoints (except public authentication routes) will require a valid JWT Bearer token supplied by Firebase Authentication.
 
 ## 🔐 Authentication Flow
 1. Client requests Firebase SDK for Auth (Google/Email).
 2. Client retrieves Firebase JWT ID Token.
-3. Client sends `Authorization: Bearer <token>` to Lerno REST API.
+3. Client sends `Authorization: Bearer <token>` to Lerno Mock Data Providers.
 4. Lerno API validates the token using Firebase Admin SDK.
 
 ## 🚦 Status Codes

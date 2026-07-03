@@ -2,13 +2,13 @@
 
 > [!NOTE]
 > **Current Implementation**: The application currently uses Mock Repositories (`lib/core/mock/`) for UI/UX testing and layout verification.
-> **Future Production Architecture**: The planned production backend will be a hybrid of Firebase and a scalable REST API.
+> **Future Production Architecture**: The planned production backend will be a hybrid of Firebase and a scalable Mock Data Providers.
 
 ## ☁️ Future Production Backend Stack
-- **Real-Time Data (Battles & Chat)**: Firebase Realtime Database / Firestore.
+- **Real-Time Data (Battles & Chat)**: Firebase Realtime local database (Hive) / Firestore.
 - **Auth & User Identity**: Firebase Authentication.
 - **Core Business API**: Node.js / Go / Python (REST or GraphQL API).
-- **Database**: PostgreSQL (for structured relational data) + Redis (for caching leaderboards).
+- **local database (Hive)**: PostgreSQL (for structured relational data) + Redis (for caching leaderboards).
 
 ## 🔐 Authentication
 Firebase Auth will handle the heavy lifting (OAuth, Email/Password, OTP). 
@@ -20,7 +20,7 @@ The application architecture is already prepared for this transition. Because th
 ## ☁️ Cloud Architecture & Real-Time Flow
 For the 1v1 Quiz Battles, low latency is critical:
 1. User enters matchmaking queue (API call to backend).
-2. Backend pairs users and creates a Firebase Realtime Database Room.
+2. Backend pairs users and creates a Firebase Realtime local database (Hive) Room.
 3. Both clients connect directly to the Firebase Room via WebSockets.
 4. Game progresses in real-time.
 5. Winner is finalized, clients send a signed payload to the Backend API to securely calculate XP and ELO updates.

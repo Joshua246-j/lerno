@@ -28,7 +28,7 @@ The project is currently in the **Late Alpha / Pre-Beta** stage.
 - [x] Core mock data and models definition.
 
 ### Phase 2: Core Features Integration (In Progress)
-- [ ] Transition from Mock Repositories to Production Firebase/REST APIs.
+- [ ] Transition from Mock Repositories to Production Firebase/Mock Data Providerss.
 - [ ] Complete implementation of the 1v1 Quiz Battle matching logic.
 - [ ] Finalize Flame Engine mini-game physics and interactions.
 
