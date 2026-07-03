@@ -1,0 +1,59 @@
+name: lerno
+description: "A cross-platform kids learning application with gamified UI, 1v1 battles, and a Flame mini-game."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management & Routing
+  flutter_riverpod: ^2.4.9
+  go_router: ^12.1.1
+  
+  # UI & Styling
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.3.0
+  
+  # Game Engine
+  flame: ^1.14.0
+  
+  # Backend & Auth (Firebase)
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_database: ^10.4.0
+  
+  # Network & Security
+  dio: ^5.4.3
+  flutter_secure_storage: ^9.0.0
+  
+  # Utils & UI Polish
+  shared_preferences: ^2.2.2
+  flutter_animate: ^4.5.0
+  cached_network_image: ^3.3.0
+  shimmer: ^3.0.0
+  audioplayers: ^5.2.1
+  
+  # Social Auth
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^6.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/avatars/
+    - assets/images/badges/
+    - assets/images/subjects/
+    - assets/images/games/
+    - assets/sounds/
