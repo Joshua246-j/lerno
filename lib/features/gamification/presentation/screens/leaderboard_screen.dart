@@ -6,6 +6,7 @@ import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/gamification/data/repositories/gamification_repository.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/core/models/user_model.dart';
+import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/features/gamification/domain/models/league_system.dart';
 import 'package:lerno/features/gamification/presentation/widgets/league_shield_widget.dart';
 
@@ -152,9 +153,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           CircleAvatar(
             backgroundColor: AppTheme.pastelBlue,
             child: SvgPicture.asset(
-              player.avatarId.isNotEmpty
-                  ? player.avatarId
-                  : 'assets/images/avatars/astronaut.svg',
+              player.avatarId.isEmpty
+                  ? 'assets/svg/avatars/starter/astronaut.svg'
+                  : (player.avatarId.contains('assets/')
+                      ? player.avatarId
+                      : AppAssets.getAvatarPath(player.avatarId)),
               width: 24,
             ),
           ),

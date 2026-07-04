@@ -28,7 +28,7 @@ class MockData {
       title: 'Language Arts - Learning Letters',
       description:
           'A jungle full of letters. Meet Blob and his virtual buddies.',
-      iconAsset: 'assets/images/games/language_arts.svg',
+      iconAsset: 'assets/images/games/colouring.svg',
       isLocked: true,
     ),
     CourseItem(
@@ -42,7 +42,7 @@ class MockData {
       id: 'c6',
       title: 'Science game',
       description: 'Level 4',
-      iconAsset: 'assets/images/games/science_game.svg',
+      iconAsset: 'assets/images/games/math_game.svg',
       isLocked: true,
     ),
   ];

@@ -8,6 +8,7 @@ import 'package:lerno/features/auth/presentation/screens/create_account_screen.d
 import 'package:lerno/features/auth/presentation/screens/verification_screen.dart';
 import 'package:lerno/core/presentation/screens/main_navigation_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/my_courses_screen.dart';
+import 'package:lerno/features/profile/presentation/screens/profile_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/subject_details_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/course_details_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/lesson_screen.dart';
@@ -31,6 +32,8 @@ import 'package:lerno/features/social/presentation/screens/inbox_screen.dart';
 import 'package:lerno/features/gamification/presentation/screens/notifications_screen.dart';
 import 'package:lerno/core/presentation/screens/search_screen.dart';
 import 'package:lerno/features/profile/presentation/screens/settings_screen.dart';
+import 'package:lerno/features/games/presentation/screens/games_hub_screen.dart';
+import 'package:lerno/core/presentation/screens/coming_soon_screen.dart';
 import 'package:flutter/material.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -38,6 +41,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: '/splash',
+    errorBuilder: (context, state) => const ComingSoonScreen(),
     redirect: (context, state) {
       final isAuthScreen = state.matchedLocation == '/login' ||
           state.matchedLocation == '/verify' ||
@@ -88,6 +92,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/main',
         builder: (context, state) => const MainNavigationScreen(),
+      ),
+      GoRoute(
+        path: '/games',
+        builder: (context, state) => const GamesHubScreen(),
       ),
       GoRoute(
         path: '/game/:id',
@@ -150,6 +158,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return TopicQuizScreen(
               subjectId: subjectId, courseId: courseId, topicId: topicId);
         },
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: '/edit_profile',

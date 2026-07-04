@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/games/common/presentation/game_manager_screen.dart';
@@ -9,7 +10,6 @@ import '../providers/quiz_battle_provider.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/features/games/common/presentation/widgets/countdown_timer.dart'
     as common_widgets;
-import 'package:lerno/features/games/common/application/game_session_service.dart';
 import 'package:lerno/core/theme/app_assets.dart';
 
 class QuizBattleScreen extends ConsumerWidget {
@@ -24,10 +24,7 @@ class QuizBattleScreen extends ConsumerWidget {
       onGameStart: (ctx, ref) {
         ref.read(quizBattleProvider.notifier).startMatchmaking();
       },
-      // Ranked battles give trophies instead of regular XP/Coins (or both)
-      // GameManager overlay doesn't currently distinguish, but we can override the behavior
-      // actually, wait, GameManager overlay just displays xpEarned and coinsEarned.
-      // GameSessionService finishRankedGame is separate.
+      isRanked: true,
       gameContent: const QuizBattleContent(),
     );
   }
@@ -49,14 +46,8 @@ class _QuizBattleContentState extends ConsumerState<QuizBattleContent> {
       if (next.status == MatchStatus.finished &&
           (previous == null || previous.status != MatchStatus.finished)) {
         final isWin = next.winner == 'player';
-
-        // We bypass the standard GameManager finishGame inside the overlay if we want,
-        // but wait, GameManagerScope handles showing the overlay.
         GameManagerScope.of(context)?.onEndGame(isWin ? 100 : 20, isWin);
-
-        // Also we need to ensure league trophies are awarded. The standard GameResultOverlay calls finishGame.
-        // We can just call finishRankedGame right away.
-        ref.read(gameSessionServiceProvider).finishRankedGame(isVictory: isWin);
+        // GameManager calls finishRankedGame because isRanked is true on the wrapper.
       }
     });
 
@@ -71,37 +62,11 @@ class _QuizBattleContentState extends ConsumerState<QuizBattleContent> {
   }
 }
 
-class MatchmakingView extends ConsumerStatefulWidget {
+class MatchmakingView extends ConsumerWidget {
   const MatchmakingView({super.key});
 
   @override
-  ConsumerState<MatchmakingView> createState() => _MatchmakingViewState();
-}
-
-class _MatchmakingViewState extends ConsumerState<MatchmakingView>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..repeat(reverse: false);
-    _animation = Tween<double>(begin: 0.5, end: 1.5).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(userProfileProvider);
     final myAvatarId = userProfile?.avatarId.isNotEmpty == true
         ? userProfile!.avatarId
@@ -116,42 +81,56 @@ class _MatchmakingViewState extends ConsumerState<MatchmakingView>
             'Searching for Opponent...',
             style: TextStyle(
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.primaryBlue),
-          ),
+                fontWeight: FontWeight.w900,
+                color: AppTheme.primaryBlue,
+                letterSpacing: 2),
+          ).animate(onPlay: (controller) => controller.repeat(reverse: true)).fadeIn(duration: 800.ms),
           const SizedBox(height: 50),
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 150 * _animation.value,
-                    height: 150 * _animation.value,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.primaryBlue
-                          .withValues(alpha: 1.0 - (_animation.value - 0.5)),
-                    ),
-                  ),
-                  Container(
-                    width: 100 * _animation.value,
-                    height: 100 * _animation.value,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.primaryGreen
-                          .withValues(alpha: 1.0 - (_animation.value - 0.5)),
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    child: SvgPicture.asset(myAvatar, width: 70),
-                  ),
-                ],
-              );
-            },
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              // Outer radar pulse
+              Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.2),
+                ),
+              ).animate(onPlay: (controller) => controller.repeat())
+                .scale(begin: const Offset(0.5, 0.5), end: const Offset(1.5, 1.5), duration: 2.seconds)
+                .fadeOut(duration: 2.seconds),
+                
+              // Inner radar pulse
+              Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.primaryGreen.withValues(alpha: 0.3),
+                ),
+              ).animate(onPlay: (controller) => controller.repeat())
+                .scale(begin: const Offset(0.5, 0.5), end: const Offset(1.5, 1.5), duration: 2.seconds, delay: 1.seconds)
+                .fadeOut(duration: 2.seconds, delay: 1.seconds),
+                
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white,
+                child: SvgPicture.asset(myAvatar, width: 70),
+              ),
+              
+              // Scanning line
+              Container(
+                width: 100,
+                height: 2,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.transparent, AppTheme.primaryBlue, Colors.transparent],
+                  )
+                ),
+              ).animate(onPlay: (controller) => controller.repeat())
+               .rotate(duration: 2.seconds)
+            ],
           ),
         ],
       ),
@@ -221,7 +200,7 @@ class BattleArenaView extends ConsumerWidget {
         mainAxisAlignment:
             isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!isOpponent) _buildAvatarItem(avatar),
+          if (!isOpponent) _buildAvatarItem(avatar, score),
           if (!isOpponent) const SizedBox(width: 15),
           Expanded(
             child: Column(
@@ -231,42 +210,53 @@ class BattleArenaView extends ConsumerWidget {
               children: [
                 Text(name,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18)),
+                        fontWeight: FontWeight.w900, fontSize: 18)),
                 const SizedBox(height: 5),
-                LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 10,
-                  backgroundColor: Colors.white,
-                  color: isOpponent ? Colors.redAccent : AppTheme.primaryGreen,
-                  borderRadius: BorderRadius.circular(5),
+                // Animated Progress Bar
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: progress),
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      minHeight: 12,
+                      backgroundColor: Colors.white,
+                      color: isOpponent ? Colors.redAccent : AppTheme.primaryGreen,
+                      borderRadius: BorderRadius.circular(6),
+                    );
+                  }
                 ),
                 const SizedBox(height: 5),
                 Text('$score / $maxScore',
+                    key: ValueKey(score), // forces animation on change
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold)),
+                        fontSize: 14, fontWeight: FontWeight.bold))
+                    .animate().scale(duration: 200.ms).tint(color: isOpponent ? Colors.red : AppTheme.primaryGreen),
               ],
             ),
           ),
           if (isOpponent) const SizedBox(width: 15),
-          if (isOpponent) _buildAvatarItem(avatar),
+          if (isOpponent) _buildAvatarItem(avatar, score),
         ],
       ),
     );
   }
 
-  Widget _buildAvatarItem(String path) {
+  Widget _buildAvatarItem(String path, int score) {
     return Container(
+      key: ValueKey(score), // Animates when score updates
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 3),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: CircleAvatar(
-        radius: 25,
+        radius: 28,
         backgroundColor: Colors.white,
-        child: SvgPicture.asset(path, width: 40),
+        child: SvgPicture.asset(path, width: 45),
       ),
-    );
+    ).animate().shake(hz: 4, duration: 400.ms).scale(begin: const Offset(1, 1), end: const Offset(1.2, 1.2), duration: 200.ms).then().scale(begin: const Offset(1.2, 1.2), end: const Offset(1, 1));
   }
 
   Widget _buildQuestionCard(
@@ -283,10 +273,11 @@ class BattleArenaView extends ConsumerWidget {
         ),
         const SizedBox(height: 20),
         Container(
-          padding: const EdgeInsets.all(20),
+          key: ValueKey(q.questionText), // Animate new questions sliding in
+          padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(25),
             boxShadow: AppTheme.modernShadow,
           ),
           child: Column(
@@ -296,8 +287,8 @@ class BattleArenaView extends ConsumerWidget {
                 q.questionText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
                     color: AppTheme.textDark),
               ),
               const SizedBox(height: 30),
@@ -322,7 +313,7 @@ class BattleArenaView extends ConsumerWidget {
                 }
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 15),
                   child: InkWell(
                     onTap: () {
                       if (state.showCorrectAnswer) return;
@@ -330,28 +321,30 @@ class BattleArenaView extends ConsumerWidget {
                       ref.read(quizBattleProvider.notifier).submitAnswer(index);
                     },
                     borderRadius: BorderRadius.circular(15),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
+                          vertical: 18, horizontal: 20),
                       decoration: BoxDecoration(
                         color: bgColor,
                         border: Border.all(color: borderColor, width: 2),
                         borderRadius: BorderRadius.circular(15),
+                        boxShadow: isSelected ? [BoxShadow(color: borderColor.withValues(alpha:0.3), blurRadius: 10)] : [],
                       ),
                       child: Text(
                         q.options[index],
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold, color: isSelected ? AppTheme.primaryBlue : AppTheme.textDark),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                );
+                ).animate().slideX(begin: 0.2, delay: (index * 100).ms, duration: 300.ms, curve: Curves.easeOutBack);
               }),
             ],
           ),
-        ),
+        ).animate().scale(duration: 400.ms, curve: Curves.elasticOut),
       ],
     );
   }

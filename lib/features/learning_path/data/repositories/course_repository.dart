@@ -32,7 +32,7 @@ class CourseRepository {
         id: 'quiz_battle',
         title: 'Quiz Battle',
         description: 'Multiplayer challenge!',
-        iconAsset: 'assets/images/games/language_arts.svg',
+        iconAsset: 'assets/images/games/colouring.svg',
         isLocked: false,
       ),
       CourseItem(
@@ -60,7 +60,7 @@ class CourseRepository {
         id: 'chess',
         title: 'Chess Master',
         description: 'Learn strategies',
-        iconAsset: 'assets/images/games/science_game.svg',
+        iconAsset: 'assets/images/games/math_game.svg',
         isLocked: false,
       ),
     ];

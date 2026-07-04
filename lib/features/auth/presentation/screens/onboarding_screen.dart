@@ -22,19 +22,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       'title': 'Learn with Fun',
       'description':
           'Discover a new way to learn your favorite subjects with engaging games and activities.',
-      'image': 'assets/images/avatars/octopus.svg',
+      'image': 'assets/svg/avatars/starter/octopus.svg',
     },
     {
       'title': 'Track Progress',
       'description':
           'Earn XP, collect badges, and climb the leaderboards as you complete lessons.',
-      'image': 'assets/images/avatars/astronaut.svg',
+      'image': 'assets/svg/avatars/starter/astronaut.svg',
     },
     {
       'title': 'Play & Compete',
       'description':
           'Challenge your friends in real-time quiz battles and show off your knowledge!',
-      'image': 'assets/images/avatars/alien.svg',
+      'image': 'assets/svg/avatars/shop/alien.svg',
     },
   ];
 

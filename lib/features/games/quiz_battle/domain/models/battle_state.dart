@@ -20,7 +20,7 @@ class BattleState {
     this.playerScore = 0,
     this.opponentScore = 0,
     this.opponentName = 'Opponent',
-    this.opponentAvatar = 'assets/images/avatars/robot.svg',
+    this.opponentAvatar = 'assets/svg/avatars/starter/robot.svg',
     this.currentQuestion,
     this.winner,
     this.showCorrectAnswer = false,

@@ -55,13 +55,13 @@ class GamificationRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
       _createMockUser('1', 'Player One', 500, leagueName,
-          'assets/images/avatars/astronaut.svg'),
+          'assets/svg/avatars/starter/astronaut.svg'),
       _createMockUser('2', 'Player Two', 450, leagueName,
-          'assets/images/avatars/robot.svg'),
+          'assets/svg/avatars/starter/robot.svg'),
       _createMockUser('3', 'AstroKid7', 120, leagueName,
-          'assets/images/avatars/octopus.svg'),
+          'assets/svg/avatars/starter/octopus.svg'),
       _createMockUser('4', 'CyberNinja', 100, leagueName,
-          'assets/images/avatars/alien.svg'),
+          'assets/svg/avatars/shop/alien.svg'),
     ];
   }
 
@@ -69,13 +69,13 @@ class GamificationRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
       _createMockUser('10', 'Grandmaster Q', 5000, 'Legend',
-          'assets/images/avatars/robot.svg'),
+          'assets/svg/avatars/starter/robot.svg'),
       _createMockUser('11', 'StarLord', 4800, 'Grand Champion',
-          'assets/images/avatars/astronaut.svg'),
+          'assets/svg/avatars/starter/astronaut.svg'),
       _createMockUser('12', 'GalaxyBrain', 4200, 'Champion',
-          'assets/images/avatars/alien.svg'),
+          'assets/svg/avatars/shop/alien.svg'),
       _createMockUser('3', 'AstroKid7', 120, 'Silver I',
-          'assets/images/avatars/octopus.svg'),
+          'assets/svg/avatars/starter/octopus.svg'),
     ];
   }
 
@@ -83,11 +83,11 @@ class GamificationRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
       _createMockUser('20', 'Bestie Bob', 800, 'Gold III',
-          'assets/images/avatars/robot.svg'),
+          'assets/svg/avatars/starter/robot.svg'),
       _createMockUser('3', 'AstroKid7', 120, 'Silver I',
-          'assets/images/avatars/octopus.svg'),
-      _createMockUser(
-          '21', 'Slowpoke', 50, 'Bronze I', 'assets/images/avatars/alien.svg'),
+          'assets/svg/avatars/starter/octopus.svg'),
+      _createMockUser('21', 'Slowpoke', 50, 'Bronze I',
+          'assets/svg/avatars/shop/alien.svg'),
     ];
   }
 

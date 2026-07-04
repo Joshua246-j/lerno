@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
+import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 
@@ -18,10 +19,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late String _selectedAvatar;
 
   final List<String> _availableAvatars = [
-    'assets/images/avatars/octopus.svg',
-    'assets/images/avatars/alien.svg',
-    'assets/images/avatars/astronaut.svg',
-    'assets/images/avatars/robot.svg',
+    'octopus',
+    'alien',
+    'astronaut',
+    'robot',
   ];
 
   @override
@@ -114,7 +115,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       ],
                     ),
                     padding: const EdgeInsets.all(16),
-                    child: SvgPicture.asset(avatar),
+                    child: SvgPicture.asset(AppAssets.getAvatarPath(avatar)),
                   ),
                 );
               },

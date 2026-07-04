@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              'assets/images/avatars/octopus.svg',
+              'assets/svg/avatars/starter/octopus.svg',
               width: 150,
             ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
             const SizedBox(height: 24),

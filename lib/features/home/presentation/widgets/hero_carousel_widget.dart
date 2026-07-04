@@ -4,51 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
-
-class BannerInfo {
-  final String title;
-  final String subtitle;
-  final String actionText;
-  final String route;
-  final Color bgColor;
-  final IconData icon;
-
-  const BannerInfo({
-    required this.title,
-    required this.subtitle,
-    required this.actionText,
-    required this.route,
-    required this.bgColor,
-    required this.icon,
-  });
-}
-
-const List<BannerInfo> mockBanners = [
-  BannerInfo(
-    title: 'Double XP Weekend!',
-    subtitle: 'Earn 2x XP in all games and courses this weekend.',
-    actionText: 'Play Now',
-    route: '/main', // Navigates to Games via MainNavigation (mock)
-    bgColor: Color(0xFF8B5CF6),
-    icon: Icons.bolt,
-  ),
-  BannerInfo(
-    title: 'Ranked Quiz Battle',
-    subtitle: 'Climb the leaderboard and earn trophies!',
-    actionText: 'Compete',
-    route: '/game/quiz_battle',
-    bgColor: Color(0xFFF59E0B),
-    icon: Icons.emoji_events,
-  ),
-  BannerInfo(
-    title: 'New Avatar Collection',
-    subtitle: 'Check out the new Astronaut avatars in the store.',
-    actionText: 'Visit Store',
-    route: '/store',
-    bgColor: Color(0xFF10B981),
-    icon: Icons.storefront,
-  ),
-];
+import 'package:lerno/data/mock_data.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HeroCarouselWidget extends ConsumerStatefulWidget {
   const HeroCarouselWidget({super.key});
@@ -79,7 +36,7 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 6), (timer) {
       if (_pageController.hasClients) {
-        int nextPage = (_currentPage + 1) % mockBanners.length;
+        int nextPage = (_currentPage + 1) % MockData.banners.length;
         _pageController.animateToPage(
           nextPage,
           duration: const Duration(milliseconds: 500),
@@ -108,9 +65,9 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
             child: PageView.builder(
               controller: _pageController,
               onPageChanged: _onPageChanged,
-              itemCount: mockBanners.length,
+              itemCount: MockData.banners.length,
               itemBuilder: (context, index) {
-                final banner = mockBanners[index];
+                final banner = MockData.banners[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Container(
@@ -168,9 +125,13 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
                           ),
                         ),
                         const SizedBox(width: 15),
-                        Icon(banner.icon,
-                            color: Colors.white.withValues(alpha: 0.8),
-                            size: 60),
+                        SvgPicture.asset(
+                          banner.svgAsset,
+                          width: 60,
+                          height: 60,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white, BlendMode.srcIn),
+                        ),
                       ],
                     ),
                   ),
@@ -182,7 +143,7 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
         const SizedBox(height: 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(mockBanners.length, (index) {
+          children: List.generate(MockData.banners.length, (index) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.symmetric(horizontal: 4),

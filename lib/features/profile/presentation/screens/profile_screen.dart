@@ -20,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
     final userName = profile?.displayName ?? 'Guest';
     final avatar = profile?.avatarId.isNotEmpty == true
         ? profile!.avatarId
-        : 'assets/images/avatars/octopus.svg';
+        : 'assets/svg/avatars/starter/octopus.svg';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FB),
@@ -355,11 +355,11 @@ class ProfileScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         _buildFriendItem(
-                            'Luna', 'assets/images/avatars/alien.svg'),
+                            'Luna', 'assets/svg/avatars/shop/alien.svg'),
+                        _buildFriendItem('Orion',
+                            'assets/svg/avatars/starter/astronaut.svg'),
                         _buildFriendItem(
-                            'Orion', 'assets/images/avatars/astronaut.svg'),
-                        _buildFriendItem(
-                            'Comet', 'assets/images/avatars/robot.svg'),
+                            'Comet', 'assets/svg/avatars/starter/robot.svg'),
                       ],
                     ),
                   ),
@@ -430,8 +430,8 @@ class ProfileScreen extends ConsumerWidget {
               shape: BoxShape.circle,
               color: color.withValues(alpha: 0.1),
             ),
-            child: SvgPicture.asset('assets/images/badges/$svgName.svg',
-                height: 35,
+            child: SvgPicture.asset('assets/svg/badges/$svgName.svg',
+                width: 40,
                 placeholderBuilder: (context) =>
                     Icon(Icons.military_tech, color: color, size: 35)),
           ),

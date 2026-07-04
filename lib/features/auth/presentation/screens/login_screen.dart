@@ -121,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/images/avatars/octopus.svg',
+                        'assets/svg/avatars/starter/octopus.svg',
                         height: 120,
                       ),
                       const SizedBox(height: 10),
@@ -309,6 +309,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 ref.read(audioManagerProvider).playClick();
+                                ref.read(authProvider.notifier).clearError();
                                 if (context.mounted) {
                                   context.push('/create_account');
                                 }

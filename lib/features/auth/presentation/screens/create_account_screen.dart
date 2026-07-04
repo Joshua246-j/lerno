@@ -77,7 +77,10 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        ref.read(authProvider.notifier).clearError();
+                        Navigator.pop(context);
+                      },
                     ),
                     const Text('Create Account',
                         style: TextStyle(

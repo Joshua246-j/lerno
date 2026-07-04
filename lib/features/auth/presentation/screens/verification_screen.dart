@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/core/widgets/mountain_background.dart';
@@ -39,12 +38,8 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 4) {
       ref.read(audioManagerProvider).playClick();
-      final success = await ref
-          .read(authProvider.notifier)
-          .verifyOtp(widget.phoneNumber, otp);
-      if (success && mounted) {
-        context.go('/main');
-      }
+      await ref.read(authProvider.notifier).verifyOtp(widget.phoneNumber, otp);
+      // GoRouter automatically redirects to '/main' upon successful authentication
     }
   }
 
@@ -75,7 +70,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/images/avatars/octopus.svg',
+                        'assets/svg/avatars/starter/octopus.svg',
                         height: 120,
                       ),
                       const SizedBox(height: 10),
@@ -172,11 +167,11 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                     Center(
                       child: SizedBox(
                         width: 180,
-                        height: 50,
                         child: ElevatedButton(
                           onPressed: authState.isLoading ? null : _handleVerify,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF8B80F9),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30)),
                             elevation: 8,

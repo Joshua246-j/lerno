@@ -22,11 +22,12 @@ class AuthState {
     AuthStatus? status,
     bool? isLoading,
     String? error,
+    bool clearError = false,
   }) {
     return AuthState(
       status: status ?? this.status,
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: clearError ? null : (error ?? this.error),
     );
   }
 }
@@ -58,7 +59,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<String?> login(String phoneNumber) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, clearError: true);
     try {
       final otp = await _authRepository.login(phoneNumber);
       state = state.copyWith(isLoading: false);
@@ -73,7 +74,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<bool> register(
       String name, String phoneNumber, int age, String avatarId) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _authRepository.register(name, phoneNumber, age, avatarId);
       state =
@@ -87,7 +88,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<bool> verifyOtp(String phoneNumber, String otp) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, clearError: true);
     try {
       final success = await _authRepository.verifyOtp(phoneNumber, otp);
       if (success) {
@@ -113,6 +114,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
           state.copyWith(status: AuthStatus.unauthenticated, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  void clearError() {
+    if (state.error != null) {
+      state = state.copyWith(clearError: true);
     }
   }
 }

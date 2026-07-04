@@ -16,6 +16,7 @@ dependencies:
   go_router: ^12.1.1
   
   # UI & Styling
+  cupertino_icons: ^1.0.8
   google_fonts: ^6.1.0
   flutter_svg: ^2.3.0
   
@@ -38,6 +39,8 @@ dependencies:
   cached_network_image: ^3.3.0
   shimmer: ^3.0.0
   audioplayers: ^5.2.1
+  lottie: ^3.1.2
+  rive: ^0.13.1
   
   # Social Auth
   google_sign_in: ^6.2.1
@@ -46,6 +49,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_chess_board: ^1.0.1
   chess: ^0.7.0
+  lucide_icons: ^0.257.0
 
 dev_dependencies:
   flutter_test:
@@ -57,10 +61,23 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
-    - assets/images/subjects/
-    - assets/images/games/
-    - assets/sounds/
-    - assets/svg/avatars/starter/
-    - assets/svg/avatars/shop/
+    - assets/svg/avatars/
     - assets/svg/badges/
+    - assets/svg/leagues/
+    - assets/svg/rewards/
+    - assets/svg/banners/
+    - assets/svg/courses/
+    - assets/svg/games/
+    - assets/svg/icons/
+    - assets/svg/empty_states/
+    - assets/svg/onboarding/
+    - assets/audio/ui/
+    - assets/audio/games/
+    - assets/audio/battle/
+    - assets/audio/profile/
+    - assets/audio/rewards/
+    - assets/audio/music/
+    - assets/animations/lottie/
+    - assets/animations/rive/
+    - assets/images/backgrounds/
+    - assets/images/thumbnails/

@@ -36,7 +36,7 @@ class QuizBattleNotifier extends StateNotifier<BattleState> {
     state = state.copyWith(
       status: MatchStatus.playing,
       opponentName: names[rIndex],
-      opponentAvatar: 'assets/images/avatars/${avatars[rIndex]}',
+      opponentAvatar: 'assets/svg/avatars/starter/${avatars[rIndex]}',
       playerScore: 0,
       opponentScore: 0,
       currentQuestion: _shuffledBank[_questionIndex],

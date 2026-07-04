@@ -57,7 +57,7 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
             Friend(
               id: '20',
               name: 'Bestie Bob',
-              avatarUrl: 'assets/images/avatars/robot.svg',
+              avatarUrl: 'assets/svg/avatars/starter/robot.svg',
               league: 'Gold III',
               isOnline: true,
               statusText: 'In a Battle',
@@ -65,7 +65,7 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
             Friend(
               id: '21',
               name: 'Slowpoke',
-              avatarUrl: 'assets/images/avatars/alien.svg',
+              avatarUrl: 'assets/svg/avatars/shop/alien.svg',
               league: 'Bronze I',
               isOnline: true,
               statusText: 'Online',
@@ -73,7 +73,7 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
             Friend(
               id: '22',
               name: 'Luna',
-              avatarUrl: 'assets/images/avatars/astronaut.svg',
+              avatarUrl: 'assets/svg/avatars/starter/astronaut.svg',
               league: 'Silver II',
               isOnline: false,
               statusText: 'Offline',

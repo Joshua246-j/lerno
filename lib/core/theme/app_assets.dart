@@ -25,7 +25,7 @@ class AppAssets {
   static const String iconPause = '$iconsFolder/pause.svg';
 
   // Fallbacks if specific avatar missing
-  static const String fallbackAvatar = 'assets/images/avatars/octopus.svg';
+  static const String fallbackAvatar = 'assets/svg/avatars/starter/octopus.svg';
 
   // Helper method to resolve avatar path
   static String getAvatarPath(String id) {

@@ -12,9 +12,10 @@ The core UI/UX and architectural foundations are solid. The app currently runs o
 - **Home Dashboard**: Mission cards, progress bars, profile summaries.
 - **Learning Path**: Scrollable, hierarchical lesson trees.
 
+- **Flame Mini-Games & Game Engine**: Core game loops, UI-to-Game state passing, and animated wrapper UI (`GameManagerScreen`) implemented.
+- **1v1 Battles**: UI for glowing radar matchmaking and live battle reaction states implemented.
+
 ## 🚧 In-Progress Features
-- **Flame Mini-Games**: Physics, core game loops, and UI-to-Game state passing.
-- **1v1 Battles**: UI for matchmaking and battle active screens.
 - **Build System Stabilization**: Resolving cross-drive Kotlin incremental caching bugs on Windows.
 
 ## 🔮 Planned Features

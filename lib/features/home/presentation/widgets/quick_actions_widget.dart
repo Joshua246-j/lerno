@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class QuickAction {
   final String label;
@@ -21,27 +22,27 @@ class QuickAction {
 const List<QuickAction> _actions = [
   QuickAction(
       label: 'Missions',
-      icon: Icons.task_alt,
+      icon: LucideIcons.target,
       color: Color(0xFF10B981),
       route: '/daily_missions'),
   QuickAction(
       label: 'Leaderboard',
-      icon: Icons.leaderboard,
+      icon: LucideIcons.barChart2,
       color: Color(0xFFF59E0B),
       route: '/leaderboard'),
   QuickAction(
       label: 'Inbox',
-      icon: Icons.inbox,
+      icon: LucideIcons.inbox,
       color: Color(0xFF3B82F6),
       route: '/inbox'),
   QuickAction(
       label: 'Friends',
-      icon: Icons.people,
+      icon: LucideIcons.users,
       color: Color(0xFF8B5CF6),
       route: '/friends'),
   QuickAction(
       label: 'Search',
-      icon: Icons.search,
+      icon: LucideIcons.search,
       color: Color(0xFF6366F1),
       route: '/search'),
 ];

@@ -7,6 +7,7 @@ import 'package:lerno/features/learning_path/presentation/screens/my_courses_scr
 import 'package:lerno/features/games/presentation/screens/games_hub_screen.dart';
 import 'package:lerno/features/store/presentation/screens/store_screen.dart';
 import 'package:lerno/features/profile/presentation/screens/profile_screen.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
@@ -78,23 +79,23 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
             showUnselectedLabels: false,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded),
+                icon: Icon(LucideIcons.home),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.map_rounded),
+                icon: Icon(LucideIcons.map),
                 label: 'Courses',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.sports_esports_rounded),
+                icon: Icon(LucideIcons.gamepad2),
                 label: 'Games',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.store_rounded),
+                icon: Icon(LucideIcons.shoppingBag),
                 label: 'Store',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_rounded),
+                icon: Icon(LucideIcons.user),
                 label: 'Profile',
               ),
             ],
