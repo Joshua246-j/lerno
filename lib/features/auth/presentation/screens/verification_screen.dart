@@ -16,7 +16,12 @@ class VerificationScreen extends ConsumerStatefulWidget {
 }
 
 class _VerificationScreenState extends ConsumerState<VerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(4, (index) => TextEditingController());
+  final List<TextEditingController> _controllers = [
+    TextEditingController(text: '1'),
+    TextEditingController(text: '2'),
+    TextEditingController(text: '3'),
+    TextEditingController(text: '4'),
+  ];
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
 
   @override

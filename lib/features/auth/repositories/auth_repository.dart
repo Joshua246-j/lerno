@@ -9,7 +9,7 @@ abstract class AuthRepository {
   Future<bool> checkSession();
   Future<String> login(String phoneNumber);
   Future<bool> verifyOtp(String phoneNumber, String otp);
-  Future<String> register(String name, String phoneNumber, int age, String avatarAsset);
+  Future<String> register(String name, String phoneNumber, int age, String avatarId);
   Future<void> logout();
   Future<UserModel?> getCurrentUser();
 }
@@ -58,26 +58,34 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<String> register(String name, String phoneNumber, int age, String avatarAsset) async {
+  Future<String> register(String name, String phoneNumber, int age, String avatarId) async {
     final box = HiveBoxes.getUsersBox();
     if (box.containsKey(phoneNumber)) {
       throw Exception('Phone number is already registered. Please login.');
     }
+
+    final random = Random();
+    
+    // Generate LRN-XXXXXX ID
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final idString = List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    final newUserId = 'LRN-$idString';
 
     // Create complete profile with default gamification stats
     final newUser = UserModel(
       phoneNumber: phoneNumber,
       displayName: name,
       age: age,
-      avatarAsset: avatarAsset,
-      stats: GamificationStats(), // Defaults to 0 XP, Bronze, etc.
+      avatarId: avatarId,
+      userId: newUserId,
+      inventory: [avatarId],
+      stats: GamificationStats(), // Defaults to 0 XP, Bronze I, etc.
     );
 
     // Save to Hive
     await box.put(phoneNumber, newUser);
 
     // Generate Mock OTP for initial verification
-    final random = Random();
     _currentMockOtp = (1000 + random.nextInt(9000)).toString();
     
     await Future.delayed(const Duration(milliseconds: 800));

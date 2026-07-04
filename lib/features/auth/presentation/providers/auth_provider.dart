@@ -66,10 +66,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<String?> register(String name, String phoneNumber, int age, String avatarAsset) async {
+  Future<String?> register(String name, String phoneNumber, int age, String avatarId) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final otp = await _authRepository.register(name, phoneNumber, age, avatarAsset);
+      final otp = await _authRepository.register(name, phoneNumber, age, avatarId);
       state = state.copyWith(isLoading: false);
       return otp;
     } catch (e) {

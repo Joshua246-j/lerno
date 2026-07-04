@@ -20,15 +20,20 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       phoneNumber: fields[0] as String,
       displayName: fields[1] as String,
       age: fields[2] as int,
-      avatarAsset: fields[3] as String,
+      avatarId: fields[3] as String,
       stats: fields[4] as GamificationStats,
+      userId: fields[8] as String,
+      inventory: (fields[9] as List).cast<String>(),
+      courseProgress: (fields[5] as Map).cast<String, double>(),
+      gameProgress: (fields[6] as Map).cast<String, int>(),
+      matchHistory: (fields[7] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.phoneNumber)
       ..writeByte(1)
@@ -36,9 +41,19 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(2)
       ..write(obj.age)
       ..writeByte(3)
-      ..write(obj.avatarAsset)
+      ..write(obj.avatarId)
       ..writeByte(4)
-      ..write(obj.stats);
+      ..write(obj.stats)
+      ..writeByte(5)
+      ..write(obj.courseProgress)
+      ..writeByte(6)
+      ..write(obj.gameProgress)
+      ..writeByte(7)
+      ..write(obj.matchHistory)
+      ..writeByte(8)
+      ..write(obj.userId)
+      ..writeByte(9)
+      ..write(obj.inventory);
   }
 
   @override

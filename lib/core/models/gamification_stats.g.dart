@@ -26,13 +26,15 @@ class GamificationStatsAdapter extends TypeAdapter<GamificationStats> {
       achievements: (fields[6] as List).cast<String>(),
       unlockedAvatars: (fields[7] as List).cast<String>(),
       currentStreak: fields[8] as int,
+      dailyMissions: (fields[9] as Map).cast<String, bool>(),
+      dailyRewardClaimed: fields[10] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, GamificationStats obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.xp)
       ..writeByte(1)
@@ -50,7 +52,11 @@ class GamificationStatsAdapter extends TypeAdapter<GamificationStats> {
       ..writeByte(7)
       ..write(obj.unlockedAvatars)
       ..writeByte(8)
-      ..write(obj.currentStreak);
+      ..write(obj.currentStreak)
+      ..writeByte(9)
+      ..write(obj.dailyMissions)
+      ..writeByte(10)
+      ..write(obj.dailyRewardClaimed);
   }
 
   @override

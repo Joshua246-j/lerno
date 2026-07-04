@@ -148,8 +148,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           CircleAvatar(
             backgroundColor: AppTheme.pastelBlue,
             child: SvgPicture.asset(
-              player.avatarAsset.isNotEmpty
-                  ? player.avatarAsset
+              player.avatarId.isNotEmpty
+                  ? player.avatarId
                   : 'assets/images/avatars/astronaut.svg',
               width: 24,
             ),

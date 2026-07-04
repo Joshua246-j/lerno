@@ -4,8 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
+import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/auth/presentation/providers/auth_provider.dart';
+import 'package:lerno/core/mock/avatar_config.dart';
 
 class CreateAccountScreen extends ConsumerStatefulWidget {
   const CreateAccountScreen({super.key});
@@ -20,14 +22,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final TextEditingController _phoneController = TextEditingController(text: "7723451234");
   final TextEditingController _ageController = TextEditingController(text: "10");
 
-  final List<String> _avatars = [
-    'assets/images/avatars/octopus.svg',
-    'assets/images/avatars/alien.svg',
-    'assets/images/avatars/robot.svg',
-    'assets/images/avatars/astronaut.svg',
-  ];
+  final List<String> _avatars = AvatarConfig.starterAvatars
+      .map((a) => a.avatarId)
+      .toList();
 
-  String _selectedAvatar = 'assets/images/avatars/octopus.svg';
+  String _selectedAvatarId = 'robot';
 
   @override
   void dispose() {
@@ -52,7 +51,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     final age = int.tryParse(ageStr) ?? 10;
     ref.read(audioManagerProvider).playClick();
     
-    final otp = await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatar);
+    final otp = await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatarId);
     
     if (mounted && otp != null) {
       _showMockOtpDialog(otp, phone);
@@ -172,13 +171,13 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                         ),
                         itemCount: _avatars.length,
                         itemBuilder: (context, index) {
-                          final avatar = _avatars[index];
-                          final isSelected = _selectedAvatar == avatar;
+                          final avatarId = _avatars[index];
+                          final isSelected = _selectedAvatarId == avatarId;
                           return GestureDetector(
                             onTap: () {
                               ref.read(audioManagerProvider).playClick();
                               setState(() {
-                                _selectedAvatar = avatar;
+                                _selectedAvatarId = avatarId;
                               });
                             },
                             child: Container(
@@ -200,7 +199,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                                 ],
                               ),
                               padding: const EdgeInsets.all(15),
-                              child: SvgPicture.asset(avatar),
+                              // Fallback to Icon if SVG doesn't exist yet during mock building
+                              child: SvgPicture.asset(
+                                AppAssets.getAvatarPath(avatarId),
+                                placeholderBuilder: (context) => const Icon(Icons.person, size: 40, color: AppTheme.primaryBlue),
+                              ),
                             ),
                           );
                         },

@@ -31,16 +31,24 @@ class GamificationStats extends HiveObject {
   @HiveField(8)
   int currentStreak;
 
+  @HiveField(9)
+  Map<String, bool> dailyMissions;
+
+  @HiveField(10)
+  bool dailyRewardClaimed;
+
   GamificationStats({
     this.xp = 0,
     this.coins = 0,
     this.level = 1,
     this.trophies = 0,
-    this.league = 'Bronze',
+    this.league = 'Bronze I',
     this.currentBadge = 'Beginner',
     this.achievements = const [],
     this.unlockedAvatars = const [],
     this.currentStreak = 0,
+    this.dailyMissions = const {},
+    this.dailyRewardClaimed = false,
   });
 
   GamificationStats copyWith({
@@ -53,6 +61,8 @@ class GamificationStats extends HiveObject {
     List<String>? achievements,
     List<String>? unlockedAvatars,
     int? currentStreak,
+    Map<String, bool>? dailyMissions,
+    bool? dailyRewardClaimed,
   }) {
     return GamificationStats(
       xp: xp ?? this.xp,
@@ -64,6 +74,8 @@ class GamificationStats extends HiveObject {
       achievements: achievements ?? this.achievements,
       unlockedAvatars: unlockedAvatars ?? this.unlockedAvatars,
       currentStreak: currentStreak ?? this.currentStreak,
+      dailyMissions: dailyMissions ?? this.dailyMissions,
+      dailyRewardClaimed: dailyRewardClaimed ?? this.dailyRewardClaimed,
     );
   }
 }

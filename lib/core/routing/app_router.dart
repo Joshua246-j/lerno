@@ -4,16 +4,20 @@ import 'package:lerno/features/auth/presentation/providers/auth_provider.dart';
 import 'package:lerno/features/auth/presentation/screens/splash_screen.dart';
 import 'package:lerno/features/auth/presentation/screens/onboarding_screen.dart';
 import 'package:lerno/features/auth/presentation/screens/login_screen.dart';
+import 'package:lerno/features/auth/presentation/screens/create_account_screen.dart';
 import 'package:lerno/features/auth/presentation/screens/verification_screen.dart';
 import 'package:lerno/core/presentation/screens/main_navigation_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/my_courses_screen.dart';
-import 'package:lerno/features/games/quiz_battle/presentation/screens/matchmaking_screen.dart';
-import 'package:lerno/features/games/quiz_battle/presentation/screens/battle_arena_screen.dart';
-import 'package:lerno/features/games/quiz_battle/presentation/screens/battle_result_screen.dart';
+import 'package:lerno/features/learning_path/presentation/screens/subject_details_screen.dart';
+import 'package:lerno/features/learning_path/presentation/screens/course_details_screen.dart';
+import 'package:lerno/features/learning_path/presentation/screens/lesson_screen.dart';
+import 'package:lerno/features/learning_path/presentation/screens/topic_quiz_screen.dart';
+import 'package:lerno/features/games/quiz_battle/presentation/screens/quiz_battle_screen.dart';
 import 'package:lerno/features/games/word_hunt/presentation/screens/word_hunt_screen.dart';
 import 'package:lerno/features/games/memory_match/presentation/screens/memory_match_screen.dart';
 import 'package:lerno/features/games/math_arena/presentation/screens/math_arena_screen.dart';
 import 'package:lerno/features/games/chess/presentation/screens/chess_puzzles_screen.dart';
+import 'package:lerno/features/games/pattern_match/presentation/screens/pattern_match_screen.dart';
 import 'package:lerno/features/gamification/presentation/screens/leaderboard_screen.dart';
 import 'package:lerno/features/gamification/presentation/screens/achievements_screen.dart';
 import 'package:lerno/features/rewards/presentation/screens/daily_missions_screen.dart';
@@ -21,8 +25,12 @@ import 'package:lerno/features/profile/presentation/screens/edit_profile_screen.
 import 'package:lerno/features/social/presentation/screens/friends_screen.dart';
 import 'package:lerno/features/social/presentation/screens/chat_screen.dart';
 import 'package:lerno/features/social/presentation/providers/friends_provider.dart';
-import 'package:lerno/features/store/presentation/screens/avatar_store_screen.dart' as lerno_store;
-import 'package:flutter/material.dart'; // Needed for Scaffold fallback
+import 'package:lerno/features/store/presentation/screens/store_screen.dart' as lerno_store;
+import 'package:lerno/features/social/presentation/screens/inbox_screen.dart';
+import 'package:lerno/features/gamification/presentation/screens/notifications_screen.dart';
+import 'package:lerno/core/presentation/screens/search_screen.dart';
+import 'package:lerno/features/profile/presentation/screens/settings_screen.dart';
+import 'package:flutter/material.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -32,6 +40,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final isAuthScreen = state.matchedLocation == '/login' || 
                            state.matchedLocation == '/verify' || 
+                           state.matchedLocation == '/create_account' ||
                            state.matchedLocation == '/onboarding';
       
       if (authState.status == AuthStatus.initial) {
@@ -65,6 +74,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
+        path: '/create_account',
+        builder: (context, state) => const CreateAccountScreen(),
+      ),
+      GoRoute(
         path: '/verify',
         builder: (context, state) {
           final phone = state.uri.queryParameters['phone'] ?? '';
@@ -81,13 +94,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id'] ?? 'unknown';
           switch (id) {
             case 'quiz_battle':
-              return const MatchmakingScreen();
+              return const QuizBattleScreen();
             case 'word_hunt':
               return const WordHuntScreen();
             case 'memory_match':
               return const MemoryMatchScreen();
             case 'math_arena':
               return const MathArenaScreen();
+            case 'pattern_match':
+              return const PatternMatchScreen();
             case 'chess':
               return const ChessPuzzlesScreen();
             default:
@@ -100,16 +115,37 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MyCoursesScreen(),
       ),
       GoRoute(
-        path: '/matchmaking',
-        builder: (context, state) => const MatchmakingScreen(),
+        path: '/subject/:subjectId',
+        builder: (context, state) {
+          final subjectId = state.pathParameters['subjectId']!;
+          return SubjectDetailsScreen(subjectId: subjectId);
+        },
       ),
       GoRoute(
-        path: '/battle_arena',
-        builder: (context, state) => const BattleArenaScreen(),
+        path: '/subject/:subjectId/course/:courseId',
+        builder: (context, state) {
+          final subjectId = state.pathParameters['subjectId']!;
+          final courseId = state.pathParameters['courseId']!;
+          return CourseDetailsScreen(subjectId: subjectId, courseId: courseId);
+        },
       ),
       GoRoute(
-        path: '/battle_result',
-        builder: (context, state) => const BattleResultScreen(),
+        path: '/subject/:subjectId/course/:courseId/topic/:topicId/lesson',
+        builder: (context, state) {
+          final subjectId = state.pathParameters['subjectId']!;
+          final courseId = state.pathParameters['courseId']!;
+          final topicId = state.pathParameters['topicId']!;
+          return LessonScreen(subjectId: subjectId, courseId: courseId, topicId: topicId);
+        },
+      ),
+      GoRoute(
+        path: '/subject/:subjectId/course/:courseId/topic/:topicId/quiz',
+        builder: (context, state) {
+          final subjectId = state.pathParameters['subjectId']!;
+          final courseId = state.pathParameters['courseId']!;
+          final topicId = state.pathParameters['topicId']!;
+          return TopicQuizScreen(subjectId: subjectId, courseId: courseId, topicId: topicId);
+        },
       ),
       GoRoute(
         path: '/edit_profile',
@@ -129,7 +165,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/store',
-        builder: (context, state) => const lerno_store.AvatarStoreScreen(),
+        builder: (context, state) => const lerno_store.StoreScreen(),
       ),
       GoRoute(
         path: '/friends',
@@ -145,6 +181,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return ChatScreen(friend: friend);
         },
       ),
+      GoRoute(
+        path: '/inbox',
+        builder: (context, state) => const InboxScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: '/search',
+        builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
     ],
   );
 });
+

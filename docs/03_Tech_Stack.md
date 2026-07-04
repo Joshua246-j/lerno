@@ -36,8 +36,8 @@
 |---------|---------|---------|
 | `firebase_core` | `^2.24.2` | Core initialization for Firebase services. |
 | `firebase_auth` | `^4.15.3` | Handles user authentication (Email/Password, Social Login). |
-| `cloud_firestore` | `^4.13.6` | NoSQL local database (Hive) for long-term user data and leaderboards. |
-| `firebase_local database (Hive)` | `^10.4.0` | Real-time local database (Hive) for 1v1 matchmaking and active quiz battles. |
+| `cloud_firestore` | `^4.13.6` | NoSQL Database for long-term user data and leaderboards. |
+| `firebase_Database` | `^10.4.0` | Real-time Database for 1v1 matchmaking and active quiz battles. |
 
 ## 🔐 Security & Networking
 | Package | Version | Purpose |

@@ -83,7 +83,7 @@ class GamificationRepository {
       phoneNumber: phone,
       displayName: name,
       age: 10,
-      avatarAsset: avatar,
+      avatarId: avatar,
       stats: GamificationStats(trophies: trophies, league: league),
     );
   }

@@ -4,6 +4,7 @@ import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/home/presentation/screens/home_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/my_courses_screen.dart';
+import 'package:lerno/features/games/presentation/screens/games_hub_screen.dart';
 import 'package:lerno/features/store/presentation/screens/store_screen.dart';
 import 'package:lerno/features/profile/presentation/screens/profile_screen.dart';
 
@@ -21,6 +22,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const MyCoursesScreen(),
+    const GamesHubScreen(),
     const StoreScreen(),
     const ProfileScreen(),
   ];
@@ -82,6 +84,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.map_rounded),
                 label: 'Courses',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sports_esports_rounded),
+                label: 'Games',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.store_rounded),

@@ -8,8 +8,12 @@ final audioManagerProvider = Provider<AudioManager>((ref) {
 class AudioManager {
   final AudioPlayer _bgmPlayer = AudioPlayer();
   final AudioPlayer _sfxPlayer = AudioPlayer();
+  final AudioPlayer _notificationPlayer = AudioPlayer();
 
   bool _isMuted = false;
+  double _masterVolume = 1.0;
+  double _musicVolume = 0.5;
+  double _effectsVolume = 1.0;
 
   bool get isMuted => _isMuted;
 
@@ -17,47 +21,8 @@ class AudioManager {
     await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
-  Future<void> playBgm() async {
-    if (_isMuted) return;
-    await _bgmPlayer.play(AssetSource('sounds/bgm.wav'), volume: 0.3);
-  }
-
-  Future<void> stopBgm() async {
-    await _bgmPlayer.stop();
-  }
-
-  Future<void> playClick() async {
-    if (_isMuted) return;
-    await _sfxPlayer.play(AssetSource('sounds/click.wav'),
-        mode: PlayerMode.lowLatency);
-  }
-
-  Future<void> playSuccess() async {
-    if (_isMuted) return;
-    await _sfxPlayer.play(AssetSource('sounds/success.wav'),
-        mode: PlayerMode.lowLatency);
-  }
-
-  Future<void> playFail() async {
-    if (_isMuted) return;
-    await _sfxPlayer.play(AssetSource('sounds/fail.wav'),
-        mode: PlayerMode.lowLatency);
-  }
-
-  Future<void> playTaskComplete() async {
-    if (_isMuted) return;
-    await _sfxPlayer.play(AssetSource('sounds/task_complete.wav'),
-        mode: PlayerMode.lowLatency);
-  }
-
-  Future<void> playLevelUp() async {
-    if (_isMuted) return;
-    await _sfxPlayer.play(AssetSource('sounds/level_up.wav'),
-        mode: PlayerMode.lowLatency);
-  }
-
-  void toggleMute() {
-    _isMuted = !_isMuted;
+  void setMute(bool muted) {
+    _isMuted = muted;
     if (_isMuted) {
       _bgmPlayer.pause();
     } else {
@@ -65,8 +30,103 @@ class AudioManager {
     }
   }
 
+  void toggleMute() {
+    setMute(!_isMuted);
+  }
+
+  void setMasterVolume(double volume) {
+    _masterVolume = volume;
+    _updateVolumes();
+  }
+
+  void setMusicVolume(double volume) {
+    _musicVolume = volume;
+    _updateVolumes();
+  }
+
+  void setEffectsVolume(double volume) {
+    _effectsVolume = volume;
+    _updateVolumes();
+  }
+
+  void _updateVolumes() {
+    if (!_isMuted) {
+      _bgmPlayer.setVolume(_musicVolume * _masterVolume);
+      _sfxPlayer.setVolume(_effectsVolume * _masterVolume);
+      _notificationPlayer.setVolume(_effectsVolume * _masterVolume);
+    }
+  }
+
+  // --- Background Music ---
+
+  Future<void> playBgm({String track = 'bgm_main'}) async {
+    if (_isMuted) return;
+    try {
+      await _bgmPlayer.play(AssetSource('audio/music/$track.mp3'), volume: _musicVolume * _masterVolume);
+    } catch (e) {
+      // Ignore missing mock file errors in prototype
+    }
+  }
+
+  Future<void> stopBgm() async {
+    await _bgmPlayer.stop();
+  }
+
+  // --- UI Sound Effects ---
+
+  Future<void> playClick() async {
+    _playSfx('ui/click');
+  }
+
+  Future<void> playSuccess() async {
+    _playSfx('ui/success');
+  }
+
+  Future<void> playFail() async {
+    _playSfx('ui/error');
+  }
+
+  // --- Game Sound Effects ---
+
+  Future<void> playCorrectAnswer() async {
+    _playSfx('game/correct');
+  }
+
+  Future<void> playWrongAnswer() async {
+    _playSfx('game/wrong');
+  }
+
+  Future<void> playVictory() async {
+    _playSfx('game/victory');
+  }
+
+  Future<void> playDefeat() async {
+    _playSfx('game/defeat');
+  }
+
+  Future<void> playTaskComplete() async {
+    _playSfx('rewards/task_complete');
+  }
+
+  Future<void> playLevelUp() async {
+    _playSfx('rewards/level_up');
+  }
+
+  Future<void> _playSfx(String path) async {
+    if (_isMuted) return;
+    try {
+      // Create a transient player for overlapping sounds
+      final player = AudioPlayer();
+      player.onPlayerComplete.listen((_) => player.dispose());
+      await player.play(AssetSource('audio/$path.mp3'), volume: _effectsVolume * _masterVolume, mode: PlayerMode.lowLatency);
+    } catch (e) {
+      // Ignore missing mock file errors
+    }
+  }
+
   void dispose() {
     _bgmPlayer.dispose();
     _sfxPlayer.dispose();
+    _notificationPlayer.dispose();
   }
 }

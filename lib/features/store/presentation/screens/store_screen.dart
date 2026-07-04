@@ -1,23 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lerno/core/theme/app_theme.dart';
-import 'package:lerno/features/store/data/repositories/store_repository.dart';
+import 'package:lerno/features/auth/presentation/providers/auth_provider.dart';
+import 'package:lerno/features/store/presentation/widgets/avatar_shop_tab.dart';
+import 'package:lerno/features/store/presentation/widgets/sticker_shop_tab.dart';
+import 'package:lerno/features/store/presentation/widgets/inventory_tab.dart';
+import 'package:lerno/features/store/presentation/widgets/featured_tab.dart';
+import 'package:lerno/core/models/user_model.dart';
+import 'package:lerno/core/local_storage/hive_boxes.dart';
 
-final storeItemsProvider = FutureProvider<List<StoreItem>>((ref) async {
-  return ref.read(storeRepositoryProvider).fetchStoreItems();
-});
-
-class StoreScreen extends ConsumerWidget {
+class StoreScreen extends ConsumerStatefulWidget {
   const StoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StoreScreen> createState() => _StoreScreenState();
+}
+
+class _StoreScreenState extends ConsumerState<StoreScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // We listen to auth state to re-render when purchases happen and coins/inventory change
+    ref.watch(authProvider); 
+    
+    // In our mock, we just get the first user to render the UI
+    final box = HiveBoxes.getUsersBox();
+    if (box.isEmpty) {
+      return const Scaffold(body: Center(child: Text('No active user found.')));
+    }
+    final UserModel user = box.getAt(0)!;
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Store',
-            style: TextStyle(
-                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Shop', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -27,147 +56,34 @@ class StoreScreen extends ConsumerWidget {
               children: [
                 const Icon(Icons.monetization_on, color: Colors.amber),
                 const SizedBox(width: 5),
-                Text('150',
-                    style: TextStyle(
-                        color: Colors.amber.shade700,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)),
+                Text('${user.stats.coins}', style: TextStyle(color: Colors.amber.shade700, fontWeight: FontWeight.bold, fontSize: 18)),
               ],
             ),
           )
         ],
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: AppTheme.primaryBlue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: AppTheme.primaryBlue,
+          isScrollable: true,
+          tabs: const [
+            Tab(text: 'Featured'),
+            Tab(text: 'Daily Deals'),
+            Tab(text: 'Avatars'),
+            Tab(text: 'Stickers'),
+            Tab(text: 'Inventory'),
+          ],
+        ),
       ),
-      body: ref.watch(storeItemsProvider).when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.signal_wifi_off,
-                      color: Colors.grey, size: 50),
-                  const SizedBox(height: 10),
-                  Text(err.toString(),
-                      style: const TextStyle(color: Colors.grey),
-                      textAlign: TextAlign.center),
-                ],
-              ),
-            ),
-            data: (items) {
-              final powerUps =
-                  items.where((i) => i.category == 'power_up').toList();
-              final outfits =
-                  items.where((i) => i.category == 'outfit').toList();
-
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Power-ups',
-                        style: TextStyle(
-                            color: AppTheme.primaryBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18)),
-                    const SizedBox(height: 10),
-                    ...powerUps.map((item) => _buildStoreItem(
-                          context,
-                          ref,
-                          item.title,
-                          item.description,
-                          item.price,
-                          _getIconForType(item.iconType),
-                          Colors.lightBlue,
-                        )),
-                    const SizedBox(height: 30),
-                    const Text('Avatar Outfits',
-                        style: TextStyle(
-                            color: AppTheme.primaryBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18)),
-                    const SizedBox(height: 10),
-                    ...outfits.map((item) => _buildStoreItem(
-                          context,
-                          ref,
-                          item.title,
-                          item.description,
-                          item.price,
-                          _getIconForType(item.iconType),
-                          Colors.purple,
-                        )),
-                  ],
-                ),
-              );
-            },
-          ),
-    );
-  }
-
-  IconData _getIconForType(String type) {
-    switch (type) {
-      case 'ac_unit':
-        return Icons.ac_unit;
-      case 'bolt':
-        return Icons.bolt;
-      case 'remove_red_eye':
-        return Icons.remove_red_eye;
-      case 'smart_toy':
-        return Icons.smart_toy;
-      default:
-        return Icons.star;
-    }
-  }
-
-  Widget _buildStoreItem(BuildContext context, WidgetRef ref, String title,
-      String desc, int price, IconData icon, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 30),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(desc,
-                    style: const TextStyle(color: Colors.grey, fontSize: 12)),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // We aren't fully managing the state of 'coins' yet globally,
-              // so we just show a mockup purchase success message.
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Purchased $title for $price coins!")),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppTheme.primaryBlue,
-              side: const BorderSide(color: AppTheme.primaryBlue),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-            ),
-            child: Text('$price Coins'),
-          ),
+          const FeaturedTab(isDailyDeals: false),
+          const FeaturedTab(isDailyDeals: true),
+          AvatarShopTab(user: user),
+          StickerShopTab(user: user),
+          InventoryTab(user: user),
         ],
       ),
     );

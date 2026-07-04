@@ -29,7 +29,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     super.initState();
     final profile = ref.read(userProfileProvider);
     _nameController = TextEditingController(text: profile?.displayName ?? '');
-    _selectedAvatar = (profile != null && profile.avatarAsset.isNotEmpty) ? profile.avatarAsset : _availableAvatars[0];
+    _selectedAvatar = (profile != null && profile.avatarId.isNotEmpty) ? profile.avatarId : _availableAvatars[0];
   }
 
   @override
@@ -43,7 +43,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final profile = ref.read(userProfileProvider);
     if (profile != null) {
       profile.displayName = _nameController.text.trim();
-      profile.avatarAsset = _selectedAvatar;
+      profile.avatarId = _selectedAvatar;
       profile.save();
       ref.read(userProfileProvider.notifier).refreshProfile();
     }

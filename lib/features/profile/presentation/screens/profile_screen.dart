@@ -18,7 +18,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userProfileProvider);
     final userName = profile?.displayName ?? 'Guest';
-    final avatar = profile?.avatarAsset.isNotEmpty == true ? profile!.avatarAsset : 'assets/images/avatars/octopus.svg';
+    final avatar = profile?.avatarId.isNotEmpty == true ? profile!.avatarId : 'assets/images/avatars/octopus.svg';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FB),
@@ -118,6 +118,15 @@ class ProfileScreen extends ConsumerWidget {
                               color: AppTheme.textDark))
                       .animate()
                       .fadeIn(delay: 300.ms),
+                  if (profile?.userId.isNotEmpty == true)
+                    Text('#${profile!.userId}',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primaryBlue))
+                        .animate()
+                        .fadeIn(delay: 350.ms),
+                  const SizedBox(height: 5),
                   Text('${profile?.age ?? 0} Years Old',
                           style: const TextStyle(
                               color: Colors.grey,

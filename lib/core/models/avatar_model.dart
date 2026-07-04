@@ -1,29 +1,49 @@
-import 'package:hive/hive.dart';
+class AvatarModel {
+  final String avatarId;
+  final String displayName;
+  final String category;
+  final String rarity;
+  final String unlockType; // e.g. Free, Coins, XP Level, Achievement
+  final int requiredLevel;
+  final int requiredXP;
+  final int coinCost;
+  final String achievementRequirement;
 
-part 'avatar_model.g.dart';
-
-@HiveType(typeId: 3)
-class AvatarModel extends HiveObject {
-  @HiveField(0)
-  String assetPath;
-
-  @HiveField(1)
-  String category;
-
-  @HiveField(2)
-  bool isFree;
-
-  @HiveField(3)
-  int costCoins;
-
-  @HiveField(4)
-  String? requiredAchievement;
+  // These two fields are determined dynamically based on the User's state.
+  // We can include them here for UI convenience when mapping.
+  bool owned;
+  bool equipped;
 
   AvatarModel({
-    required this.assetPath,
+    required this.avatarId,
+    required this.displayName,
     required this.category,
-    this.isFree = true,
-    this.costCoins = 0,
-    this.requiredAchievement,
+    required this.rarity,
+    required this.unlockType,
+    this.requiredLevel = 1,
+    this.requiredXP = 0,
+    this.coinCost = 0,
+    this.achievementRequirement = '',
+    this.owned = false,
+    this.equipped = false,
   });
+
+  AvatarModel copyWith({
+    bool? owned,
+    bool? equipped,
+  }) {
+    return AvatarModel(
+      avatarId: avatarId,
+      displayName: displayName,
+      category: category,
+      rarity: rarity,
+      unlockType: unlockType,
+      requiredLevel: requiredLevel,
+      requiredXP: requiredXP,
+      coinCost: coinCost,
+      achievementRequirement: achievementRequirement,
+      owned: owned ?? this.owned,
+      equipped: equipped ?? this.equipped,
+    );
+  }
 }

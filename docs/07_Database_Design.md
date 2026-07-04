@@ -1,6 +1,6 @@
-# 07 - local database (Hive) Design
+# 07 - Database Design
 
-The following represents the production relational local database (Hive) design required to support the application.
+The following represents the production relational Database design required to support the application.
 
 ## 📊 Complete ER Diagram
 
@@ -85,4 +85,4 @@ Bank of questions for both solo learning and multiplayer battles.
 Stores historical data of 1v1 interactions. Used for anti-cheat analysis and user statistics generation.
 
 ## 🗃 Normalization Strategy
-The local database (Hive) is generally in 3NF. However, fields like `total_xp` and `coins` are heavily denormalized and stored directly on the `Users` table (rather than summing up all `Transactions`) because they are read on almost every API call and UI render. 
+The Database is generally in 3NF. However, fields like `total_xp` and `coins` are heavily denormalized and stored directly on the `Users` table (rather than summing up all `Transactions`) because they are read on almost every API call and UI render. 
