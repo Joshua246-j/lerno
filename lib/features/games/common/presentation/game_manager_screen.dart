@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/games/common/application/game_session_service.dart';

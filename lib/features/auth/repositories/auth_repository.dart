@@ -24,8 +24,16 @@ class MockAuthRepository implements AuthRepository {
 
   @override
   Future<bool> checkSession() async {
-    final value = await _secureStorage.read(key: _sessionKey);
-    return value != null;
+    final activePhone = await _secureStorage.read(key: _sessionKey);
+    if (activePhone == null) return false;
+
+    // Verify user actually exists in local DB (handles reinstall edge cases)
+    final box = HiveBoxes.getUsersBox();
+    if (!box.containsKey(activePhone)) {
+      await _secureStorage.delete(key: _sessionKey);
+      return false;
+    }
+    return true;
   }
 
   @override

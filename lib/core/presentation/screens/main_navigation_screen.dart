@@ -7,7 +7,7 @@ import 'package:lerno/features/learning_path/presentation/screens/my_courses_scr
 import 'package:lerno/features/games/presentation/screens/games_hub_screen.dart';
 import 'package:lerno/features/store/presentation/screens/store_screen.dart';
 import 'package:lerno/features/profile/presentation/screens/profile_screen.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
