@@ -66,16 +66,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<String?> register(String name, String phoneNumber, int age, String avatarId) async {
+  Future<bool> register(String name, String phoneNumber, int age, String avatarId) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final otp = await _authRepository.register(name, phoneNumber, age, avatarId);
-      state = state.copyWith(isLoading: false);
-      return otp;
+      await _authRepository.register(name, phoneNumber, age, avatarId);
+      state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
+      return true;
     } catch (e) {
       final msg = e.toString().replaceAll('Exception: ', '');
       state = state.copyWith(isLoading: false, error: msg);
-      return null;
+      return false;
     }
   }
 

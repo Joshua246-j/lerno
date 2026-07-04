@@ -51,62 +51,8 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     final age = int.tryParse(ageStr) ?? 10;
     ref.read(audioManagerProvider).playClick();
     
-    final otp = await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatarId);
-    
-    if (mounted && otp != null) {
-      _showMockOtpDialog(otp, phone);
-    }
-  }
-
-  void _showMockOtpDialog(String otp, String phone) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
-          children: [
-            Icon(Icons.security, color: AppTheme.primaryBlue),
-            SizedBox(width: 10),
-            Text('Mock Verification', style: TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Your Mock OTP Code is:', style: TextStyle(color: AppTheme.textLight)),
-            const SizedBox(height: 15),
-            Text(
-              otp,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 5,
-                color: AppTheme.primaryBlue,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              '(Use this code to log in)',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.go('/verify?phone=$phone');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryGreen,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            child: const Text('Continue', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
+    await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatarId);
+    // The router will automatically redirect to '/main' because auth state changes to authenticated
   }
 
   @override
@@ -269,11 +215,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
 
                       SizedBox(
                         width: double.infinity,
-                        height: 55,
                         child: ElevatedButton(
                           onPressed: authState.isLoading ? null : _handleRegister,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryGreen,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                             elevation: 5,
                           ),

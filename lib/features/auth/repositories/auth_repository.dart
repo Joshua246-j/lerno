@@ -9,7 +9,7 @@ abstract class AuthRepository {
   Future<bool> checkSession();
   Future<String> login(String phoneNumber);
   Future<bool> verifyOtp(String phoneNumber, String otp);
-  Future<String> register(String name, String phoneNumber, int age, String avatarId);
+  Future<void> register(String name, String phoneNumber, int age, String avatarId);
   Future<void> logout();
   Future<UserModel?> getCurrentUser();
 }
@@ -58,7 +58,7 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<String> register(String name, String phoneNumber, int age, String avatarId) async {
+  Future<void> register(String name, String phoneNumber, int age, String avatarId) async {
     final box = HiveBoxes.getUsersBox();
     if (box.containsKey(phoneNumber)) {
       throw Exception('Phone number is already registered. Please login.');
@@ -85,11 +85,9 @@ class MockAuthRepository implements AuthRepository {
     // Save to Hive
     await box.put(phoneNumber, newUser);
 
-    // Generate Mock OTP for initial verification
-    _currentMockOtp = (1000 + random.nextInt(9000)).toString();
-    
-    await Future.delayed(const Duration(milliseconds: 800));
-    return _currentMockOtp!;
+    // Auto log-in by setting session key
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_sessionKey, phoneNumber);
   }
 
   @override
