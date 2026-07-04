@@ -48,7 +48,9 @@ class MemoryMatchState {
       cards: cards ?? this.cards,
       moves: moves ?? this.moves,
       isGameOver: isGameOver ?? this.isGameOver,
-      firstSelectedIndex: clearFirstSelection ? null : (firstSelectedIndex ?? this.firstSelectedIndex),
+      firstSelectedIndex: clearFirstSelection
+          ? null
+          : (firstSelectedIndex ?? this.firstSelectedIndex),
     );
   }
 }

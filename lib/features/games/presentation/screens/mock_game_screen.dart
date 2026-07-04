@@ -20,13 +20,14 @@ class _MockGameScreenState extends ConsumerState<MockGameScreen> {
     setState(() {
       _isPlaying = false;
     });
-    
+
     // Reward player using Gamification Repository
     final repo = ref.read(gamificationRepositoryProvider);
     final profile = ref.read(userProfileProvider);
-    
+
     if (profile != null) {
-      repo.resolveSoloGame(profile, isWin: true, score: 1500); // Simulated win score
+      repo.resolveSoloGame(profile,
+          isWin: true, score: 1500); // Simulated win score
       ref.read(userProfileProvider.notifier).refreshProfile();
     }
   }
@@ -53,11 +54,16 @@ class _MockGameScreenState extends ConsumerState<MockGameScreen> {
                       onPressed: _finishGame,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                       ),
                       child: const Text('Simulate Win',
-                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                     )
                   ],
                 )
@@ -76,18 +82,26 @@ class _MockGameScreenState extends ConsumerState<MockGameScreen> {
                     const SizedBox(height: 20),
                     const Text(
                       '+150 XP   +20 Coins   +1 Trophy',
-                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: () => context.pop(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                       ),
                       child: const Text('Continue',
-                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                     )
                   ],
                 ),

@@ -10,7 +10,7 @@ class MockShopRepository {
   Future<UserModel?> _getCurrentUser() async {
     // Assuming active session is stored in usersBox under the current phone number,
     // or just take the first user since it's a mock.
-    // In auth_repository it's managed via SharedPreferences. 
+    // In auth_repository it's managed via SharedPreferences.
     // For local mock execution, we can just grab the first user.
     final box = HiveBoxes.getUsersBox();
     if (box.isNotEmpty) {

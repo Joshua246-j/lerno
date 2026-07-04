@@ -18,7 +18,9 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userProfileProvider);
     final userName = profile?.displayName ?? 'Guest';
-    final avatar = profile?.avatarId.isNotEmpty == true ? profile!.avatarId : 'assets/images/avatars/octopus.svg';
+    final avatar = profile?.avatarId.isNotEmpty == true
+        ? profile!.avatarId
+        : 'assets/images/avatars/octopus.svg';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FB),
@@ -78,8 +80,8 @@ class ProfileScreen extends ConsumerWidget {
                               color: AppTheme.pastelPurple,
                             ),
                             child: ClipOval(
-                              child:
-                                  SvgPicture.asset(avatar, fit: BoxFit.scaleDown),
+                              child: SvgPicture.asset(avatar,
+                                  fit: BoxFit.scaleDown),
                             ),
                           ),
                         ).animate().scale(
@@ -104,7 +106,8 @@ class ProfileScreen extends ConsumerWidget {
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 3),
                             ),
-                            child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                            child: const Icon(Icons.edit,
+                                color: Colors.white, size: 20),
                           ),
                         ),
                       ),
@@ -206,13 +209,15 @@ class ProfileScreen extends ConsumerWidget {
                           onTap: () async {
                             final board = await ref
                                 .read(gamificationRepositoryProvider)
-                                .fetchLeagueLeaderboard(profile?.stats.league ?? 'Bronze');
+                                .fetchLeagueLeaderboard(
+                                    profile?.stats.league ?? 'Bronze');
                             if (context.mounted) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => LeagueLeaderboardScreen(
-                                          currentLeague: profile?.stats.league ?? 'Bronze',
+                                          currentLeague:
+                                              profile?.stats.league ?? 'Bronze',
                                           leaderboard: board)));
                             }
                           },
@@ -265,7 +270,7 @@ class ProfileScreen extends ConsumerWidget {
                       ],
                     ).animate().slideY(begin: 0.2, delay: 400.ms).fadeIn(),
                   ),
-                  
+
                   const SizedBox(height: 15),
 
                   // XP & Coins Row
@@ -280,12 +285,8 @@ class ProfileScreen extends ConsumerWidget {
                             const Color(0xFFFEF3C7),
                             const Color(0xFFF59E0B)),
                         const SizedBox(width: 15),
-                        _buildStatCard(
-                            '0',
-                            'Lessons',
-                            Icons.menu_book,
-                            const Color(0xFFE0E7FF),
-                            const Color(0xFF4F46E5)),
+                        _buildStatCard('0', 'Lessons', Icons.menu_book,
+                            const Color(0xFFE0E7FF), const Color(0xFF4F46E5)),
                         const SizedBox(width: 15),
                         _buildStatCard(
                             '${profile?.stats.coins ?? 0}',
@@ -321,9 +322,16 @@ class ProfileScreen extends ConsumerWidget {
                     crossAxisSpacing: 15,
                     childAspectRatio: 0.8,
                     children: [
-                      _buildBadge('Word Warrior', 'word_warrior', Colors.orange).animate().scale(delay: 500.ms),
-                      _buildBadge('Math Master', 'math_master', Colors.blue).animate().scale(delay: 600.ms),
-                      _buildBadge('Science Explorer', 'science_explorer', Colors.green).animate().scale(delay: 700.ms),
+                      _buildBadge('Word Warrior', 'word_warrior', Colors.orange)
+                          .animate()
+                          .scale(delay: 500.ms),
+                      _buildBadge('Math Master', 'math_master', Colors.blue)
+                          .animate()
+                          .scale(delay: 600.ms),
+                      _buildBadge('Science Explorer', 'science_explorer',
+                              Colors.green)
+                          .animate()
+                          .scale(delay: 700.ms),
                     ],
                   ),
 

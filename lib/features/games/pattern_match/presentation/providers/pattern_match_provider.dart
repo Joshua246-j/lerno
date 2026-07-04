@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/pattern_match_state.dart';
 
-final patternMatchProvider = StateNotifierProvider<PatternMatchNotifier, PatternMatchState>((ref) {
+final patternMatchProvider =
+    StateNotifierProvider<PatternMatchNotifier, PatternMatchState>((ref) {
   return PatternMatchNotifier();
 });
 
@@ -21,7 +22,7 @@ class PatternMatchNotifier extends StateNotifier<PatternMatchState> {
   void _startNextLevel() {
     final newPattern = List<int>.from(state.currentPattern);
     newPattern.add(_random.nextInt(4)); // 4 possible tiles (0,1,2,3)
-    
+
     state = state.copyWith(
       level: state.level + 1,
       currentPattern: newPattern,

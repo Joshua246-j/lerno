@@ -13,7 +13,8 @@ class MathArenaScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GameManagerScreen(
       gameTitle: 'Math Arena',
-      gameDescription: 'Solve math equations as fast as you can. Build your combo for bonus XP!',
+      gameDescription:
+          'Solve math equations as fast as you can. Build your combo for bonus XP!',
       onGameStart: (ctx, ref) {
         ref.read(mathArenaProvider.notifier).startGame();
       },
@@ -26,7 +27,8 @@ class MathArenaGameContent extends ConsumerStatefulWidget {
   const MathArenaGameContent({super.key});
 
   @override
-  ConsumerState<MathArenaGameContent> createState() => _MathArenaGameContentState();
+  ConsumerState<MathArenaGameContent> createState() =>
+      _MathArenaGameContentState();
 }
 
 class _MathArenaGameContentState extends ConsumerState<MathArenaGameContent> {
@@ -51,17 +53,28 @@ class _MathArenaGameContentState extends ConsumerState<MathArenaGameContent> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Score', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                  Text('${state.score}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                  const Text('Score',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                  Text('${state.score}',
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryBlue)),
                   if (state.combo >= 2)
-                    Text('${state.combo}x Combo!', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.orange)),
+                    Text('${state.combo}x Combo!',
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange)),
                 ],
               ),
-              CountdownTimer(secondsRemaining: state.timeLeft, totalSeconds: 60),
+              CountdownTimer(
+                  secondsRemaining: state.timeLeft, totalSeconds: 60),
             ],
           ),
           const Spacer(),
-          
+
           // The Equation
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
@@ -72,12 +85,15 @@ class _MathArenaGameContentState extends ConsumerState<MathArenaGameContent> {
             ),
             child: Text(
               state.equation,
-              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: AppTheme.textDark),
+              style: const TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textDark),
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Options Grid
           if (state.options.isNotEmpty)
             GridView.builder(
@@ -105,9 +121,12 @@ class _MathArenaGameContentState extends ConsumerState<MathArenaGameContent> {
                     backgroundColor: Colors.white,
                     foregroundColor: AppTheme.primaryBlue,
                     elevation: 4,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: Text('$option', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                  child: Text('$option',
+                      style: const TextStyle(
+                          fontSize: 32, fontWeight: FontWeight.bold)),
                 );
               },
             ),

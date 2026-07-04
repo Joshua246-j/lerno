@@ -19,7 +19,7 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   List<UserModel> _leaguePlayers = [];
   List<UserModel> _globalPlayers = [];
   List<UserModel> _friendsPlayers = [];
@@ -43,9 +43,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
     if (mounted) {
       setState(() {
-        _leaguePlayers = leagueData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
-        _globalPlayers = globalData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
-        _friendsPlayers = friendsData..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
+        _leaguePlayers = leagueData
+          ..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
+        _globalPlayers = globalData
+          ..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
+        _friendsPlayers = friendsData
+          ..sort((a, b) => b.stats.trophies.compareTo(a.stats.trophies));
         _isLoading = false;
       });
     }
@@ -112,7 +115,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
   Widget _buildPlayerCard(UserModel player, int rank) {
     final profile = ref.read(userProfileProvider);
-    final isCurrentUser = profile != null && player.phoneNumber == profile.phoneNumber;
+    final isCurrentUser =
+        profile != null && player.phoneNumber == profile.phoneNumber;
     final league = LeagueTier.getLeagueForTrophies(player.stats.trophies);
 
     return Container(
@@ -178,7 +182,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             children: [
               Row(
                 children: [
-                  const Icon(Icons.emoji_events, color: Color(0xFFFBBF24), size: 16),
+                  const Icon(Icons.emoji_events,
+                      color: Color(0xFFFBBF24), size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '${player.stats.trophies}',
@@ -205,11 +210,17 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     // Just show a mock rank for demonstration, or find actual rank
     // Find current rank in the active tab (using a getter or just mock it)
     int mockRank = _tabController.index == 0
-        ? _leaguePlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1
+        ? _leaguePlayers.indexWhere(
+                (p) => p.phoneNumber == profile.phoneNumber) +
+            1
         : (_tabController.index == 1
-            ? _globalPlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1
-            : _friendsPlayers.indexWhere((p) => p.phoneNumber == profile.phoneNumber) + 1);
-            
+            ? _globalPlayers
+                    .indexWhere((p) => p.phoneNumber == profile.phoneNumber) +
+                1
+            : _friendsPlayers
+                    .indexWhere((p) => p.phoneNumber == profile.phoneNumber) +
+                1);
+
     if (mockRank <= 0) mockRank = 42; // arbitrary off-screen mock
 
     return Positioned(

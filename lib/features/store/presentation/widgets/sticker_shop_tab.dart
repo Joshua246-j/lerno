@@ -30,7 +30,10 @@ class StickerShopTab extends ConsumerWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
-              BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, spreadRadius: 2),
+              BoxShadow(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  spreadRadius: 2),
             ],
           ),
           child: Column(
@@ -44,32 +47,46 @@ class StickerShopTab extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(pack.displayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text(pack.displayName,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18)),
                         const SizedBox(height: 5),
-                        Text('${pack.stickerIds.length} Stickers • ${pack.category}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                        Text(
+                            '${pack.stickerIds.length} Stickers • ${pack.category}',
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12)),
                       ],
                     ),
                     if (isOwned)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.green.shade100,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text('Owned', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                        child: const Text('Owned',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold)),
                       )
                     else
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryBlue,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                         ),
                         onPressed: () {
                           ref.read(audioManagerProvider).playClick();
                           _showPurchaseDialog(context, ref, pack);
                         },
-                        icon: const Icon(Icons.monetization_on, color: Colors.amber, size: 16),
-                        label: Text('${pack.coinCost}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                        icon: const Icon(Icons.monetization_on,
+                            color: Colors.amber, size: 16),
+                        label: Text('${pack.coinCost}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                       )
                   ],
                 ),
@@ -78,14 +95,18 @@ class StickerShopTab extends ConsumerWidget {
                 height: 100,
                 decoration: const BoxDecoration(
                   color: AppTheme.primaryLight,
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(20)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: pack.stickerIds.map((sid) => SvgPicture.asset(
-                    AppAssets.getAvatarPath(sid), // Reusing avatars as mock stickers for now
-                    height: 50,
-                  )).toList(),
+                  children: pack.stickerIds
+                      .map((sid) => SvgPicture.asset(
+                            AppAssets.getAvatarPath(
+                                sid), // Reusing avatars as mock stickers for now
+                            height: 50,
+                          ))
+                      .toList(),
                 ),
               )
             ],
@@ -98,27 +119,34 @@ class StickerShopTab extends ConsumerWidget {
   void _showPurchaseDialog(BuildContext context, WidgetRef ref, pack) {
     final cost = pack.coinCost;
     if (user.stats.coins < cost) {
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Not enough coins!')));
-       return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Not enough coins!')));
+      return;
     }
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Buy ${pack.displayName}?'),
-        content: Text('Do you want to unlock this sticker pack for $cost coins?'),
+        content:
+            Text('Do you want to unlock this sticker pack for $cost coins?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              final success = await ref.read(shopProvider.notifier).purchaseStickerPack(pack.id, cost);
+              final success = await ref
+                  .read(shopProvider.notifier)
+                  .purchaseStickerPack(pack.id, cost);
               if (success && context.mounted) {
                 ref.read(audioManagerProvider).playSuccess();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Purchased ${pack.displayName}!')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Purchased ${pack.displayName}!')));
               } else if (context.mounted) {
-                 final err = ref.read(shopProvider).error;
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $err')));
+                final err = ref.read(shopProvider).error;
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Failed: $err')));
               }
             },
             child: const Text('Purchase'),

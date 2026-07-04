@@ -26,7 +26,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     ref.read(audioManagerProvider).playClick();
     ref.read(friendsProvider.notifier).sendMessage(widget.friend.id, text);
     _messageController.clear();
-    
+
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -112,7 +112,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 final isMe = msg.senderId == 'me';
 
                 return Align(
-                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment:
+                      isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: const EdgeInsets.symmetric(
@@ -143,7 +144,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12).copyWith(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+                .copyWith(
               bottom: MediaQuery.of(context).padding.bottom + 12,
             ),
             decoration: BoxDecoration(
@@ -168,8 +170,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         borderRadius: BorderRadius.circular(25),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                     ),
                     onSubmitted: (_) => _sendMessage(),
                   ),

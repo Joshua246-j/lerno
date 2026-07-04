@@ -181,7 +181,8 @@ class AvatarConfig {
     ),
   ];
 
-  static List<AvatarModel> get allAvatars => [...starterAvatars, ...storeAvatars];
+  static List<AvatarModel> get allAvatars =>
+      [...starterAvatars, ...storeAvatars];
 
   static AvatarModel getById(String id) {
     return allAvatars.firstWhere(

@@ -43,12 +43,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final hasSession = await _authRepository.checkSession();
       if (hasSession) {
-        state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
+        state =
+            state.copyWith(status: AuthStatus.authenticated, isLoading: false);
       } else {
-        state = state.copyWith(status: AuthStatus.unauthenticated, isLoading: false);
+        state = state.copyWith(
+            status: AuthStatus.unauthenticated, isLoading: false);
       }
     } catch (e) {
-      state = state.copyWith(status: AuthStatus.unauthenticated, isLoading: false, error: e.toString());
+      state = state.copyWith(
+          status: AuthStatus.unauthenticated,
+          isLoading: false,
+          error: e.toString());
     }
   }
 
@@ -66,11 +71,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<bool> register(String name, String phoneNumber, int age, String avatarId) async {
+  Future<bool> register(
+      String name, String phoneNumber, int age, String avatarId) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
       await _authRepository.register(name, phoneNumber, age, avatarId);
-      state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
+      state =
+          state.copyWith(status: AuthStatus.authenticated, isLoading: false);
       return true;
     } catch (e) {
       final msg = e.toString().replaceAll('Exception: ', '');
@@ -84,7 +91,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final success = await _authRepository.verifyOtp(phoneNumber, otp);
       if (success) {
-        state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
+        state =
+            state.copyWith(status: AuthStatus.authenticated, isLoading: false);
         return true;
       } else {
         state = state.copyWith(isLoading: false, error: 'Invalid Code');
@@ -101,7 +109,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
     try {
       await _authRepository.logout();
-      state = state.copyWith(status: AuthStatus.unauthenticated, isLoading: false);
+      state =
+          state.copyWith(status: AuthStatus.unauthenticated, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

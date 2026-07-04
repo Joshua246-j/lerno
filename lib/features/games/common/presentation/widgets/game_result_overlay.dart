@@ -28,7 +28,9 @@ class GameResultOverlay extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(
-            bottom: 0, left: 0, right: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: MountainBackground(),
           ),
           Center(
@@ -36,7 +38,9 @@ class GameResultOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, size: 100, color: Colors.white)
-                    .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                    .animate(
+                        onPlay: (controller) =>
+                            controller.repeat(reverse: true))
                     .scaleXY(end: 1.2, duration: 800.ms),
                 const SizedBox(height: 24),
                 Text(
@@ -52,9 +56,11 @@ class GameResultOverlay extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildRewardPill(Icons.star, '+$xpEarned XP', Colors.amber),
+                      _buildRewardPill(
+                          Icons.star, '+$xpEarned XP', Colors.amber),
                       const SizedBox(width: 16),
-                      _buildRewardPill(Icons.monetization_on, '+$coinsEarned Coins', Colors.yellow),
+                      _buildRewardPill(Icons.monetization_on,
+                          '+$coinsEarned Coins', Colors.yellow),
                     ],
                   ).animate(delay: 400.ms).scaleXY(begin: 0.0).fadeIn(),
                   const SizedBox(height: 50),
@@ -64,7 +70,8 @@ class GameResultOverlay extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: color,
-                    padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 48, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

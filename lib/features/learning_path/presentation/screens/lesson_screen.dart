@@ -11,14 +11,20 @@ class LessonScreen extends ConsumerWidget {
   final String courseId;
   final String topicId;
 
-  const LessonScreen({super.key, required this.subjectId, required this.courseId, required this.topicId});
+  const LessonScreen(
+      {super.key,
+      required this.subjectId,
+      required this.courseId,
+      required this.topicId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Lesson', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Lesson',
+            style: TextStyle(
+                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.textDark),
@@ -34,7 +40,8 @@ class LessonScreen extends ConsumerWidget {
         future: ref.read(learningRepositoryProvider).getLessonForTopic(topicId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
+            return const Center(
+                child: CircularProgressIndicator(color: AppTheme.primaryBlue));
           }
 
           final lesson = snapshot.data;
@@ -49,9 +56,13 @@ class LessonScreen extends ConsumerWidget {
               children: [
                 _buildTimeTag(lesson.estimatedMinutes),
                 const SizedBox(height: 16),
-                Text(lesson.title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+                Text(lesson.title,
+                    style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: AppTheme.textDark)),
                 const SizedBox(height: 24),
-                
+
                 // Illustration placeholder
                 Container(
                   height: 200,
@@ -60,15 +71,18 @@ class LessonScreen extends ConsumerWidget {
                     color: AppTheme.primaryLight,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Center(child: Icon(Icons.menu_book, size: 80, color: AppTheme.primaryBlue)),
+                  child: const Center(
+                      child: Icon(Icons.menu_book,
+                          size: 80, color: AppTheme.primaryBlue)),
                 ),
-                
+
                 const SizedBox(height: 30),
                 Text(
                   lesson.content,
-                  style: const TextStyle(fontSize: 16, height: 1.6, color: Colors.black87),
+                  style: const TextStyle(
+                      fontSize: 16, height: 1.6, color: Colors.black87),
                 ),
-                
+
                 const SizedBox(height: 30),
                 Container(
                   width: double.infinity,
@@ -76,7 +90,8 @@ class LessonScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                    border:
+                        Border.all(color: Colors.amber.withValues(alpha: 0.3)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,30 +100,42 @@ class LessonScreen extends ConsumerWidget {
                         children: [
                           Icon(Icons.lightbulb, color: Colors.amber),
                           SizedBox(width: 8),
-                          Text('Key Points', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.amber)),
+                          Text('Key Points',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.amber)),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Text(lesson.keyPoints, style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87)),
+                      Text(lesson.keyPoints,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              height: 1.5,
+                              color: Colors.black87)),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
                       ref.read(audioManagerProvider).playSuccess();
-                      context.pushReplacement('/subject/$subjectId/course/$courseId/topic/$topicId/quiz');
+                      context.pushReplacement(
+                          '/subject/$subjectId/course/$courseId/topic/$topicId/quiz');
                     },
                     icon: const Icon(Icons.check_circle),
-                    label: const Text('Mark as Read & Practice', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    label: const Text('Mark as Read & Practice',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlue,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                   ),
                 ),
@@ -124,13 +151,18 @@ class LessonScreen extends ConsumerWidget {
   Widget _buildTimeTag(int minutes) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: Colors.grey.shade100, borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.timer, size: 16, color: Colors.grey),
           const SizedBox(width: 6),
-          Text('$minutes mins read', style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+          Text('$minutes mins read',
+              style: const TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12)),
         ],
       ),
     );

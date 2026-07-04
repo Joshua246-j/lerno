@@ -30,7 +30,17 @@ class AppAssets {
   // Helper method to resolve avatar path
   static String getAvatarPath(String id) {
     // Check if it is a starter avatar
-    final isStarter = ['robot', 'dinosaur', 'panda', 'fox', 'astronaut', 'octopus', 'wizard', 'penguin', 'dragon'].contains(id);
+    final isStarter = [
+      'robot',
+      'dinosaur',
+      'panda',
+      'fox',
+      'astronaut',
+      'octopus',
+      'wizard',
+      'penguin',
+      'dragon'
+    ].contains(id);
     if (isStarter) {
       return 'assets/svg/avatars/starter/$id.svg';
     }

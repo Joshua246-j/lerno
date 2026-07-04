@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/math_arena_state.dart';
 
-final mathArenaProvider = StateNotifierProvider<MathArenaNotifier, MathArenaState>((ref) {
+final mathArenaProvider =
+    StateNotifierProvider<MathArenaNotifier, MathArenaState>((ref) {
   return MathArenaNotifier();
 });
 

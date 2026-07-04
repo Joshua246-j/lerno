@@ -8,7 +8,8 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const FeaturePreviewScreen(
       title: 'Notifications',
-      description: 'Stay updated on rewards, friend requests, and battle invites!',
+      description:
+          'Stay updated on rewards, friend requests, and battle invites!',
       icon: Icons.notifications_active_rounded,
     );
   }

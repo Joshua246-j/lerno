@@ -1,4 +1,3 @@
-
 class WordHuntState {
   final List<String> grid;
   final String targetWord;

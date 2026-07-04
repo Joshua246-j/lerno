@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 final courseRepositoryProvider = Provider((ref) {
   return CourseRepository();
 });

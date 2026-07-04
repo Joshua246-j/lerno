@@ -20,17 +20,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final List<Map<String, String>> _pages = [
     {
       'title': 'Learn with Fun',
-      'description': 'Discover a new way to learn your favorite subjects with engaging games and activities.',
+      'description':
+          'Discover a new way to learn your favorite subjects with engaging games and activities.',
       'image': 'assets/images/avatars/octopus.svg',
     },
     {
       'title': 'Track Progress',
-      'description': 'Earn XP, collect badges, and climb the leaderboards as you complete lessons.',
+      'description':
+          'Earn XP, collect badges, and climb the leaderboards as you complete lessons.',
       'image': 'assets/images/avatars/astronaut.svg',
     },
     {
       'title': 'Play & Compete',
-      'description': 'Challenge your friends in real-time quiz battles and show off your knowledge!',
+      'description':
+          'Challenge your friends in real-time quiz battles and show off your knowledge!',
       'image': 'assets/images/avatars/alien.svg',
     },
   ];
@@ -59,7 +62,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     },
                     child: const Text(
                       'Skip',
-                      style: TextStyle(color: AppTheme.textLight, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: AppTheme.textLight,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -131,7 +136,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             height: 10,
                             width: _currentPage == index ? 24 : 10,
                             decoration: BoxDecoration(
-                              color: _currentPage == index ? AppTheme.primaryBlue : Colors.grey.shade300,
+                              color: _currentPage == index
+                                  ? AppTheme.primaryBlue
+                                  : Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
@@ -154,12 +161,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
                           elevation: 4,
-                          shadowColor: AppTheme.primaryBlue.withValues(alpha: 0.4),
+                          shadowColor:
+                              AppTheme.primaryBlue.withValues(alpha: 0.4),
                         ),
                         child: Text(
-                          _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                          _currentPage == _pages.length - 1
+                              ? 'Get Started'
+                              : 'Next',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

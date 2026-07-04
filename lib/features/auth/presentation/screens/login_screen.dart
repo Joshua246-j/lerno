@@ -16,7 +16,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final TextEditingController _phoneController = TextEditingController(text: "7723451234");
+  final TextEditingController _phoneController =
+      TextEditingController(text: "7723451234");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -28,10 +29,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       ref.read(audioManagerProvider).playClick();
-      
+
       final phone = _phoneController.text.trim();
       final otp = await ref.read(authProvider.notifier).login(phone);
-      
+
       if (mounted && otp != null) {
         _showMockOtpDialog(otp, phone);
       }
@@ -48,13 +49,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           children: [
             Icon(Icons.security, color: AppTheme.primaryBlue),
             SizedBox(width: 10),
-            Text('Mock Verification', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Mock Verification',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Your Mock OTP Code is:', style: TextStyle(color: AppTheme.textLight)),
+            const Text('Your Mock OTP Code is:',
+                style: TextStyle(color: AppTheme.textLight)),
             const SizedBox(height: 15),
             Text(
               otp,
@@ -80,9 +83,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryGreen,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
-            child: const Text('Continue', style: TextStyle(color: Colors.white)),
+            child:
+                const Text('Continue', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -98,11 +103,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Stack(
         children: [
           const Positioned(
-            bottom: 0, left: 0, right: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: MountainBackground(),
           ),
           Positioned(
-            top: 0, left: 0, right: 0,
+            top: 0,
+            left: 0,
+            right: 0,
             height: MediaQuery.of(context).size.height * 0.45,
             child: Container(
               color: const Color(0xFFFBBF24),
@@ -129,7 +138,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.35,
-            left: 0, right: 0, bottom: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.95),
@@ -158,7 +169,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const Text(
                         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod',
                         style: TextStyle(
-                            color: AppTheme.textLight, fontSize: 13, height: 1.5),
+                            color: AppTheme.textLight,
+                            fontSize: 13,
+                            height: 1.5),
                       ),
                       const SizedBox(height: 50),
                       const Center(
@@ -175,7 +188,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const Center(
                         child: Text(
                           'Enter your mobile number',
-                          style: TextStyle(color: AppTheme.textLight, fontSize: 13),
+                          style: TextStyle(
+                              color: AppTheme.textLight, fontSize: 13),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -211,19 +225,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
                                 hintText: '77 2345 1234',
-                                hintStyle: TextStyle(color: Colors.grey.shade400),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                                hintStyle:
+                                    TextStyle(color: Colors.grey.shade400),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 15),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: AppTheme.primaryBlue, width: 2),
                                 ),
                               ),
                               validator: (value) {
@@ -251,19 +270,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: SizedBox(
                           width: 180,
                           child: ElevatedButton(
-                            onPressed: authState.isLoading ? null : _handleLogin,
+                            onPressed:
+                                authState.isLoading ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF8B80F9),
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               elevation: 8,
-                              shadowColor: const Color(0xFF8B80F9).withValues(alpha: 0.5),
+                              shadowColor: const Color(0xFF8B80F9)
+                                  .withValues(alpha: 0.5),
                             ),
                             child: authState.isLoading
                                 ? const SizedBox(
-                                    width: 24, height: 24,
-                                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white, strokeWidth: 2),
                                   )
                                 : const Text('Next',
                                     style: TextStyle(

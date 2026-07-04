@@ -13,7 +13,7 @@ class GameManagerScreen extends ConsumerStatefulWidget {
   final Widget gameContent;
   final bool isRanked;
   final Function(BuildContext context, WidgetRef ref)? onGameStart;
-  
+
   const GameManagerScreen({
     super.key,
     required this.gameTitle,
@@ -70,7 +70,8 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
       // Basic math for xp/coins based on score
       final xp = isVictory ? score + 20 : score;
       final coins = isVictory ? (score / 10).floor() + 5 : (score / 10).floor();
-      service.finishGame(xpEarned: xp, coinsEarned: coins, isVictory: isVictory);
+      service.finishGame(
+          xpEarned: xp, coinsEarned: coins, isVictory: isVictory);
     }
   }
 
@@ -81,8 +82,10 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
       body: Stack(
         children: [
           // Background Gradient
-          Container(decoration: const BoxDecoration(gradient: AppTheme.primaryGradient)),
-          
+          Container(
+              decoration:
+                  const BoxDecoration(gradient: AppTheme.primaryGradient)),
+
           SafeArea(
             child: Column(
               children: [
@@ -117,7 +120,8 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
           ),
           Text(
             widget.gameTitle,
-            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           if (_currentState == GameState.playing)
             IconButton(
@@ -163,20 +167,33 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.sports_esports, size: 80, color: AppTheme.primaryBlue),
+            const Icon(Icons.sports_esports,
+                size: 80, color: AppTheme.primaryBlue),
             const SizedBox(height: 20),
-            Text(widget.gameTitle, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+            Text(widget.gameTitle,
+                style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.textDark)),
             const SizedBox(height: 15),
-            Text(widget.gameDescription, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+            Text(widget.gameDescription,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16, color: Colors.grey)),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: _startGame,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryGreen,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('START', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              child: const Text('START',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -197,16 +214,26 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('PAUSED', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+            const Text('PAUSED',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.textDark)),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: _resumeGame,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('RESUME', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              child: const Text('RESUME',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
             TextButton(
@@ -214,7 +241,8 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
                 ref.read(audioManagerProvider).playClick();
                 context.pop();
               },
-              child: const Text('Quit Game', style: TextStyle(color: Colors.red, fontSize: 16)),
+              child: const Text('Quit Game',
+                  style: TextStyle(color: Colors.red, fontSize: 16)),
             ),
           ],
         ),
@@ -250,7 +278,11 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Score: $_score', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+            Text('Score: $_score',
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryBlue)),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
@@ -259,10 +291,16 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('CONTINUE', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              child: const Text('CONTINUE',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
           ],
         ),

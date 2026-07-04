@@ -13,7 +13,8 @@ class WordHuntScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GameManagerScreen(
       gameTitle: 'Word Hunt',
-      gameDescription: 'Find the hidden words in the grid to earn XP and Coins!',
+      gameDescription:
+          'Find the hidden words in the grid to earn XP and Coins!',
       onGameStart: (ctx, ref) {
         ref.read(wordHuntProvider.notifier).startGame();
       },
@@ -26,7 +27,8 @@ class WordHuntGameContent extends ConsumerStatefulWidget {
   const WordHuntGameContent({super.key});
 
   @override
-  ConsumerState<WordHuntGameContent> createState() => _WordHuntGameContentState();
+  ConsumerState<WordHuntGameContent> createState() =>
+      _WordHuntGameContentState();
 }
 
 class _WordHuntGameContentState extends ConsumerState<WordHuntGameContent> {
@@ -51,18 +53,30 @@ class _WordHuntGameContentState extends ConsumerState<WordHuntGameContent> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Score', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                  Text('${state.score}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                  const Text('Score',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                  Text('${state.score}',
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryBlue)),
                 ],
               ),
-              CountdownTimer(secondsRemaining: state.timeLeft, totalSeconds: 30),
+              CountdownTimer(
+                  secondsRemaining: state.timeLeft, totalSeconds: 30),
             ],
           ),
           const SizedBox(height: 40),
-          const Text('Find the word:', style: TextStyle(fontSize: 18, color: Colors.grey)),
+          const Text('Find the word:',
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
           Text(
             state.targetWord,
-            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 4, color: AppTheme.textDark),
+            style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 4,
+                color: AppTheme.textDark),
           ),
           const Spacer(),
           if (state.grid.isNotEmpty)
@@ -88,7 +102,11 @@ class _WordHuntGameContentState extends ConsumerState<WordHuntGameContent> {
                       color: isSelected ? AppTheme.primaryGreen : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: AppTheme.modernShadow,
-                      border: Border.all(color: isSelected ? AppTheme.primaryGreen : Colors.grey.shade300, width: 2),
+                      border: Border.all(
+                          color: isSelected
+                              ? AppTheme.primaryGreen
+                              : Colors.grey.shade300,
+                          width: 2),
                     ),
                     alignment: Alignment.center,
                     child: Text(

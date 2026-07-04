@@ -12,7 +12,8 @@ class PatternMatchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GameManagerScreen(
       gameTitle: 'Pattern Match',
-      gameDescription: 'Memorize and repeat the light pattern. It gets faster and longer each level!',
+      gameDescription:
+          'Memorize and repeat the light pattern. It gets faster and longer each level!',
       onGameStart: (ctx, ref) {
         ref.read(patternMatchProvider.notifier).startGame();
       },
@@ -25,10 +26,12 @@ class PatternMatchGameContent extends ConsumerStatefulWidget {
   const PatternMatchGameContent({super.key});
 
   @override
-  ConsumerState<PatternMatchGameContent> createState() => _PatternMatchGameContentState();
+  ConsumerState<PatternMatchGameContent> createState() =>
+      _PatternMatchGameContentState();
 }
 
-class _PatternMatchGameContentState extends ConsumerState<PatternMatchGameContent> {
+class _PatternMatchGameContentState
+    extends ConsumerState<PatternMatchGameContent> {
   final List<Color> _colors = [
     Colors.red,
     Colors.green,
@@ -56,15 +59,27 @@ class _PatternMatchGameContentState extends ConsumerState<PatternMatchGameConten
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Score', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                  Text('${state.score}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                  const Text('Score',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                  Text('${state.score}',
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryBlue)),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text('Level', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                  Text('${state.level}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryGreen)),
+                  const Text('Level',
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold)),
+                  Text('${state.level}',
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryGreen)),
                 ],
               )
             ],
@@ -86,7 +101,8 @@ class _PatternMatchGameContentState extends ConsumerState<PatternMatchGameConten
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: state.isShowingPattern ? Colors.orange : AppTheme.primaryBlue,
+              color:
+                  state.isShowingPattern ? Colors.orange : AppTheme.primaryBlue,
             ),
           ),
           const SizedBox(height: 40),
@@ -106,14 +122,19 @@ class _PatternMatchGameContentState extends ConsumerState<PatternMatchGameConten
                 return GestureDetector(
                   onTap: () {
                     if (!state.isShowingPattern) {
-                      ref.read(audioManagerProvider).playClick(); // In a real simon game, each has a specific tone
-                      ref.read(patternMatchProvider.notifier).onTileTapped(index);
+                      ref
+                          .read(audioManagerProvider)
+                          .playClick(); // In a real simon game, each has a specific tone
+                      ref
+                          .read(patternMatchProvider.notifier)
+                          .onTileTapped(index);
                     }
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
                     decoration: BoxDecoration(
-                      color: _colors[index].withValues(alpha: state.isShowingPattern ? 0.3 : 1.0),
+                      color: _colors[index].withValues(
+                          alpha: state.isShowingPattern ? 0.3 : 1.0),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(

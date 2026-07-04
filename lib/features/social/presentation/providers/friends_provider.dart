@@ -93,27 +93,29 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
   void sendMessage(String friendId, String text) {
     final history = Map<String, List<ChatMessage>>.from(state.chatHistory);
     final messages = List<ChatMessage>.from(history[friendId] ?? []);
-    
+
     messages.add(ChatMessage(
       senderId: 'me',
       text: text,
       timestamp: DateTime.now(),
     ));
-    
+
     history[friendId] = messages;
     state = state.copyWith(chatHistory: history);
 
     // Simulate bot reply
     Future.delayed(const Duration(seconds: 2), () {
-      final updatedHistory = Map<String, List<ChatMessage>>.from(state.chatHistory);
-      final updatedMessages = List<ChatMessage>.from(updatedHistory[friendId] ?? []);
-      
+      final updatedHistory =
+          Map<String, List<ChatMessage>>.from(state.chatHistory);
+      final updatedMessages =
+          List<ChatMessage>.from(updatedHistory[friendId] ?? []);
+
       updatedMessages.add(ChatMessage(
         senderId: friendId,
         text: 'Awesome! Let\'s go!',
         timestamp: DateTime.now(),
       ));
-      
+
       updatedHistory[friendId] = updatedMessages;
       if (mounted) {
         state = state.copyWith(chatHistory: updatedHistory);
@@ -122,6 +124,7 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
   }
 }
 
-final friendsProvider = StateNotifierProvider<FriendsNotifier, FriendsState>((ref) {
+final friendsProvider =
+    StateNotifierProvider<FriendsNotifier, FriendsState>((ref) {
   return FriendsNotifier();
 });

@@ -16,7 +16,8 @@ class StoreScreen extends ConsumerStatefulWidget {
   ConsumerState<StoreScreen> createState() => _StoreScreenState();
 }
 
-class _StoreScreenState extends ConsumerState<StoreScreen> with SingleTickerProviderStateMixin {
+class _StoreScreenState extends ConsumerState<StoreScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,8 +35,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     // We listen to auth state to re-render when purchases happen and coins/inventory change
-    ref.watch(authProvider); 
-    
+    ref.watch(authProvider);
+
     // In our mock, we just get the first user to render the UI
     final box = HiveBoxes.getUsersBox();
     if (box.isEmpty) {
@@ -46,7 +47,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen> with SingleTickerProv
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Shop', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Shop',
+            style: TextStyle(
+                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -56,7 +59,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen> with SingleTickerProv
               children: [
                 const Icon(Icons.monetization_on, color: Colors.amber),
                 const SizedBox(width: 5),
-                Text('${user.stats.coins}', style: TextStyle(color: Colors.amber.shade700, fontWeight: FontWeight.bold, fontSize: 18)),
+                Text('${user.stats.coins}',
+                    style: TextStyle(
+                        color: Colors.amber.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18)),
               ],
             ),
           )

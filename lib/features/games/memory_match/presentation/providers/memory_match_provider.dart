@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/memory_match_models.dart';
 
-final memoryMatchProvider = StateNotifierProvider<MemoryMatchNotifier, MemoryMatchState>((ref) {
+final memoryMatchProvider =
+    StateNotifierProvider<MemoryMatchNotifier, MemoryMatchState>((ref) {
   return MemoryMatchNotifier();
 });
 
@@ -25,7 +26,9 @@ class MemoryMatchNotifier extends StateNotifier<MemoryMatchState> {
   }
 
   Future<void> flipCard(int index) async {
-    if (_isProcessing || state.isGameOver || state.cards[index].isFlipped) return;
+    if (_isProcessing || state.isGameOver || state.cards[index].isFlipped) {
+      return;
+    }
 
     var newCards = List<MemoryCard>.from(state.cards);
     newCards[index] = newCards[index].copyWith(isFlipped: true);
@@ -52,7 +55,7 @@ class MemoryMatchNotifier extends StateNotifier<MemoryMatchState> {
         newCards[index] = secondCard.copyWith(isMatched: true);
 
         final isGameOver = newCards.every((c) => c.isMatched);
-        
+
         state = state.copyWith(
           cards: newCards,
           clearFirstSelection: true,

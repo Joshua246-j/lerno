@@ -38,15 +38,16 @@ class ShopNotifier extends StateNotifier<ShopState> {
     try {
       final success = await _repository.purchaseAvatar(avatarId, cost);
       state = state.copyWith(isLoading: false);
-      
+
       // We must notify the auth provider to refresh the user session state
       // so the UI reflects the deducted coins and updated inventory.
       if (success) {
-         _ref.read(authProvider.notifier).checkSession();
+        _ref.read(authProvider.notifier).checkSession();
       }
       return success;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
+      state = state.copyWith(
+          isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
       return false;
     }
   }
@@ -57,11 +58,12 @@ class ShopNotifier extends StateNotifier<ShopState> {
       final success = await _repository.purchaseStickerPack(packId, cost);
       state = state.copyWith(isLoading: false);
       if (success) {
-         _ref.read(authProvider.notifier).checkSession();
+        _ref.read(authProvider.notifier).checkSession();
       }
       return success;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
+      state = state.copyWith(
+          isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
       return false;
     }
   }
@@ -73,7 +75,8 @@ class ShopNotifier extends StateNotifier<ShopState> {
       state = state.copyWith(isLoading: false);
       _ref.read(authProvider.notifier).checkSession();
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
+      state = state.copyWith(
+          isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
     }
   }
 }

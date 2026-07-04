@@ -12,7 +12,8 @@ class ChessPuzzlesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return const GameManagerScreen(
       gameTitle: 'Chess Match',
-      gameDescription: 'Play a full game of chess against the computer. Checkmate your opponent to win!',
+      gameDescription:
+          'Play a full game of chess against the computer. Checkmate your opponent to win!',
       gameContent: ChessGameContent(),
     );
   }
@@ -39,7 +40,9 @@ class _ChessGameContentState extends ConsumerState<ChessGameContent> {
   void _onChessStateChanged() {
     if (_isGameOver) return;
 
-    if (_controller.isCheckMate() || _controller.isDraw() || _controller.isStaleMate()) {
+    if (_controller.isCheckMate() ||
+        _controller.isDraw() ||
+        _controller.isStaleMate()) {
       setState(() {
         _isGameOver = true;
       });
@@ -87,11 +90,19 @@ class _ChessGameContentState extends ConsumerState<ChessGameContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Opponent (AI)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+              const Text('Opponent (AI)',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textDark)),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(10)),
-                child: const Text('Black', style: TextStyle(fontWeight: FontWeight.bold)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Text('Black',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               )
             ],
           ),
@@ -121,11 +132,20 @@ class _ChessGameContentState extends ConsumerState<ChessGameContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+              const Text('You',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryBlue)),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(10)),
-                child: const Text('White', style: TextStyle(fontWeight: FontWeight.bold)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Text('White',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               )
             ],
           ),
@@ -158,4 +178,3 @@ class _ChessGameContentState extends ConsumerState<ChessGameContent> {
     );
   }
 }
-

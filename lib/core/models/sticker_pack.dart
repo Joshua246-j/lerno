@@ -4,7 +4,7 @@ class StickerPack {
   final String category;
   final int coinCost;
   final List<String> stickerIds;
-  
+
   bool owned;
 
   StickerPack({

@@ -4,7 +4,7 @@ import 'package:lerno/features/auth/repositories/auth_repository.dart';
 
 class UserProfileNotifier extends StateNotifier<UserModel?> {
   final AuthRepository _authRepository;
-  
+
   UserProfileNotifier(this._authRepository) : super(null) {
     _loadUser();
   }
@@ -23,10 +23,10 @@ class UserProfileNotifier extends StateNotifier<UserModel?> {
       final user = state!;
       user.stats.xp += xp;
       user.stats.coins += coins;
-      
+
       // Level up logic (every 100 XP = 1 Level)
       user.stats.level = 1 + (user.stats.xp ~/ 100);
-      
+
       await user.save(); // Save to Hive
       state = user; // Trigger UI rebuild
     }
@@ -37,7 +37,7 @@ class UserProfileNotifier extends StateNotifier<UserModel?> {
       final user = state!;
       user.stats.trophies += trophiesDelta;
       if (user.stats.trophies < 0) user.stats.trophies = 0;
-      
+
       // Simple League logic
       if (user.stats.trophies > 500) {
         user.stats.league = 'Gold';
@@ -53,7 +53,8 @@ class UserProfileNotifier extends StateNotifier<UserModel?> {
   }
 }
 
-final userProfileProvider = StateNotifierProvider<UserProfileNotifier, UserModel?>((ref) {
+final userProfileProvider =
+    StateNotifierProvider<UserProfileNotifier, UserModel?>((ref) {
   final authRepo = ref.watch(authRepositoryProvider);
   return UserProfileNotifier(authRepo);
 });

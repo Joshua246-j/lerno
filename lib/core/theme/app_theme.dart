@@ -92,17 +92,17 @@ class AppTheme {
 
   // Standard drop shadow for floating cards
   static List<BoxShadow> get modernShadow => [
-    BoxShadow(
-      color: Colors.black.withValues(alpha: 0.04),
-      blurRadius: 20,
-      offset: const Offset(0, 10),
-    ),
-    BoxShadow(
-      color: primaryBlue.withValues(alpha: 0.03),
-      blurRadius: 10,
-      offset: const Offset(0, 4),
-    ),
-  ];
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.04),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        ),
+        BoxShadow(
+          color: primaryBlue.withValues(alpha: 0.03),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ];
 
   // Primary Gradient Backgrounds
   static const LinearGradient primaryGradient = LinearGradient(

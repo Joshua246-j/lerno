@@ -19,11 +19,31 @@ class QuickAction {
 }
 
 const List<QuickAction> _actions = [
-  QuickAction(label: 'Missions', icon: Icons.task_alt, color: Color(0xFF10B981), route: '/daily_missions'),
-  QuickAction(label: 'Leaderboard', icon: Icons.leaderboard, color: Color(0xFFF59E0B), route: '/leaderboard'),
-  QuickAction(label: 'Inbox', icon: Icons.inbox, color: Color(0xFF3B82F6), route: '/inbox'),
-  QuickAction(label: 'Friends', icon: Icons.people, color: Color(0xFF8B5CF6), route: '/friends'),
-  QuickAction(label: 'Search', icon: Icons.search, color: Color(0xFF6366F1), route: '/search'),
+  QuickAction(
+      label: 'Missions',
+      icon: Icons.task_alt,
+      color: Color(0xFF10B981),
+      route: '/daily_missions'),
+  QuickAction(
+      label: 'Leaderboard',
+      icon: Icons.leaderboard,
+      color: Color(0xFFF59E0B),
+      route: '/leaderboard'),
+  QuickAction(
+      label: 'Inbox',
+      icon: Icons.inbox,
+      color: Color(0xFF3B82F6),
+      route: '/inbox'),
+  QuickAction(
+      label: 'Friends',
+      icon: Icons.people,
+      color: Color(0xFF8B5CF6),
+      route: '/friends'),
+  QuickAction(
+      label: 'Search',
+      icon: Icons.search,
+      color: Color(0xFF6366F1),
+      route: '/search'),
 ];
 
 class QuickActionsWidget extends ConsumerWidget {
@@ -36,7 +56,11 @@ class QuickActionsWidget extends ConsumerWidget {
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text('Quick Actions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+          child: Text('Quick Actions',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textDark)),
         ),
         const SizedBox(height: 15),
         SizedBox(
@@ -69,7 +93,10 @@ class QuickActionsWidget extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         action.label,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textDark),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textDark),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

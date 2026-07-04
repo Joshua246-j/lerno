@@ -75,7 +75,7 @@ class LeagueCalculator {
     required LeagueTier currentLeague,
   }) {
     int trophiesEarned = isVictory ? baseWinTrophies : baseLossTrophies;
-    
+
     // Cannot drop below 0 trophies
     if (currentTrophies + trophiesEarned < 0) {
       trophiesEarned = -currentTrophies;

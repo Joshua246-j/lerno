@@ -62,7 +62,8 @@ class AudioManager {
   Future<void> playBgm({String track = 'bgm_main'}) async {
     if (_isMuted) return;
     try {
-      await _bgmPlayer.play(AssetSource('audio/music/$track.mp3'), volume: _musicVolume * _masterVolume);
+      await _bgmPlayer.play(AssetSource('audio/music/$track.mp3'),
+          volume: _musicVolume * _masterVolume);
     } catch (e) {
       // Ignore missing mock file errors in prototype
     }
@@ -118,7 +119,8 @@ class AudioManager {
       // Create a transient player for overlapping sounds
       final player = AudioPlayer();
       player.onPlayerComplete.listen((_) => player.dispose());
-      await player.play(AssetSource('audio/$path.mp3'), volume: _effectsVolume * _masterVolume, mode: PlayerMode.lowLatency);
+      await player.play(AssetSource('audio/$path.mp3'),
+          volume: _effectsVolume * _masterVolume, mode: PlayerMode.lowLatency);
     } catch (e) {
       // Ignore missing mock file errors
     }

@@ -7,23 +7,75 @@ final learningRepositoryProvider = Provider((ref) => LearningRepository());
 class LearningRepository {
   // Mock Subjects
   final List<Subject> _subjects = const [
-    Subject(id: 'math', name: 'Mathematics', description: 'Numbers, logic, and problem solving.', icon: Icons.calculate, themeColor: Color(0xFF10B981), courseCount: 4),
-    Subject(id: 'english', name: 'English', description: 'Grammar, vocabulary, and reading.', icon: Icons.abc, themeColor: Color(0xFFF59E0B), courseCount: 3),
-    Subject(id: 'science', name: 'Science', description: 'Explore the world around you.', icon: Icons.science, themeColor: Color(0xFF8B5CF6), courseCount: 3),
-    Subject(id: 'logic', name: 'Logic & Reasoning', description: 'Patterns, puzzles, and critical thinking.', icon: Icons.extension, themeColor: Color(0xFFEC4899), courseCount: 2),
+    Subject(
+        id: 'math',
+        name: 'Mathematics',
+        description: 'Numbers, logic, and problem solving.',
+        icon: Icons.calculate,
+        themeColor: Color(0xFF10B981),
+        courseCount: 4),
+    Subject(
+        id: 'english',
+        name: 'English',
+        description: 'Grammar, vocabulary, and reading.',
+        icon: Icons.abc,
+        themeColor: Color(0xFFF59E0B),
+        courseCount: 3),
+    Subject(
+        id: 'science',
+        name: 'Science',
+        description: 'Explore the world around you.',
+        icon: Icons.science,
+        themeColor: Color(0xFF8B5CF6),
+        courseCount: 3),
+    Subject(
+        id: 'logic',
+        name: 'Logic & Reasoning',
+        description: 'Patterns, puzzles, and critical thinking.',
+        icon: Icons.extension,
+        themeColor: Color(0xFFEC4899),
+        courseCount: 2),
   ];
 
   // Mock Courses
   final List<Course> _courses = const [
-    Course(id: 'math_numbers', subjectId: 'math', title: 'Numbers & Counting', description: 'Learn the basics of counting from 1 to 100.', difficulty: 'Easy', topicCount: 3),
-    Course(id: 'math_addition', subjectId: 'math', title: 'Addition Fundamentals', description: 'Combine numbers to find the total.', difficulty: 'Easy', topicCount: 4),
-    Course(id: 'math_geometry', subjectId: 'math', title: 'Shapes & Geometry', description: 'Identify circles, squares, and triangles.', difficulty: 'Medium', topicCount: 3),
+    Course(
+        id: 'math_numbers',
+        subjectId: 'math',
+        title: 'Numbers & Counting',
+        description: 'Learn the basics of counting from 1 to 100.',
+        difficulty: 'Easy',
+        topicCount: 3),
+    Course(
+        id: 'math_addition',
+        subjectId: 'math',
+        title: 'Addition Fundamentals',
+        description: 'Combine numbers to find the total.',
+        difficulty: 'Easy',
+        topicCount: 4),
+    Course(
+        id: 'math_geometry',
+        subjectId: 'math',
+        title: 'Shapes & Geometry',
+        description: 'Identify circles, squares, and triangles.',
+        difficulty: 'Medium',
+        topicCount: 3),
   ];
 
   // Mock Topics
   final List<Topic> _topics = const [
-    Topic(id: 'topic_counting_1_20', courseId: 'math_numbers', title: 'Counting 1-20', description: 'Learn to count and recognize numbers up to 20.', orderIndex: 1),
-    Topic(id: 'topic_counting_20_100', courseId: 'math_numbers', title: 'Counting to 100', description: 'Count by tens and ones to reach 100.', orderIndex: 2),
+    Topic(
+        id: 'topic_counting_1_20',
+        courseId: 'math_numbers',
+        title: 'Counting 1-20',
+        description: 'Learn to count and recognize numbers up to 20.',
+        orderIndex: 1),
+    Topic(
+        id: 'topic_counting_20_100',
+        courseId: 'math_numbers',
+        title: 'Counting to 100',
+        description: 'Count by tens and ones to reach 100.',
+        orderIndex: 2),
   ];
 
   // Mock Lessons
@@ -32,7 +84,8 @@ class LearningRepository {
       id: 'lesson_1_20',
       topicId: 'topic_counting_1_20',
       title: 'Let\'s count to 20!',
-      content: 'Numbers are everywhere! We use them to count toys, fingers, and friends. Let\'s practice counting from 1 to 20. 1, 2, 3, 4, 5, 6, 7, 8, 9, 10! You have ten fingers. Now let\'s keep going: 11, 12, 13, 14, 15, 16, 17, 18, 19, 20!',
+      content:
+          'Numbers are everywhere! We use them to count toys, fingers, and friends. Let\'s practice counting from 1 to 20. 1, 2, 3, 4, 5, 6, 7, 8, 9, 10! You have ten fingers. Now let\'s keep going: 11, 12, 13, 14, 15, 16, 17, 18, 19, 20!',
       keyPoints: '• 1 to 10 is the base.\n• 11 to 20 builds on the base.',
       estimatedMinutes: 3,
       xpReward: 50,

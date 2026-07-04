@@ -133,9 +133,17 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(banner.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
+                              Text(banner.title,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white)),
                               const SizedBox(height: 8),
-                              Text(banner.subtitle, style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4)),
+                              Text(banner.subtitle,
+                                  style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                      height: 1.4)),
                               const SizedBox(height: 16),
                               ElevatedButton(
                                 onPressed: () {
@@ -145,17 +153,24 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   foregroundColor: banner.bgColor,
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
                                   elevation: 0,
                                 ),
-                                child: Text(banner.actionText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                child: Text(banner.actionText,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12)),
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(width: 15),
-                        Icon(banner.icon, color: Colors.white.withValues(alpha: 0.8), size: 60),
+                        Icon(banner.icon,
+                            color: Colors.white.withValues(alpha: 0.8),
+                            size: 60),
                       ],
                     ),
                   ),
@@ -174,7 +189,9 @@ class _HeroCarouselWidgetState extends ConsumerState<HeroCarouselWidget> {
               width: _currentPage == index ? 24 : 8,
               height: 8,
               decoration: BoxDecoration(
-                color: _currentPage == index ? AppTheme.primaryBlue : Colors.grey.shade300,
+                color: _currentPage == index
+                    ? AppTheme.primaryBlue
+                    : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(4),
               ),
             );

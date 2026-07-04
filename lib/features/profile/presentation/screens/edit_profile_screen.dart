@@ -29,7 +29,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     super.initState();
     final profile = ref.read(userProfileProvider);
     _nameController = TextEditingController(text: profile?.displayName ?? '');
-    _selectedAvatar = (profile != null && profile.avatarId.isNotEmpty) ? profile.avatarId : _availableAvatars[0];
+    _selectedAvatar = (profile != null && profile.avatarId.isNotEmpty)
+        ? profile.avatarId
+        : _availableAvatars[0];
   }
 
   @override

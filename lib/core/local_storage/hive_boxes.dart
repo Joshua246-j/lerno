@@ -8,7 +8,7 @@ class HiveBoxes {
 
   static Future<void> init() async {
     await Hive.initFlutter();
-    
+
     // Register Adapters
     Hive.registerAdapter(UserModelAdapter());
     Hive.registerAdapter(GamificationStatsAdapter());

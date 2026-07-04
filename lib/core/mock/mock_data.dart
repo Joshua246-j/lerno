@@ -26,7 +26,8 @@ class MockData {
     CourseItem(
       id: 'c4',
       title: 'Language Arts - Learning Letters',
-      description: 'A jungle full of letters. Meet Blob and his virtual buddies.',
+      description:
+          'A jungle full of letters. Meet Blob and his virtual buddies.',
       iconAsset: 'assets/images/games/language_arts.svg',
       isLocked: true,
     ),

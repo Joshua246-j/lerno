@@ -14,7 +14,9 @@ class MyCoursesScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Subjects Hub', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Subjects Hub',
+            style: TextStyle(
+                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -22,7 +24,8 @@ class MyCoursesScreen extends ConsumerWidget {
         future: ref.read(learningRepositoryProvider).getSubjects(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
+            return const Center(
+                child: CircularProgressIndicator(color: AppTheme.primaryBlue));
           }
 
           if (snapshot.hasError || !snapshot.hasData) {
@@ -30,7 +33,7 @@ class MyCoursesScreen extends ConsumerWidget {
           }
 
           final subjects = snapshot.data!;
-          
+
           return ListView(
             padding: const EdgeInsets.all(20.0),
             children: [
@@ -51,7 +54,12 @@ class MyCoursesScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.primaryBlue,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: AppTheme.primaryBlue.withValues(alpha: 0.4), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: [
+          BoxShadow(
+              color: AppTheme.primaryBlue.withValues(alpha: 0.4),
+              blurRadius: 15,
+              offset: const Offset(0, 8))
+        ],
       ),
       child: Row(
         children: [
@@ -59,9 +67,18 @@ class MyCoursesScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Continue Learning', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const Text('Continue Learning',
+                    style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2)),
                 const SizedBox(height: 8),
-                const Text('Numbers & Counting', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
+                const Text('Numbers & Counting',
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -71,13 +88,18 @@ class MyCoursesScreen extends ConsumerWidget {
                         child: const LinearProgressIndicator(
                           value: 0.45,
                           backgroundColor: Colors.white24,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.amber),
                           minHeight: 8,
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Text('45%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                    const Text('45%',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -86,13 +108,18 @@ class MyCoursesScreen extends ConsumerWidget {
                     ref.read(audioManagerProvider).playClick();
                     context.push('/subject/math/course/math_numbers');
                   },
-                  icon: const Icon(Icons.play_arrow, color: AppTheme.primaryBlue, size: 20),
-                  label: const Text('Resume', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  icon: const Icon(Icons.play_arrow,
+                      color: AppTheme.primaryBlue, size: 20),
+                  label: const Text('Resume',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppTheme.primaryBlue,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
                     elevation: 0,
                   ),
                 ),
@@ -106,7 +133,8 @@ class MyCoursesScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSubjectCard(BuildContext context, WidgetRef ref, Subject subject) {
+  Widget _buildSubjectCard(
+      BuildContext context, WidgetRef ref, Subject subject) {
     return GestureDetector(
       onTap: () {
         ref.read(audioManagerProvider).playClick();
@@ -131,26 +159,39 @@ class MyCoursesScreen extends ConsumerWidget {
                 color: subject.themeColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Center(child: Icon(subject.icon, color: subject.themeColor, size: 40)),
+              child: Center(
+                  child:
+                      Icon(subject.icon, color: subject.themeColor, size: 40)),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(subject.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                  Text(subject.name,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textDark)),
                   const SizedBox(height: 6),
-                  Text(subject.description, style: const TextStyle(color: Colors.grey, fontSize: 13, height: 1.4)),
+                  Text(subject.description,
+                      style: const TextStyle(
+                          color: Colors.grey, fontSize: 13, height: 1.4)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: subject.themeColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text('${subject.courseCount} Courses', style: TextStyle(color: subject.themeColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                        child: Text('${subject.courseCount} Courses',
+                            style: TextStyle(
+                                color: subject.themeColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold)),
                       ),
                     ],
                   )

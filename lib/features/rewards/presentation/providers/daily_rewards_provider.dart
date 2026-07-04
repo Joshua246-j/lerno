@@ -57,7 +57,7 @@ class DailyRewardsNotifier extends StateNotifier<DailyRewardState> {
 
   void completeMission(int index) {
     if (index < 0 || index >= state.missionsCompleted.length) return;
-    
+
     final newCompleted = List<bool>.from(state.missionsCompleted);
     newCompleted[index] = true;
 

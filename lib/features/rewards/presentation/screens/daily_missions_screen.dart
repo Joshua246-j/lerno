@@ -56,7 +56,10 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
                 rewardState.dailyMissions[index],
                 rewardState.missionsCompleted[index],
                 index,
-              ).animate().fadeIn(delay: Duration(milliseconds: 100 * index)).slideX();
+              )
+                  .animate()
+                  .fadeIn(delay: Duration(milliseconds: 100 * index))
+                  .slideX();
             }),
           ],
         ),
@@ -138,10 +141,14 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
                   ? null
                   : () {
                       ref.read(audioManagerProvider).playSuccess();
-                      ref.read(dailyRewardsProvider.notifier).claimDailyReward();
-                      
-                      ref.read(userProfileProvider.notifier).addXpAndCoins(0, 50);
-                      
+                      ref
+                          .read(dailyRewardsProvider.notifier)
+                          .claimDailyReward();
+
+                      ref
+                          .read(userProfileProvider.notifier)
+                          .addXpAndCoins(0, 50);
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Claimed 50 Coins!'),
@@ -214,7 +221,8 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: AppTheme.textDark,
-                      decoration: isCompleted ? TextDecoration.lineThrough : null,
+                      decoration:
+                          isCompleted ? TextDecoration.lineThrough : null,
                     )),
                 const SizedBox(height: 4),
                 Text('Reward: 20 XP',
@@ -230,7 +238,7 @@ class _DailyMissionsScreenState extends ConsumerState<DailyMissionsScreen> {
               onPressed: () {
                 ref.read(audioManagerProvider).playSuccess();
                 ref.read(dailyRewardsProvider.notifier).completeMission(index);
-                
+
                 ref.read(userProfileProvider.notifier).addXpAndCoins(20, 0);
               },
               style: ElevatedButton.styleFrom(

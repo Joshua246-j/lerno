@@ -146,7 +146,8 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Chat', style: TextStyle(color: Colors.white)),
+                child:
+                    const Text('Chat', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

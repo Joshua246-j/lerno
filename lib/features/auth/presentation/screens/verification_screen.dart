@@ -26,8 +26,12 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
 
   @override
   void dispose() {
-    for (var c in _controllers) { c.dispose(); }
-    for (var f in _focusNodes) { f.dispose(); }
+    for (var c in _controllers) {
+      c.dispose();
+    }
+    for (var f in _focusNodes) {
+      f.dispose();
+    }
     super.dispose();
   }
 
@@ -35,7 +39,9 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 4) {
       ref.read(audioManagerProvider).playClick();
-      final success = await ref.read(authProvider.notifier).verifyOtp(widget.phoneNumber, otp);
+      final success = await ref
+          .read(authProvider.notifier)
+          .verifyOtp(widget.phoneNumber, otp);
       if (success && mounted) {
         context.go('/main');
       }
@@ -51,11 +57,15 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
       body: Stack(
         children: [
           const Positioned(
-            bottom: 0, left: 0, right: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: MountainBackground(),
           ),
           Positioned(
-            top: 0, left: 0, right: 0,
+            top: 0,
+            left: 0,
+            right: 0,
             height: MediaQuery.of(context).size.height * 0.45,
             child: Container(
               color: const Color(0xFFFBBF24),
@@ -82,7 +92,9 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.35,
-            left: 0, right: 0, bottom: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -132,7 +144,9 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      widget.phoneNumber.isNotEmpty ? '+91 ${widget.phoneNumber}' : '+91 77 2345 1234',
+                      widget.phoneNumber.isNotEmpty
+                          ? '+91 ${widget.phoneNumber}'
+                          : '+91 77 2345 1234',
                       style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           color: AppTheme.textDark),
@@ -142,7 +156,8 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: List.generate(4, (index) => _buildOTPBox(index)),
+                        children:
+                            List.generate(4, (index) => _buildOTPBox(index)),
                       ),
                     ),
                     if (authState.error != null)
@@ -165,18 +180,21 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30)),
                             elevation: 8,
-                            shadowColor: const Color(0xFF8B80F9).withValues(alpha: 0.5),
+                            shadowColor:
+                                const Color(0xFF8B80F9).withValues(alpha: 0.5),
                           ),
-                          child: authState.isLoading 
-                            ? const SizedBox(
-                                width: 24, height: 24,
-                                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                              )
-                            : const Text('Verify',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                          child: authState.isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white, strokeWidth: 2),
+                                )
+                              : const Text('Verify',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                         ),
                       ),
                     ),

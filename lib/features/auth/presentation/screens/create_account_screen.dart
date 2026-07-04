@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
@@ -18,13 +17,15 @@ class CreateAccountScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
-  final TextEditingController _nameController = TextEditingController(text: "AstroKid");
-  final TextEditingController _phoneController = TextEditingController(text: "7723451234");
-  final TextEditingController _ageController = TextEditingController(text: "10");
+  final TextEditingController _nameController =
+      TextEditingController(text: "AstroKid");
+  final TextEditingController _phoneController =
+      TextEditingController(text: "7723451234");
+  final TextEditingController _ageController =
+      TextEditingController(text: "10");
 
-  final List<String> _avatars = AvatarConfig.starterAvatars
-      .map((a) => a.avatarId)
-      .toList();
+  final List<String> _avatars =
+      AvatarConfig.starterAvatars.map((a) => a.avatarId).toList();
 
   String _selectedAvatarId = 'robot';
 
@@ -50,8 +51,10 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
 
     final age = int.tryParse(ageStr) ?? 10;
     ref.read(audioManagerProvider).playClick();
-    
-    await ref.read(authProvider.notifier).register(name, phone, age, _selectedAvatarId);
+
+    await ref
+        .read(authProvider.notifier)
+        .register(name, phone, age, _selectedAvatarId);
     // The router will automatically redirect to '/main' because auth state changes to authenticated
   }
 
@@ -77,11 +80,14 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     const Text('Create Account',
-                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ).animate().fadeIn().slideY(begin: -0.5),
                 const SizedBox(height: 20),
-                
+
                 Container(
                   padding: const EdgeInsets.all(24.0),
                   decoration: BoxDecoration(
@@ -110,7 +116,8 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 15,
                           mainAxisSpacing: 15,
@@ -128,7 +135,9 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: isSelected ? AppTheme.primaryLight : Colors.white,
+                                color: isSelected
+                                    ? AppTheme.primaryLight
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: isSelected
@@ -148,7 +157,10 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                               // Fallback to Icon if SVG doesn't exist yet during mock building
                               child: SvgPicture.asset(
                                 AppAssets.getAvatarPath(avatarId),
-                                placeholderBuilder: (context) => const Icon(Icons.person, size: 40, color: AppTheme.primaryBlue),
+                                placeholderBuilder: (context) => const Icon(
+                                    Icons.person,
+                                    size: 40,
+                                    color: AppTheme.primaryBlue),
                               ),
                             ),
                           );
@@ -156,7 +168,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       ),
 
                       const SizedBox(height: 30),
-                      const Text('Your Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const Text('Your Name',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textDark)),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _nameController,
@@ -164,13 +180,20 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                           hintText: 'e.g. AstroKid7',
                           filled: true,
                           fillColor: Colors.white,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      const Text('Phone Number', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const Text('Phone Number',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textDark)),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _phoneController,
@@ -179,13 +202,20 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                           hintText: '77 2345 1234',
                           filled: true,
                           fillColor: Colors.white,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
                         ),
                       ),
 
                       const SizedBox(height: 20),
-                      const Text('Age', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                      const Text('Age',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textDark)),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _ageController,
@@ -194,8 +224,11 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                           hintText: 'e.g. 10',
                           filled: true,
                           fillColor: Colors.white,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
                         ),
                       ),
 
@@ -216,16 +249,26 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: authState.isLoading ? null : _handleRegister,
+                          onPressed:
+                              authState.isLoading ? null : _handleRegister,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryGreen,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
                             elevation: 5,
                           ),
-                          child: authState.isLoading 
-                            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                            : const Text('Start Journey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                          child: authState.isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white, strokeWidth: 2))
+                              : const Text('Start Journey',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                         ).animate().scale(delay: 400.ms),
                       ),
                     ],

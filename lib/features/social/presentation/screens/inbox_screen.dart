@@ -8,7 +8,8 @@ class InboxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const FeaturePreviewScreen(
       title: 'Inbox',
-      description: 'Send and receive messages from your friends.\nChallenge them to Quiz Battles!',
+      description:
+          'Send and receive messages from your friends.\nChallenge them to Quiz Battles!',
       icon: Icons.inbox_rounded,
     );
   }

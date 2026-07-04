@@ -7,21 +7,25 @@ class StickerConfig {
       displayName: 'Cute Animals',
       category: 'Animals',
       coinCost: 500,
-      stickerIds: ['robot', 'dinosaur', 'panda'], // Re-using avatars as mock SVGs
+      stickerIds: [
+        'robot',
+        'dinosaur',
+        'panda'
+      ], // Re-using avatars as mock SVGs
     ),
     StickerPack(
       id: 'pack_greetings',
       displayName: 'Greetings & Emotes',
       category: 'Greetings',
       coinCost: 300,
-      stickerIds: ['fox', 'astronaut'], 
+      stickerIds: ['fox', 'astronaut'],
     ),
     StickerPack(
       id: 'pack_victory',
       displayName: 'Victory Poses',
       category: 'Victory',
       coinCost: 1000,
-      stickerIds: ['wizard', 'penguin', 'dragon'], 
+      stickerIds: ['wizard', 'penguin', 'dragon'],
     ),
   ];
 

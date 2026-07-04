@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/word_hunt_state.dart';
 
-final wordHuntProvider = StateNotifierProvider<WordHuntNotifier, WordHuntState>((ref) {
+final wordHuntProvider =
+    StateNotifierProvider<WordHuntNotifier, WordHuntState>((ref) {
   return WordHuntNotifier();
 });
 
@@ -52,14 +53,14 @@ class WordHuntNotifier extends StateNotifier<WordHuntState> {
 
   void selectTile(int index) {
     if (state.isGameOver) return;
-    
+
     if (state.selectedIndices.contains(index)) return; // Already selected
 
     final newSelected = List<int>.from(state.selectedIndices)..add(index);
-    
+
     // Check if the selected word matches target
     String selectedWord = newSelected.map((i) => state.grid[i]).join('');
-    
+
     if (state.targetWord.startsWith(selectedWord)) {
       if (selectedWord == state.targetWord) {
         // Complete word found!

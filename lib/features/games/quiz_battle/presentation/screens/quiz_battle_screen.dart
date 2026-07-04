@@ -7,7 +7,8 @@ import 'package:lerno/features/games/common/presentation/game_manager_screen.dar
 import '../../domain/models/battle_state.dart';
 import '../providers/quiz_battle_provider.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
-import 'package:lerno/features/games/common/presentation/widgets/countdown_timer.dart' as common_widgets;
+import 'package:lerno/features/games/common/presentation/widgets/countdown_timer.dart'
+    as common_widgets;
 import 'package:lerno/features/games/common/application/game_session_service.dart';
 import 'package:lerno/core/theme/app_assets.dart';
 
@@ -18,7 +19,8 @@ class QuizBattleScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GameManagerScreen(
       gameTitle: 'Ranked Quiz Battle',
-      gameDescription: 'Compete against other players in real-time to earn League Trophies!',
+      gameDescription:
+          'Compete against other players in real-time to earn League Trophies!',
       onGameStart: (ctx, ref) {
         ref.read(quizBattleProvider.notifier).startMatchmaking();
       },
@@ -44,9 +46,10 @@ class _QuizBattleContentState extends ConsumerState<QuizBattleContent> {
     final battleState = ref.watch(quizBattleProvider);
 
     ref.listen<BattleState>(quizBattleProvider, (previous, next) {
-      if (next.status == MatchStatus.finished && (previous == null || previous.status != MatchStatus.finished)) {
+      if (next.status == MatchStatus.finished &&
+          (previous == null || previous.status != MatchStatus.finished)) {
         final isWin = next.winner == 'player';
-        
+
         // We bypass the standard GameManager finishGame inside the overlay if we want,
         // but wait, GameManagerScope handles showing the overlay.
         GameManagerScope.of(context)?.onEndGame(isWin ? 100 : 20, isWin);
@@ -59,7 +62,8 @@ class _QuizBattleContentState extends ConsumerState<QuizBattleContent> {
 
     if (battleState.status == MatchStatus.searching) {
       return const MatchmakingView();
-    } else if (battleState.status == MatchStatus.playing || battleState.status == MatchStatus.finished) {
+    } else if (battleState.status == MatchStatus.playing ||
+        battleState.status == MatchStatus.finished) {
       return const BattleArenaView();
     } else {
       return const Center(child: CircularProgressIndicator());
@@ -74,14 +78,17 @@ class MatchmakingView extends ConsumerStatefulWidget {
   ConsumerState<MatchmakingView> createState() => _MatchmakingViewState();
 }
 
-class _MatchmakingViewState extends ConsumerState<MatchmakingView> with SingleTickerProviderStateMixin {
+class _MatchmakingViewState extends ConsumerState<MatchmakingView>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat(reverse: false);
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2))
+          ..repeat(reverse: false);
     _animation = Tween<double>(begin: 0.5, end: 1.5).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
@@ -96,7 +103,9 @@ class _MatchmakingViewState extends ConsumerState<MatchmakingView> with SingleTi
   @override
   Widget build(BuildContext context) {
     final userProfile = ref.watch(userProfileProvider);
-    final myAvatarId = userProfile?.avatarId.isNotEmpty == true ? userProfile!.avatarId : 'octopus';
+    final myAvatarId = userProfile?.avatarId.isNotEmpty == true
+        ? userProfile!.avatarId
+        : 'octopus';
     final myAvatar = AppAssets.getAvatarPath(myAvatarId);
 
     return Center(
@@ -105,7 +114,10 @@ class _MatchmakingViewState extends ConsumerState<MatchmakingView> with SingleTi
         children: [
           const Text(
             'Searching for Opponent...',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.primaryBlue),
           ),
           const SizedBox(height: 50),
           AnimatedBuilder(
@@ -119,7 +131,8 @@ class _MatchmakingViewState extends ConsumerState<MatchmakingView> with SingleTi
                     height: 150 * _animation.value,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.primaryBlue.withValues(alpha: 1.0 - (_animation.value - 0.5)),
+                      color: AppTheme.primaryBlue
+                          .withValues(alpha: 1.0 - (_animation.value - 0.5)),
                     ),
                   ),
                   Container(
@@ -127,7 +140,8 @@ class _MatchmakingViewState extends ConsumerState<MatchmakingView> with SingleTi
                     height: 100 * _animation.value,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.primaryGreen.withValues(alpha: 1.0 - (_animation.value - 0.5)),
+                      color: AppTheme.primaryGreen
+                          .withValues(alpha: 1.0 - (_animation.value - 0.5)),
                     ),
                   ),
                   CircleAvatar(
@@ -154,7 +168,9 @@ class BattleArenaView extends ConsumerWidget {
     final userProfile = ref.watch(userProfileProvider);
 
     final myName = userProfile?.displayName ?? 'Guest';
-    final myAvatarId = userProfile?.avatarId.isNotEmpty == true ? userProfile!.avatarId : 'octopus';
+    final myAvatarId = userProfile?.avatarId.isNotEmpty == true
+        ? userProfile!.avatarId
+        : 'octopus';
     final myAvatar = AppAssets.getAvatarPath(myAvatarId);
 
     return Column(
@@ -183,26 +199,39 @@ class BattleArenaView extends ConsumerWidget {
     );
   }
 
-  Widget _buildPlayerHeader({required String name, required String avatar, required int score, required bool isOpponent}) {
+  Widget _buildPlayerHeader(
+      {required String name,
+      required String avatar,
+      required int score,
+      required bool isOpponent}) {
     const maxScore = 5;
     final progress = score / maxScore;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
-        color: isOpponent ? Colors.redAccent.withValues(alpha: 0.1) : AppTheme.primaryLight,
-        borderRadius: isOpponent ? const BorderRadius.vertical(bottom: Radius.circular(30)) : const BorderRadius.vertical(top: Radius.circular(30)),
+        color: isOpponent
+            ? Colors.redAccent.withValues(alpha: 0.1)
+            : AppTheme.primaryLight,
+        borderRadius: isOpponent
+            ? const BorderRadius.vertical(bottom: Radius.circular(30))
+            : const BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: Row(
-        mainAxisAlignment: isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isOpponent ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isOpponent) _buildAvatarItem(avatar),
           if (!isOpponent) const SizedBox(width: 15),
           Expanded(
             child: Column(
-              crossAxisAlignment: isOpponent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: isOpponent
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                Text(name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18)),
                 const SizedBox(height: 5),
                 LinearProgressIndicator(
                   value: progress,
@@ -212,7 +241,9 @@ class BattleArenaView extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 const SizedBox(height: 5),
-                Text('$score / $maxScore', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                Text('$score / $maxScore',
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -238,7 +269,8 @@ class BattleArenaView extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuestionCard(BuildContext context, WidgetRef ref, BattleState state) {
+  Widget _buildQuestionCard(
+      BuildContext context, WidgetRef ref, BattleState state) {
     final q = state.currentQuestion;
     if (q == null) return const SizedBox();
 
@@ -263,7 +295,10 @@ class BattleArenaView extends ConsumerWidget {
               Text(
                 q.questionText,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textDark),
+                style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textDark),
               ),
               const SizedBox(height: 30),
               ...List.generate(q.options.length, (index) {
@@ -297,7 +332,8 @@ class BattleArenaView extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 20),
                       decoration: BoxDecoration(
                         color: bgColor,
                         border: Border.all(color: borderColor, width: 2),
@@ -305,7 +341,8 @@ class BattleArenaView extends ConsumerWidget {
                       ),
                       child: Text(
                         q.options[index],
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),

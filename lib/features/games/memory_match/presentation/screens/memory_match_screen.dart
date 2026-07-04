@@ -13,7 +13,8 @@ class MemoryMatchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GameManagerScreen(
       gameTitle: 'Memory Match',
-      gameDescription: 'Match all the pairs with the fewest moves possible to earn maximum XP!',
+      gameDescription:
+          'Match all the pairs with the fewest moves possible to earn maximum XP!',
       onGameStart: (ctx, ref) {
         ref.read(memoryMatchProvider.notifier).startGame();
       },
@@ -26,10 +27,12 @@ class MemoryMatchGameContent extends ConsumerStatefulWidget {
   const MemoryMatchGameContent({super.key});
 
   @override
-  ConsumerState<MemoryMatchGameContent> createState() => _MemoryMatchGameContentState();
+  ConsumerState<MemoryMatchGameContent> createState() =>
+      _MemoryMatchGameContentState();
 }
 
-class _MemoryMatchGameContentState extends ConsumerState<MemoryMatchGameContent> {
+class _MemoryMatchGameContentState
+    extends ConsumerState<MemoryMatchGameContent> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(memoryMatchProvider);
@@ -46,7 +49,11 @@ class _MemoryMatchGameContentState extends ConsumerState<MemoryMatchGameContent>
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          Text('Moves: ${state.moves}', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+          Text('Moves: ${state.moves}',
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primaryBlue)),
           const Spacer(),
           if (state.cards.isNotEmpty)
             GridView.builder(
@@ -71,10 +78,16 @@ class _MemoryMatchGameContentState extends ConsumerState<MemoryMatchGameContent>
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     decoration: BoxDecoration(
-                      color: card.isFlipped || card.isMatched ? Colors.white : AppTheme.primaryBlue,
+                      color: card.isFlipped || card.isMatched
+                          ? Colors.white
+                          : AppTheme.primaryBlue,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: AppTheme.modernShadow,
-                      border: Border.all(color: card.isMatched ? AppTheme.primaryGreen : Colors.transparent, width: 3),
+                      border: Border.all(
+                          color: card.isMatched
+                              ? AppTheme.primaryGreen
+                              : Colors.transparent,
+                          width: 3),
                     ),
                     alignment: Alignment.center,
                     child: card.isFlipped || card.isMatched
@@ -83,10 +96,13 @@ class _MemoryMatchGameContentState extends ConsumerState<MemoryMatchGameContent>
                             style: TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
-                              color: card.isMatched ? AppTheme.primaryGreen : AppTheme.textDark,
+                              color: card.isMatched
+                                  ? AppTheme.primaryGreen
+                                  : AppTheme.textDark,
                             ),
                           )
-                        : const Icon(Icons.help_outline, color: Colors.white54, size: 40),
+                        : const Icon(Icons.help_outline,
+                            color: Colors.white54, size: 40),
                   ),
                 );
               },

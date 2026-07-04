@@ -25,7 +25,8 @@ import 'package:lerno/features/profile/presentation/screens/edit_profile_screen.
 import 'package:lerno/features/social/presentation/screens/friends_screen.dart';
 import 'package:lerno/features/social/presentation/screens/chat_screen.dart';
 import 'package:lerno/features/social/presentation/providers/friends_provider.dart';
-import 'package:lerno/features/store/presentation/screens/store_screen.dart' as lerno_store;
+import 'package:lerno/features/store/presentation/screens/store_screen.dart'
+    as lerno_store;
 import 'package:lerno/features/social/presentation/screens/inbox_screen.dart';
 import 'package:lerno/features/gamification/presentation/screens/notifications_screen.dart';
 import 'package:lerno/core/presentation/screens/search_screen.dart';
@@ -38,11 +39,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
-      final isAuthScreen = state.matchedLocation == '/login' || 
-                           state.matchedLocation == '/verify' || 
-                           state.matchedLocation == '/create_account' ||
-                           state.matchedLocation == '/onboarding';
-      
+      final isAuthScreen = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/verify' ||
+          state.matchedLocation == '/create_account' ||
+          state.matchedLocation == '/onboarding';
+
       if (authState.status == AuthStatus.initial) {
         return state.matchedLocation == '/splash' ? null : '/splash';
       }
@@ -106,7 +107,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             case 'chess':
               return const ChessPuzzlesScreen();
             default:
-              return const Scaffold(body: Center(child: Text('Game not found')));
+              return const Scaffold(
+                  body: Center(child: Text('Game not found')));
           }
         },
       ),
@@ -135,7 +137,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final subjectId = state.pathParameters['subjectId']!;
           final courseId = state.pathParameters['courseId']!;
           final topicId = state.pathParameters['topicId']!;
-          return LessonScreen(subjectId: subjectId, courseId: courseId, topicId: topicId);
+          return LessonScreen(
+              subjectId: subjectId, courseId: courseId, topicId: topicId);
         },
       ),
       GoRoute(
@@ -144,7 +147,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final subjectId = state.pathParameters['subjectId']!;
           final courseId = state.pathParameters['courseId']!;
           final topicId = state.pathParameters['topicId']!;
-          return TopicQuizScreen(subjectId: subjectId, courseId: courseId, topicId: topicId);
+          return TopicQuizScreen(
+              subjectId: subjectId, courseId: courseId, topicId: topicId);
         },
       ),
       GoRoute(
@@ -200,4 +204,3 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-

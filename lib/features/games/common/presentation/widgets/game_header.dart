@@ -39,7 +39,8 @@ class GameHeader extends ConsumerWidget {
                   color: Colors.grey.shade100,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.close, color: AppTheme.textDark, size: 24),
+                child:
+                    const Icon(Icons.close, color: AppTheme.textDark, size: 24),
               ),
             ),
             const SizedBox(width: 16),

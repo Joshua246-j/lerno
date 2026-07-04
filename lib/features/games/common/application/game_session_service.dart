@@ -21,7 +21,7 @@ class GameSessionService {
 
     final repo = _ref.read(gamificationRepositoryProvider);
     final profile = _ref.read(userProfileProvider);
-    
+
     if (profile != null) {
       repo.resolveSoloGame(profile, isWin: isVictory, score: xpEarned);
       _ref.read(userProfileProvider.notifier).refreshProfile();
@@ -39,7 +39,7 @@ class GameSessionService {
 
     final repo = _ref.read(gamificationRepositoryProvider);
     final profile = _ref.read(userProfileProvider);
-    
+
     if (profile != null) {
       repo.resolveRankedBattle(profile, isWin: isVictory, score: 0);
       _ref.read(userProfileProvider.notifier).refreshProfile();

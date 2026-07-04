@@ -10,14 +10,17 @@ class CourseDetailsScreen extends ConsumerWidget {
   final String subjectId;
   final String courseId;
 
-  const CourseDetailsScreen({super.key, required this.subjectId, required this.courseId});
+  const CourseDetailsScreen(
+      {super.key, required this.subjectId, required this.courseId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Course Topics', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Course Topics',
+            style: TextStyle(
+                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.textDark),
@@ -33,7 +36,8 @@ class CourseDetailsScreen extends ConsumerWidget {
         future: ref.read(learningRepositoryProvider).getSubjectById(subjectId),
         builder: (context, subjectSnapshot) {
           if (subjectSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
+            return const Center(
+                child: CircularProgressIndicator(color: AppTheme.primaryBlue));
           }
 
           final subject = subjectSnapshot.data;
@@ -42,10 +46,14 @@ class CourseDetailsScreen extends ConsumerWidget {
           }
 
           return FutureBuilder<List<Topic>>(
-            future: ref.read(learningRepositoryProvider).getTopicsForCourse(courseId),
+            future: ref
+                .read(learningRepositoryProvider)
+                .getTopicsForCourse(courseId),
             builder: (context, topicsSnapshot) {
               if (topicsSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
+                return const Center(
+                    child:
+                        CircularProgressIndicator(color: AppTheme.primaryBlue));
               }
 
               final topics = topicsSnapshot.data ?? [];
@@ -53,7 +61,8 @@ class CourseDetailsScreen extends ConsumerWidget {
               return ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  ...topics.map((t) => _buildTopicCard(context, ref, t, subject)),
+                  ...topics
+                      .map((t) => _buildTopicCard(context, ref, t, subject)),
                   const SizedBox(height: 20),
                   _buildFinalAssessmentCard(context, ref, subject),
                 ],
@@ -65,11 +74,13 @@ class CourseDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTopicCard(BuildContext context, WidgetRef ref, Topic topic, Subject subject) {
+  Widget _buildTopicCard(
+      BuildContext context, WidgetRef ref, Topic topic, Subject subject) {
     return GestureDetector(
       onTap: () {
         ref.read(audioManagerProvider).playClick();
-        context.push('/subject/${subject.id}/course/$courseId/topic/${topic.id}/lesson');
+        context.push(
+            '/subject/${subject.id}/course/$courseId/topic/${topic.id}/lesson');
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
@@ -92,12 +103,11 @@ class CourseDetailsScreen extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  '${topic.orderIndex}', 
+                  '${topic.orderIndex}',
                   style: TextStyle(
-                    color: subject.themeColor, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 20
-                  ),
+                      color: subject.themeColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                 ),
               ),
             ),
@@ -106,15 +116,14 @@ class CourseDetailsScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    topic.title, 
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark)
-                  ),
+                  Text(topic.title,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textDark)),
                   const SizedBox(height: 4),
-                  Text(
-                    topic.description, 
-                    style: const TextStyle(color: Colors.grey, fontSize: 13)
-                  ),
+                  Text(topic.description,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13)),
                 ],
               ),
             ),
@@ -125,7 +134,8 @@ class CourseDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFinalAssessmentCard(BuildContext context, WidgetRef ref, Subject subject) {
+  Widget _buildFinalAssessmentCard(
+      BuildContext context, WidgetRef ref, Subject subject) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -138,19 +148,28 @@ class CourseDetailsScreen extends ConsumerWidget {
         children: [
           const Icon(Icons.stars, color: Colors.amber, size: 60),
           const SizedBox(height: 12),
-          const Text('Final Assessment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.amber)),
+          const Text('Final Assessment',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber)),
           const SizedBox(height: 8),
-          const Text('Complete all topics to unlock the final course quiz and earn your badge.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+          const Text(
+              'Complete all topics to unlock the final course quiz and earn your badge.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-               ref.read(audioManagerProvider).playFail();
-               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Topics not completed yet!')));
+              ref.read(audioManagerProvider).playFail();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Topics not completed yet!')));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.grey.shade300,
               foregroundColor: Colors.grey,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               elevation: 0,
             ),
             child: const Text('Locked'),

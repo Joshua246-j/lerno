@@ -93,7 +93,7 @@ class _ShieldPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
     canvas.drawPath(path, borderPaint);
-    
+
     // Add inner highlight
     final highlightPath = Path();
     highlightPath.moveTo(size.width / 2, size.height * 0.05);

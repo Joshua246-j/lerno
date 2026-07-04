@@ -42,7 +42,7 @@ class Topic {
   final String title;
   final String description;
   final int orderIndex;
-  
+
   const Topic({
     required this.id,
     required this.courseId,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lerno/core/theme/app_theme.dart';
 
-
 class Achievement {
   final String title;
   final String description;

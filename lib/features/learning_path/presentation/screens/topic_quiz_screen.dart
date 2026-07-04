@@ -11,7 +11,11 @@ class TopicQuizScreen extends ConsumerStatefulWidget {
   final String courseId;
   final String topicId;
 
-  const TopicQuizScreen({super.key, required this.subjectId, required this.courseId, required this.topicId});
+  const TopicQuizScreen(
+      {super.key,
+      required this.subjectId,
+      required this.courseId,
+      required this.topicId});
 
   @override
   ConsumerState<TopicQuizScreen> createState() => _TopicQuizScreenState();
@@ -27,10 +31,13 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       appBar: AppBar(
-        title: const Text('Topic Quiz', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
+        title: const Text('Topic Quiz',
+            style: TextStyle(
+                color: AppTheme.textDark, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Force them to finish or explicitly close
+        automaticallyImplyLeading:
+            false, // Force them to finish or explicitly close
         actions: [
           IconButton(
             icon: const Icon(Icons.close, color: Colors.grey),
@@ -42,10 +49,13 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
         ],
       ),
       body: FutureBuilder<List<QuizQuestion>>(
-        future: ref.read(learningRepositoryProvider).getQuizForTopic(widget.topicId),
+        future: ref
+            .read(learningRepositoryProvider)
+            .getQuizForTopic(widget.topicId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
+            return const Center(
+                child: CircularProgressIndicator(color: AppTheme.primaryBlue));
           }
 
           final questions = snapshot.data ?? [];
@@ -70,17 +80,23 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Question ${_currentIndex + 1} of $total', style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+          Text('Question ${_currentIndex + 1} of $total',
+              style: const TextStyle(
+                  color: Colors.grey, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          Text(q.questionText, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+          Text(q.questionText,
+              style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  color: AppTheme.textDark)),
           const SizedBox(height: 30),
           ...List.generate(q.options.length, (index) {
             final isSelected = _selectedOption == index;
             final isCorrect = index == q.correctOptionIndex;
-            
+
             Color bgColor = Colors.white;
             Color borderColor = Colors.grey.shade300;
-            
+
             if (_hasSubmitted) {
               if (isCorrect) {
                 bgColor = Colors.green.withValues(alpha: 0.1);
@@ -111,54 +127,72 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
                 ),
                 child: Text(
                   q.options[index],
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _hasSubmitted && isCorrect ? Colors.green : AppTheme.textDark),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: _hasSubmitted && isCorrect
+                          ? Colors.green
+                          : AppTheme.textDark),
                 ),
               ),
             );
           }),
-          
           if (_hasSubmitted) ...[
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: _selectedOption == q.correctOptionIndex ? Colors.green.withValues(alpha: 0.1) : Colors.amber.withValues(alpha: 0.1),
+                color: _selectedOption == q.correctOptionIndex
+                    ? Colors.green.withValues(alpha: 0.1)
+                    : Colors.amber.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                _selectedOption == q.correctOptionIndex ? "Correct! ${q.explanation}" : "Not quite. ${q.explanation}",
-                style: TextStyle(color: _selectedOption == q.correctOptionIndex ? Colors.green.shade700 : Colors.amber.shade700, fontWeight: FontWeight.bold),
+                _selectedOption == q.correctOptionIndex
+                    ? "Correct! ${q.explanation}"
+                    : "Not quite. ${q.explanation}",
+                style: TextStyle(
+                    color: _selectedOption == q.correctOptionIndex
+                        ? Colors.green.shade700
+                        : Colors.amber.shade700,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
-          
           const Spacer(),
           ElevatedButton(
-            onPressed: _selectedOption == null ? null : () {
-              if (!_hasSubmitted) {
-                setState(() {
-                  _hasSubmitted = true;
-                  if (_selectedOption == q.correctOptionIndex) {
-                    ref.read(audioManagerProvider).playSuccess();
-                  } else {
-                    ref.read(audioManagerProvider).playFail();
-                  }
-                });
-              } else {
-                setState(() {
-                  _currentIndex++;
-                  _selectedOption = null;
-                  _hasSubmitted = false;
-                });
-              }
-            },
+            onPressed: _selectedOption == null
+                ? null
+                : () {
+                    if (!_hasSubmitted) {
+                      setState(() {
+                        _hasSubmitted = true;
+                        if (_selectedOption == q.correctOptionIndex) {
+                          ref.read(audioManagerProvider).playSuccess();
+                        } else {
+                          ref.read(audioManagerProvider).playFail();
+                        }
+                      });
+                    } else {
+                      setState(() {
+                        _currentIndex++;
+                        _selectedOption = null;
+                        _hasSubmitted = false;
+                      });
+                    }
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryBlue,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               disabledBackgroundColor: Colors.grey.shade300,
             ),
-            child: Text(_hasSubmitted ? 'Continue' : 'Check Answer', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            child: Text(_hasSubmitted ? 'Continue' : 'Check Answer',
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
           ),
         ],
       ),
@@ -174,19 +208,31 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
           children: [
             const Icon(Icons.stars, color: Colors.amber, size: 100),
             const SizedBox(height: 24),
-            const Text('Topic Complete!', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTheme.textDark)),
+            const Text('Topic Complete!',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.textDark)),
             const SizedBox(height: 16),
-            const Text('You have mastered this topic. Course progress updated!', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 16)),
+            const Text('You have mastered this topic. Course progress updated!',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 16)),
             const SizedBox(height: 40),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              decoration: BoxDecoration(color: Colors.amber.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20)),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.star, color: Colors.amber),
                   SizedBox(width: 8),
-                  Text('+50 XP', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text('+50 XP',
+                      style: TextStyle(
+                          color: Colors.amber,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18)),
                 ],
               ),
             ),
@@ -201,9 +247,14 @@ class _TopicQuizScreenState extends ConsumerState<TopicQuizScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryBlue,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
                 ),
-                child: const Text('Continue Learning', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                child: const Text('Continue Learning',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
               ),
             ),
           ],
