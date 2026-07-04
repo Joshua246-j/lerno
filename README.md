@@ -85,4 +85,7 @@ For detailed technical implementation and architecture guidelines, refer to the 
 - [20_Development_Guide](docs/20_Development_Guide.md)
 - [21_Build_Deployment](docs/21_Build_Deployment.md)
 - [22_Project_Status](docs/22_Project_Status.md)
+- [23_Store_and_Economy](docs/23_Store_and_Economy.md)
+- [24_Social_Features](docs/24_Social_Features.md)
+- [25_Learning_Path_System](docs/25_Learning_Path_System.md)
 - [CHANGELOG](CHANGELOG.md)

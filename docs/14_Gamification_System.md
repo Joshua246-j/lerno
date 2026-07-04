@@ -1,23 +1,27 @@
 # 14 - Gamification System
 
-## 🌟 Core Loop
-The primary engagement mechanic is a continuous loop:
-**Learn/Play -> Earn Rewards -> Upgrade/Showcase -> Learn/Play.**
+## Overview
+Lerno utilizes extensive gamification strategies to drive retention. The system is located in `features/gamification/` and orchestrates all user rewards, leveling, and competitive mechanics.
 
-## ✨ Currencies
-- **XP (Experience Points)**: Unspendable. Used purely for leveling up and unlocking new paths.
-- **Coins**: Spendable virtual currency. Earned via daily missions, battles, and level-ups. Used to buy avatars, profile borders, and game power-ups.
+## Core Mechanics
 
-## 🏅 Badges & Achievements
-Achievements are broken down into tiers (Bronze, Silver, Gold).
-- *Example*: "Bookworm" (Complete 5, 20, 50 lessons).
-- Badges are displayed publicly on the user's Profile for bragging rights.
+### 1. XP and Leveling
+- Users earn XP points across all app activities (completing lessons, winning games).
+- The `GamificationEngine` processes XP gains and triggers local animations and database syncs.
 
-## 📅 Daily & Weekly Engagement
-- **Daily Login Bonus**: Escalating rewards for consecutive logins (Days 1-7), resetting after Day 7 or if a day is missed.
-- **Daily Missions**: Three random tasks (e.g., "Win 2 battles", "Complete 1 Math lesson"). Completing all three unlocks a bonus chest.
-- **Weekly Challenges**: Harder tasks requiring sustained effort over the week.
+### 2. League System
+- Located in `domain/models/league_system.dart` and `models/league_tier.dart`.
+- Users are grouped into tiers (e.g., Bronze, Silver, Gold).
+- Tier promotion/demotion occurs based on weekly leaderboard standings (`league_leaderboard_screen.dart`).
 
-## 📈 Progress Calculation
-XP curves are designed using a quadratic formula to make early levels extremely fast (instant gratification) while later levels require sustained dedication.
-`Required XP for Next Level = (Level^2) * 50`
+### 3. Streaks
+- `streak_service.dart` tracks consecutive days the user has engaged with the app.
+- Maintaining streaks applies multipliers to XP and Coin rewards.
+
+### 4. Achievements and Badges
+- Users unlock badges for significant milestones.
+- Managed by `achievements_screen.dart` and displayed dynamically via `achievement_popup.dart`.
+
+### 5. Daily Tasks
+- Found in `features/rewards/` and `daily_tasks_screen.dart`.
+- Rotates daily objectives (e.g., "Play 2 Math Games") for bonus payouts.

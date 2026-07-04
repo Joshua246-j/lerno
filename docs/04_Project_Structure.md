@@ -8,29 +8,37 @@ The project utilizes a strict feature-first organization within the `lib/` direc
 lib/
 ├── core/                       # Foundation and global utilities
 │   ├── audio/                  # Background music and SFX managers
+│   ├── local_storage/          # Hive database setup
 │   ├── mock/                   # Mock data generators for offline dev
-│   ├── network/                # Dio HTTP client, interceptors, error handling
+│   ├── network/                # HTTP client, interceptors, error handling
 │   ├── presentation/           # Base screens and common scaffold widgets
-│   ├── providers/              # Global Riverpod providers (e.g., global logger)
+│   ├── providers/              # Global Riverpod providers
 │   ├── routing/                # GoRouter configuration and route definitions
 │   ├── security/               # Secure storage, cryptography utils
 │   ├── services/               # Shared background services
 │   ├── theme/                  # Colors, typography, spacing, and ThemeData
-│   └── widgets/                # Highly reusable global widgets (buttons, dialogs)
+│   └── widgets/                # Highly reusable global widgets
 │
 ├── data/                       # Global Data Transfer Objects (DTOs) and models
 │
 ├── features/                   # Feature-specific logic and UI
 │   ├── auth/                   # Authentication (Login, Register, OTP)
-│   ├── chat/                   # In-app messaging and friends list
-│   ├── games/                  # Flame engine mini-games
-│   ├── gamification/           # XP, Leveling, and Badge calculations
+│   ├── chat/                   # In-app messaging and chat repo
+│   ├── games/                  # Standalone and Flame mini-games
+│   │   ├── chess/              # Chess Puzzles
+│   │   ├── math_arena/         # Math Arena game
+│   │   ├── math_fun_drive/     # Math Fun Drive game
+│   │   ├── memory_match/       # Memory Match game
+│   │   ├── pattern_match/      # Pattern Match game
+│   │   ├── quiz_battle/        # 1v1 Quiz Battles
+│   │   └── word_hunt/          # Word Hunt game
+│   ├── gamification/           # XP, Leveling, Leagues, and Streaks
 │   ├── home/                   # Main dashboard and navigation wrapper
-│   ├── learning_path/          # Core educational content and subject trees
+│   ├── learning_path/          # Courses, subjects, lessons, and topic quizzes
 │   ├── profile/                # User profile, statistics, settings
 │   ├── rewards/                # Daily missions and daily login rewards
-│   ├── social/                 # Leaderboards and leagues
-│   └── store/                  # Virtual economy and inventory
+│   ├── social/                 # Friends list, inbox, and leaderboards
+│   └── store/                  # Avatar shop, stickers, and inventory
 │
 └── shared/                     # Feature-agnostic shared helpers
 ```
