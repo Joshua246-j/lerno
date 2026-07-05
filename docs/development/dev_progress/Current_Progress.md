@@ -1,46 +1,45 @@
 > [!NOTE]
-> **CURRENT PROTOTYPE**: This document describes the current active development state, utilizing mock data and local persistence.
+> **CURRENT DEVELOPMENT STATE**: This document tracks the real-time implementation status of the Lerno project, differentiating between the Flutter prototype and the FastAPI backend foundation.
 
 # Current Project Progress
 
-This document tracks the actual, real-time implementation status of the Lerno prototype. It serves as a reality check against the long-term production vision.
+Lerno has evolved from a messy prototype into a highly professional, structurally sound monolithic repository. The frontend and backend are now perfectly isolated and poised for integration.
 
-## 🏗 Current Phase: High-Fidelity Prototype
+## 🏗 Current Phase: Dual-Track Development
 
-The project is currently a standalone Flutter application heavily reliant on mock data. It is not yet connected to a live database or remote API. The primary focus has been proving the UX, UI, and Riverpod architectural stability.
+The project is currently split into two completely isolated tracks:
+1. **Frontend**: A high-fidelity Flutter prototype utilizing mock data and `hive` local persistence.
+2. **Backend**: A brand new, production-ready FastAPI foundation utilizing asynchronous SQLAlchemy, Alembic, Docker, and PostgreSQL.
 
-## 📊 Overall Completion: 45%
+## 📊 Overall Completion
 
 ### Discipline Breakdown
 
-- **UI/UX Progress: 90%** 
-  - Design system, animations, responsive layouts, and theming are complete and highly polished.
-- **Frontend Architecture: 85%** 
+- **UI/UX & Frontend Architecture: 95%** 
+  - Design system, animations, and responsive layouts are highly polished across the Home, Games Hub, Leaderboard, and Chat screens.
   - Riverpod injection, GoRouter, and Feature-First folder structures are firmly established.
+  - Firebase and legacy Social Auth bloat has been 100% purged from the app.
+- **Backend Infrastructure: 30%** 
+  - The `backend/` directory was successfully scaffolded.
+  - FastAPI core, `uv` dependency management, and `docker-compose.yml` (PostgreSQL + Redis) are configured.
+  - Asynchronous SQLAlchemy engine and Alembic migrations are initialized.
 - **Game Development: 65%** 
   - Flame engine wrappers are built. 1v1 Quiz UI is done. Core game loop logic needs finalizing.
-- **Documentation: 100%** 
-  - The project is fully documented, strictly separating prototype reality from production plans.
-- **Testing Progress: 15%** 
-  - Basic unit tests exist. Full widget and integration testing is pending.
-- **Backend Progress: 10%** 
-  - Architecture is fully designed. FastAPI boilerplate needs to be written. Mock backend currently handles all data requests.
-- **Database Progress: 5%** 
-  - ER Diagrams designed for future FastAPI implementation. 
-  - **Local Persistence**: `hive` is installed in `pubspec.yaml` and is actively used to simulate persistence for Mock Repositories so the prototype does not lose state on restart.
-  - **Legacy Dependencies**: Firebase packages (`cloud_firestore`, etc.) are still physically present in `pubspec.yaml` but are deprecated and slated for removal.
+- **Documentation & CI/CD: 100%** 
+  - The project is fully documented, strictly separating `docs/production/` and `docs/development/`.
+  - `.github/` templates (Issues, PRs) and Git Workflow standards (Conventional Commits, Branching strategy) are fully implemented.
+  - Root utility scripts have been properly organized into `tools/`.
+- **Database Schema Progress: 5%** 
+  - Base UUID SQLAlchemy model created. Awaiting implementation of actual business tables (Users, Profiles, Leaderboards).
 - **API Progress: 0%** 
-  - Zero live endpoints exist.
+  - Backend environment exists, but zero live endpoints have been built.
 
-## ⚠️ Known Limitations & Technical Debt
+## ✅ Recently Resolved Technical Debt
+- **Firebase Bloat**: Completely removed all legacy Firebase SDKs and orphaned repositories.
+- **Root Clutter**: Moved 13 scattered Python/Dart utility scripts into a clean `tools/` directory.
 
-- **Legacy Package Bloat**: Firebase dependencies are still technically compiled into the app, increasing build size unnecessarily while we use Mock Repositories.
-- **Fake Opponents**: The 1v1 Quiz Battles currently match you against a delayed bot. It does not use WebSockets.
-- **Build Errors**: Windows developers may experience Kotlin incremental build caching bugs if the repository and the Flutter SDK are on different hard drives.
+## 🎯 Next Milestones (Backend Focus)
 
-## 🎯 Next Milestones
-
-1. **Stabilize Flame Engine**: Finalize the drag-and-drop game mechanics.
-2. **Purge Firebase**: Completely remove Firebase dependencies from `pubspec.yaml` and initialization code to clean up the prototype.
-3. **Initialize FastAPI**: Create the backend repository and build the base PostgreSQL schemas.
-4. **Auth Swap**: Replace `MockAuthRepository` with the first live FastAPI endpoint (`/api/v1/auth/login`).
+1. **Phase 2 - Database Modeling**: Design and migrate the core PostgreSQL tables (Users, Auth, Profiles) using Alembic.
+2. **Phase 3 - Core REST APIs**: Build out the `/api/v1/auth/` and `/api/v1/users/` endpoints using Pydantic validation.
+3. **Phase 4 - Frontend Integration**: Begin replacing `MockAuthRepository` with `ApiAuthRepository` without touching the Flutter UI layer.
