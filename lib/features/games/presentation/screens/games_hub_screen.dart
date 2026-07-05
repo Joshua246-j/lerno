@@ -20,7 +20,8 @@ class GamesHubScreen extends ConsumerWidget {
         elevation: 0,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20.0),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
         children: [
           _buildRankedBanner(context, ref),
           const SizedBox(height: 30),
@@ -35,62 +36,55 @@ class GamesHubScreen extends ConsumerWidget {
   }
 
   Widget _buildRankedBanner(BuildContext context, WidgetRef ref) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-            colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+    return InkWell(
+      onTap: () {
+        ref.read(audioManagerProvider).playClick();
+        context.push('/arena');
+      },
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppTheme.primaryBlue, Colors.purpleAccent],
             begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-              color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 8))
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Ranked Quiz Battle',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white)),
-                const SizedBox(height: 8),
-                const Text('Compete 1v1 and earn Trophies!',
-                    style: TextStyle(
-                        color: Colors.white70, fontSize: 14, height: 1.4)),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(audioManagerProvider).playClick();
-                    context.push('/game/quiz_battle');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFFD97706),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    elevation: 0,
-                  ),
-                  child: const Text('Play Now',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                ),
-              ],
-            ),
+            end: Alignment.bottomRight,
           ),
-          const SizedBox(width: 20),
-          const Icon(Icons.emoji_events, color: Colors.white, size: 80),
-        ],
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+                color: AppTheme.primaryBlue.withValues(alpha: 0.4),
+                blurRadius: 15,
+                offset: const Offset(0, 5))
+          ],
+        ),
+        child: Column(
+          children: [
+            const Icon(Icons.flash_on, color: Colors.amber, size: 50),
+            const SizedBox(height: 10),
+            const Text('BRAIN BATTLE ARENA',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 2)),
+            const SizedBox(height: 5),
+            const Text('Ranked 1v1 Quiz Matches',
+                style: TextStyle(color: Colors.white70, fontSize: 16)),
+            const SizedBox(height: 15),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20)),
+              child: const Text('Play Ranked',
+                  style: TextStyle(
+                      color: AppTheme.primaryBlue,
+                      fontWeight: FontWeight.bold)),
+            )
+          ],
+        ),
       ),
     );
   }

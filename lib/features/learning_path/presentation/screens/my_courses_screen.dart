@@ -35,7 +35,8 @@ class MyCoursesScreen extends ConsumerWidget {
           final subjects = snapshot.data!;
 
           return ListView(
-            padding: const EdgeInsets.all(20.0),
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
             children: [
               _buildContinueLearningBanner(context, ref),
               const SizedBox(height: 30),

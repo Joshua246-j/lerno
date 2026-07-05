@@ -24,31 +24,53 @@ class GamificationRepository {
 
   /// Resolves a Ranked Quiz Battle. Awards XP, Coins, and changes Trophies/League.
   UserModel resolveRankedBattle(UserModel user,
-      {required bool isWin, required int score}) {
+      {required bool isWin, required int score, required int opponentTrophies}) {
     final xpEarned = isWin ? 30 : 10;
     final coinsEarned = isWin ? 15 : 5;
-    final trophiesDelta = isWin ? 25 : -15;
+    
+    // Dynamic Trophy Calculation (Clash of Clans style)
+    // Base gain/loss is 30. We adjust by +/- 1 for every 10 trophy difference.
+    final int diff = opponentTrophies - user.stats.trophies;
+    int trophyDelta = 0;
+    
+    if (isWin) {
+      trophyDelta = 30 + (diff ~/ 15); // If opponent has 300 more trophies, gain 30 + 20 = 50.
+      if (trophyDelta < 10) trophyDelta = 10; // Floor of +10
+      if (trophyDelta > 50) trophyDelta = 50; // Ceiling of +50
+    } else {
+      trophyDelta = -30 + (diff ~/ 15); // If opponent has 300 more trophies, lose -30 + 20 = -10 (lose less).
+      if (trophyDelta > -10) trophyDelta = -10; // Min loss -10
+      if (trophyDelta < -50) trophyDelta = -50; // Max loss -50
+    }
 
     user.stats.xp += xpEarned;
     user.stats.coins += coinsEarned;
     user.stats.level = 1 + (user.stats.xp ~/ 100);
 
-    user.stats.trophies += trophiesDelta;
+    user.stats.trophies += trophyDelta;
     if (user.stats.trophies < 0) user.stats.trophies = 0;
 
-    // League thresholds
-    if (user.stats.trophies > 1000) {
-      user.stats.league = 'Legend';
-    } else if (user.stats.trophies > 500) {
-      user.stats.league = 'Gold';
-    } else if (user.stats.trophies > 200) {
-      user.stats.league = 'Silver';
-    } else {
-      user.stats.league = 'Bronze';
-    }
+    user.stats.league = getLeagueForTrophies(user.stats.trophies);
 
     user.save();
     return user;
+  }
+
+  /// Helper to determine the professional league tier based on trophies
+  String getLeagueForTrophies(int trophies) {
+    if (trophies >= 3000) return 'Legend';
+    if (trophies >= 2000) return 'Champion';
+    if (trophies >= 1500) return 'Master';
+    if (trophies >= 1200) return 'Gold I';
+    if (trophies >= 1000) return 'Gold II';
+    if (trophies >= 800) return 'Gold III';
+    if (trophies >= 600) return 'Silver I';
+    if (trophies >= 500) return 'Silver II';
+    if (trophies >= 400) return 'Silver III';
+    if (trophies >= 300) return 'Bronze I';
+    if (trophies >= 200) return 'Bronze II';
+    if (trophies >= 100) return 'Bronze III';
+    return 'Unranked';
   }
 
   Future<List<UserModel>> fetchLeagueLeaderboard(String leagueName) async {

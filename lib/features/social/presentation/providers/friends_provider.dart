@@ -18,6 +18,22 @@ class Friend {
   });
 }
 
+class FriendRequest {
+  final String id;
+  final String userId;
+  final String name;
+  final String avatarUrl;
+  final String league;
+
+  FriendRequest({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.avatarUrl,
+    required this.league,
+  });
+}
+
 class ChatMessage {
   final String senderId;
   final String text;
@@ -32,19 +48,23 @@ class ChatMessage {
 
 class FriendsState {
   final List<Friend> friends;
+  final List<FriendRequest> requests;
   final Map<String, List<ChatMessage>> chatHistory;
 
   FriendsState({
     required this.friends,
+    this.requests = const [],
     required this.chatHistory,
   });
 
   FriendsState copyWith({
     List<Friend>? friends,
+    List<FriendRequest>? requests,
     Map<String, List<ChatMessage>>? chatHistory,
   }) {
     return FriendsState(
       friends: friends ?? this.friends,
+      requests: requests ?? this.requests,
       chatHistory: chatHistory ?? this.chatHistory,
     );
   }
@@ -78,6 +98,22 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
               isOnline: false,
               statusText: 'Offline',
             ),
+          ],
+          requests: [
+            FriendRequest(
+              id: 'req1',
+              userId: '45',
+              name: 'Dr. Einstein',
+              avatarUrl: 'assets/svg/avatars/shop/scientist.svg',
+              league: 'Legend',
+            ),
+            FriendRequest(
+              id: 'req2',
+              userId: '88',
+              name: 'Pirate Pete',
+              avatarUrl: 'assets/svg/avatars/shop/pirate.svg',
+              league: 'Silver I',
+            )
           ],
           chatHistory: {
             '21': [
@@ -121,6 +157,32 @@ class FriendsNotifier extends StateNotifier<FriendsState> {
         state = state.copyWith(chatHistory: updatedHistory);
       }
     });
+  }
+
+  void acceptRequest(String requestId) {
+    final request = state.requests.firstWhere((r) => r.id == requestId);
+    final updatedRequests = state.requests.where((r) => r.id != requestId).toList();
+    final updatedFriends = List<Friend>.from(state.friends)
+      ..add(Friend(
+        id: request.userId,
+        name: request.name,
+        avatarUrl: request.avatarUrl,
+        league: request.league,
+        isOnline: true,
+        statusText: 'Online',
+      ));
+    
+    state = state.copyWith(friends: updatedFriends, requests: updatedRequests);
+  }
+
+  void declineRequest(String requestId) {
+    final updatedRequests = state.requests.where((r) => r.id != requestId).toList();
+    state = state.copyWith(requests: updatedRequests);
+  }
+
+  void sendFriendRequest(String userId) {
+    // In a real app this would send an API request.
+    // For now we just mock success.
   }
 }
 

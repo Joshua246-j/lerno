@@ -49,57 +49,80 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      backgroundColor: Colors.transparent, // Let content background show
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+      ),
+    );
+  }
+}
+
+class CustomBottomNavBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final navItems = [
+      {'icon': LucideIcons.home, 'label': 'Home'},
+      {'icon': LucideIcons.map, 'label': 'Courses'},
+      {'icon': LucideIcons.gamepad2, 'label': 'Games'},
+      {'icon': LucideIcons.shoppingBag, 'label': 'Store'},
+      {'icon': LucideIcons.user, 'label': 'Profile'},
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0, left: 24.0, right: 24.0),
+      child: Container(
+        height: 70,
         decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(35), // Pill shape like mockup
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 5,
-              blurRadius: 10,
-              offset: const Offset(0, -3),
+              color: Colors.black.withValues(alpha: 0.05),
+              spreadRadius: 0,
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: _onTabTapped,
-            backgroundColor: Colors.white,
-            selectedItemColor: AppTheme.primaryBlue,
-            unselectedItemColor: Colors.grey.shade400,
-            showSelectedLabels: true,
-            showUnselectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(LucideIcons.home),
-                label: 'Home',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List.generate(navItems.length, (index) {
+            final isSelected = currentIndex == index;
+            final icon = navItems[index]['icon'] as IconData;
+            return GestureDetector(
+              onTap: () => onTap(index),
+              behavior: HitTestBehavior.opaque,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppTheme.primaryBlue.withValues(alpha: 0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ? AppTheme.primaryBlue : Colors.grey.shade400,
+                  size: isSelected ? 28 : 24,
+                ),
               ),
-              BottomNavigationBarItem(
-                icon: Icon(LucideIcons.map),
-                label: 'Courses',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(LucideIcons.gamepad2),
-                label: 'Games',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(LucideIcons.shoppingBag),
-                label: 'Store',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(LucideIcons.user),
-                label: 'Profile',
-              ),
-            ],
-          ),
+            );
+          }),
         ),
       ),
     );

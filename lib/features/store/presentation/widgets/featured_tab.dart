@@ -8,7 +8,8 @@ class FeaturedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(20),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
       children: [
         if (isDailyDeals) ...[
           _buildOfferCard(

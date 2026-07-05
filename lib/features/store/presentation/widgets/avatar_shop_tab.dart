@@ -18,7 +18,8 @@ class AvatarShopTab extends ConsumerWidget {
     final avatars = AvatarConfig.storeAvatars;
 
     return GridView.builder(
-      padding: const EdgeInsets.all(20),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 15,

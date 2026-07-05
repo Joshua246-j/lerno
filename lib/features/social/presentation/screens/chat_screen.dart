@@ -55,12 +55,30 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: AppTheme.pastelBlue,
-              radius: 16,
-              child: SvgPicture.asset(widget.friend.avatarUrl, width: 20),
+            Stack(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppTheme.pastelBlue,
+                  radius: 18,
+                  child: SvgPicture.asset(widget.friend.avatarUrl, width: 24),
+                ),
+                if (widget.friend.isOnline)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                    ),
+                  )
+              ],
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -115,20 +133,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 12),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
+                    ),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                        horizontal: 18, vertical: 14),
                     decoration: BoxDecoration(
                       color: isMe ? AppTheme.primaryBlue : Colors.white,
                       borderRadius: BorderRadius.circular(20).copyWith(
-                        bottomRight: isMe ? const Radius.circular(0) : null,
-                        bottomLeft: !isMe ? const Radius.circular(0) : null,
+                        bottomRight: isMe ? const Radius.circular(4) : null,
+                        bottomLeft: !isMe ? const Radius.circular(4) : null,
                       ),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2))
+                            color: isMe 
+                                ? AppTheme.primaryBlue.withValues(alpha: 0.2)
+                                : Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4))
                       ],
                     ),
                     child: Text(
@@ -136,9 +159,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       style: TextStyle(
                         color: isMe ? Colors.white : AppTheme.textDark,
                         fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ).animate().fadeIn().slideY(begin: 0.2),
+                  ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.1),
                 );
               },
             ),

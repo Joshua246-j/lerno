@@ -10,7 +10,6 @@ import 'package:lerno/core/audio/audio_manager.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/features/home/presentation/providers/home_provider.dart';
 import 'package:lerno/data/mock_data.dart';
-
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -20,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
     final coursesAsync = ref.watch(coursesProvider);
     final activitiesAsync = ref.watch(activitiesProvider);
     final recommendationsAsync = ref.watch(recommendationsProvider);
+    final bannersAsync = ref.watch(bannersProvider);
 
     if (user == null) {
       return const Scaffold(
@@ -30,236 +30,215 @@ class HomeScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: const Color(0xFFEDF2FA), // Light bluish background
       body: SafeArea(
         child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(context, ref, user),
-                    const SizedBox(height: 25),
-                    
-                    const Text('Courses',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textDark)),
-                    const SizedBox(height: 15),
-                    _buildHeroBanner(context, ref).animate().fadeIn().slideY(begin: 0.1),
-                    
-                    const SizedBox(height: 30),
-                    const Text('Subjects',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textDark)),
-                    const SizedBox(height: 15),
-                    coursesAsync.when(
-                      data: (courses) => _buildSubjectsList(courses),
-                      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue)),
-                      error: (err, stack) => Text('Error: $err'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
+                    child: _buildHeader(context, ref, user),
+                  ),
+                  
+                  // Courses (Replaces Banners)
+                  _buildSectionTitle('Courses'),
+                  bannersAsync.when(
+                    data: (banners) => _buildBannersCarousel(context, ref, banners).animate().fadeIn().slideY(begin: 0.1),
+                    loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
+                    error: (err, stack) => const SizedBox(),
+                  ),
+
+                  const SizedBox(height: 20),
+                  
+                  // Subjects
+                  _buildSectionTitle('Subjects'),
+                  coursesAsync.when(
+                    data: (courses) => _buildCoursesList(courses),
+                    loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
+                    error: (err, stack) => const SizedBox(),
+                  ),
+                  
+                  const SizedBox(height: 25),
+                  
+                  // Activity
+                  _buildSectionTitle('Activity'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: activitiesAsync.when(
+                      data: (activities) => _buildActivityGrid(context, ref, activities).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => const SizedBox(),
                     ),
-                    
-                    const SizedBox(height: 30),
-                    const Text('Activity',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textDark)),
-                    const SizedBox(height: 15),
-                    activitiesAsync.when(
-                      data: (activities) => _buildActivityGrid(context, ref, activities).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
-                      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue)),
-                      error: (err, stack) => Text('Error: $err'),
-                    ),
-                    
-                    const SizedBox(height: 30),
-                    const Text('Recommended',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textDark)),
-                    const SizedBox(height: 15),
-                    recommendationsAsync.when(
-                      data: (recommendations) => _buildRecommendationsList(recommendations),
-                      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue)),
-                      error: (err, stack) => Text('Error: $err'),
-                    ),
-                    
-                    const SizedBox(height: 40),
-                  ],
-                ),
+                  ),
+                  
+                  const SizedBox(height: 25),
+                  
+                  // Recommended
+                  _buildSectionTitle('Recommended'),
+                  recommendationsAsync.when(
+                    data: (recommendations) => _buildRecommendationsList(recommendations),
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (err, stack) => const SizedBox(),
+                  ),
+                  
+                  const SizedBox(height: 120), // Bottom padding for navbar
+                ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      child: Text(title,
+          style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              letterSpacing: -0.5,
+              color: AppTheme.textDark)),
     );
   }
 
   Widget _buildHeader(BuildContext context, WidgetRef ref, dynamic user) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () => context.push('/profile'),
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.primaryBlue, width: 2),
-                ),
-                child: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: AppTheme.primaryLight,
-                  child: SvgPicture.asset(
-                      AppAssets.getAvatarPath(user.avatarId),
-                      width: 34,
-                      placeholderBuilder: (_) =>
-                          const Icon(LucideIcons.user, color: AppTheme.primaryBlue)),
-                ),
-              ),
+            IconButton(
+              icon: const Icon(LucideIcons.menu, color: AppTheme.primaryBlue, size: 28),
+              onPressed: () => context.push('/settings'), 
             ),
-            const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Text('Hello ${user.displayName}',
-                    style: const TextStyle(
-                        color: AppTheme.textDark,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800)),
-                Text('Grade ${user.stats.level}',
-                    style: const TextStyle(
-                        color: AppTheme.textLight,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500)),
+                IconButton(
+                  icon: const Icon(LucideIcons.mail, color: AppTheme.primaryBlue, size: 26),
+                  onPressed: () => context.push('/inbox'),
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.search, color: AppTheme.primaryBlue, size: 26),
+                  onPressed: () => context.push('/search'),
+                ),
               ],
             ),
           ],
         ),
-        Row(
-          children: [
-            TextButton.icon(
-              onPressed: () {
-                ref.read(audioManagerProvider).playClick();
-                context.push('/achievements');
-              },
-              icon: const Icon(LucideIcons.trophy, color: Colors.orange, size: 20),
-              label: const Text('Awards', style: TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.bold)),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.push('/profile'),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          )
+                        ]
+                      ),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: SvgPicture.asset(
+                              AppAssets.getAvatarPath(user.avatarId),
+                              placeholderBuilder: (_) =>
+                                  const Icon(LucideIcons.user, color: AppTheme.primaryBlue)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Hello ${user.displayName.split(" ")[0]}',
+                          style: const TextStyle(
+                              color: AppTheme.textDark,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5)),
+                      Text('Grade ${user.stats.level}',
+                          style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            IconButton(
-              icon: const Icon(LucideIcons.search, color: AppTheme.textLight),
-              onPressed: () {
-                ref.read(audioManagerProvider).playClick();
-                context.push('/search');
-              },
-            ),
-          ],
-        )
+              const Column(
+                children: [
+                  Icon(LucideIcons.trophy, color: Colors.orange, size: 26),
+                  SizedBox(height: 4),
+                  Text('Awards', style: TextStyle(color: Colors.orange, fontSize: 13, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildHeroBanner(BuildContext context, WidgetRef ref) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF86EFAC),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: AppTheme.modernShadow,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('All about Words',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white)),
-                const SizedBox(height: 8),
-                const Text('Learn to read and\nwrite words',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        height: 1.2)),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    ref.read(audioManagerProvider).playClick();
-                    context.push('/game/word_hunt');
-                  },
-                  icon: const Icon(LucideIcons.play, size: 16),
-                  label: const Text('Start',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF10B981),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    elevation: 0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: SvgPicture.asset(
-              'assets/svg/avatars/alien.svg',
-              height: 100,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubjectsList(List<MockCourse> courses) {
+  Widget _buildBannersCarousel(BuildContext context, WidgetRef ref, List<MockBanner> banners) {
     return SizedBox(
-      height: 160,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        clipBehavior: Clip.none,
-        itemCount: courses.length,
+      height: 170,
+      child: PageView.builder(
+        controller: PageController(viewportFraction: 0.92),
+        itemCount: banners.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final banner = banners[index];
           return Container(
-            width: 120,
-            margin: const EdgeInsets.only(right: 15),
+            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
             decoration: BoxDecoration(
-              color: course.color,
-              borderRadius: BorderRadius.circular(24),
+              color: banner.bgColor,
+              borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: course.color.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5))
+                  color: banner.bgColor.withValues(alpha: 0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                )
               ],
             ),
             child: Stack(
               children: [
+                // Background decorative circles
                 Positioned(
-                  right: -10,
-                  top: -10,
+                  right: -20,
+                  top: -20,
                   child: Container(
-                    width: 60,
-                    height: 60,
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: -30,
+                  bottom: -30,
+                  child: Container(
+                    width: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
@@ -267,25 +246,149 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  padding: const EdgeInsets.all(22.0),
+                  child: Row(
                     children: [
                       Expanded(
-                        child: SvgPicture.asset(course.svgAsset),
+                        flex: 6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(banner.title,
+                                style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.1,
+                                    color: Colors.white)),
+                            const SizedBox(height: 6),
+                            Text(banner.subtitle,
+                                style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.2)),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                ref.read(audioManagerProvider).playClick();
+                                context.push(banner.route);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: banner.bgColor,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                elevation: 0,
+                                minimumSize: const Size(0, 36),
+                              ),
+                              child: Text(banner.actionText,
+                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 15),
-                      Text(course.title.split(' ')[0],
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white)),
+                      Expanded(
+                        flex: 4,
+                        child: Transform.rotate(
+                          angle: -0.1,
+                          child: SvgPicture.asset(
+                            banner.svgAsset,
+                            height: 110,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-          ).animate().fadeIn(delay: (100 + (index * 100)).ms).slideX(begin: 0.2);
+          );
+        },
+      ),
+    );
+  }
+
+
+  Widget _buildCoursesList(List<MockCourse> courses) {
+    return SizedBox(
+      height: 180,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        itemCount: courses.length,
+        itemBuilder: (context, index) {
+          final course = courses[index];
+          return Container(
+            width: 140,
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+              color: course.color,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: course.color.withValues(alpha: 0.4),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5))
+              ],
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: -15,
+                  top: -15,
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: SvgPicture.asset(course.svgAsset),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(course.title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                              letterSpacing: -0.5,
+                              color: Colors.white)),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: double.infinity,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: course.progress,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ).animate().fadeIn(delay: (100 + (index * 100)).ms).slideX(begin: 0.1);
         },
       ),
     );
@@ -296,7 +399,8 @@ class HomeScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
         boxShadow: AppTheme.modernShadow,
       ),
       child: GridView.builder(
@@ -304,9 +408,9 @@ class HomeScreen extends ConsumerWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 10,
-          childAspectRatio: 0.85,
+          mainAxisSpacing: 25,
+          crossAxisSpacing: 15,
+          childAspectRatio: 0.75,
         ),
         itemCount: activities.length,
         itemBuilder: (context, index) {
@@ -324,20 +428,21 @@ class HomeScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 55,
-                  height: 55,
+                  width: 65,
+                  height: 65,
                   decoration: BoxDecoration(
-                    color: activity.color.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                    color: activity.color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(activity.icon, color: activity.color, size: 28),
+                  child: Icon(activity.icon, color: activity.color, size: 30),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
                 Text(
                   activity.title,
                   style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.3,
                       color: AppTheme.textDark),
                 ),
               ],
@@ -350,21 +455,29 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildRecommendationsList(List<MockRecommendation> recommendations) {
     return SizedBox(
-      height: 110,
+      height: 120,
       child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
         itemCount: recommendations.length,
         itemBuilder: (context, index) {
           final rec = recommendations[index];
           return Container(
-            width: 280,
-            margin: const EdgeInsets.only(right: 15),
+            width: 300,
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: AppTheme.modernShadow,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                )
+              ],
             ),
             child: Row(
               children: [
@@ -372,11 +485,11 @@ class HomeScreen extends ConsumerWidget {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryLight,
-                    borderRadius: BorderRadius.circular(15),
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(14.0),
                     child: SvgPicture.asset(rec.svgAsset),
                   ),
                 ),
@@ -388,22 +501,26 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       Text(rec.title,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                              letterSpacing: -0.5,
                               color: AppTheme.textDark)),
                       const SizedBox(height: 4),
                       Text(rec.subtitle,
                           style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 12,
                               color: AppTheme.textLight,
                               height: 1.2)),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 8),
                       Row(
                         children: List.generate(3, (starIdx) {
-                          return Icon(
-                            LucideIcons.star,
-                            size: 12,
-                            color: starIdx < rec.stars ? Colors.orange : Colors.grey.shade300,
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 2),
+                            child: Icon(
+                              LucideIcons.star,
+                              size: 14,
+                              color: starIdx < rec.stars ? Colors.orange : Colors.grey.shade200,
+                            ),
                           );
                         }),
                       )
@@ -411,8 +528,8 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  width: 35,
-                  height: 35,
+                  width: 38,
+                  height: 38,
                   decoration: const BoxDecoration(
                     color: AppTheme.primaryLight,
                     shape: BoxShape.circle,
@@ -421,7 +538,7 @@ class HomeScreen extends ConsumerWidget {
                 )
               ],
             ),
-          ).animate().fadeIn(delay: (300 + (index * 100)).ms).slideX(begin: 0.2);
+          ).animate().fadeIn(delay: (200 + (index * 100)).ms).slideX(begin: 0.1);
         },
       ),
     );

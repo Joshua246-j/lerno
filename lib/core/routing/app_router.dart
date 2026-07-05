@@ -13,7 +13,7 @@ import 'package:lerno/features/learning_path/presentation/screens/subject_detail
 import 'package:lerno/features/learning_path/presentation/screens/course_details_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/lesson_screen.dart';
 import 'package:lerno/features/learning_path/presentation/screens/topic_quiz_screen.dart';
-import 'package:lerno/features/games/quiz_battle/presentation/screens/quiz_battle_screen.dart';
+import 'package:lerno/features/arena/presentation/screens/arena_screen.dart';
 import 'package:lerno/features/games/word_hunt/presentation/screens/word_hunt_screen.dart';
 import 'package:lerno/features/games/memory_match/presentation/screens/memory_match_screen.dart';
 import 'package:lerno/features/games/math_arena/presentation/screens/math_arena_screen.dart';
@@ -102,8 +102,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? 'unknown';
           switch (id) {
-            case 'quiz_battle':
-              return const QuizBattleScreen();
             case 'word_hunt':
               return const WordHuntScreen();
             case 'memory_match':
@@ -158,6 +156,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return TopicQuizScreen(
               subjectId: subjectId, courseId: courseId, topicId: topicId);
         },
+      ),
+      GoRoute(
+        path: '/arena',
+        builder: (context, state) => const ArenaScreen(),
       ),
       GoRoute(
         path: '/profile',

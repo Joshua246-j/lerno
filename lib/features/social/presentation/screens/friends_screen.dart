@@ -16,6 +16,10 @@ class FriendsScreen extends ConsumerStatefulWidget {
 class _FriendsScreenState extends ConsumerState<FriendsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  bool _searchComplete = false;
+  bool _requestSent = false;
 
   @override
   void initState() {
@@ -26,6 +30,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -162,6 +167,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
       child: Column(
         children: [
           TextField(
+            controller: _searchController,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
@@ -171,24 +177,155 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
               ),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear, color: Colors.grey),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          _searchComplete = false;
+                          _requestSent = false;
+                        });
+                      },
+                    )
+                  : null,
             ),
+            onSubmitted: (val) {
+              if (val.trim().isEmpty) return;
+              ref.read(audioManagerProvider).playClick();
+              setState(() {
+                _isSearching = true;
+                _searchComplete = false;
+                _requestSent = false;
+              });
+              
+              Future.delayed(const Duration(seconds: 1), () {
+                if (mounted) {
+                  setState(() {
+                    _isSearching = false;
+                    _searchComplete = true;
+                  });
+                }
+              });
+            },
+            onChanged: (val) {
+              setState(() {});
+            },
           ),
           const SizedBox(height: 40),
-          const Icon(Icons.people_outline, size: 80, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Find your friends',
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textDark),
+          if (_isSearching)
+            const CircularProgressIndicator(color: AppTheme.primaryBlue)
+          else if (_searchComplete)
+            _buildSearchResult()
+          else ...[
+            const Icon(Icons.people_outline, size: 80, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'Find your friends',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textDark),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Search for a friend\'s username to invite them to a quiz battle!',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchResult() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.3), width: 2),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: AppTheme.pastelPurple,
+                child: SvgPicture.asset('assets/svg/avatars/shop/unicorn.svg', width: 45),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _searchController.text,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppTheme.textDark),
+                    ),
+                    const Row(
+                      children: [
+                        Icon(Icons.emoji_events, size: 16, color: Colors.orange),
+                        SizedBox(width: 4),
+                        Text(
+                          'Gold I',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Search for a friend\'s username to invite them to a quiz battle!',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
-          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _requestSent ? null : () {
+                ref.read(audioManagerProvider).playClick();
+                ref.read(friendsProvider.notifier).sendFriendRequest('mock_id');
+                setState(() {
+                  _requestSent = true;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Friend request sent to ${_searchController.text}!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _requestSent ? Colors.grey : AppTheme.primaryBlue,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                _requestSent ? 'Request Sent' : 'Add Friend',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
         ],
       ),
     );

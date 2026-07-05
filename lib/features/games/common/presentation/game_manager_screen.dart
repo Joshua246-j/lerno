@@ -14,7 +14,6 @@ class GameManagerScreen extends ConsumerStatefulWidget {
   final String gameTitle;
   final String gameDescription;
   final Widget gameContent;
-  final bool isRanked;
   final Function(BuildContext context, WidgetRef ref)? onGameStart;
 
   const GameManagerScreen({
@@ -22,7 +21,6 @@ class GameManagerScreen extends ConsumerStatefulWidget {
     required this.gameTitle,
     required this.gameDescription,
     required this.gameContent,
-    this.isRanked = false,
     this.onGameStart,
   });
 
@@ -65,16 +63,11 @@ class _GameManagerScreenState extends ConsumerState<GameManagerScreen> {
     setState(() {
       _currentState = GameState.results;
     });
-
     final service = ref.read(gameSessionServiceProvider);
-    if (widget.isRanked) {
-      service.finishRankedGame(isVictory: isVictory);
-    } else {
-      final xp = isVictory ? score + 20 : score;
-      final coins = isVictory ? (score / 10).floor() + 5 : (score / 10).floor();
-      service.finishGame(
-          xpEarned: xp, coinsEarned: coins, isVictory: isVictory);
-    }
+    final xp = isVictory ? score + 20 : score;
+    final coins = isVictory ? (score / 10).floor() + 5 : (score / 10).floor();
+    service.finishGame(
+        xpEarned: xp, coinsEarned: coins, isVictory: isVictory);
   }
 
   @override

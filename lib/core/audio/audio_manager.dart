@@ -59,7 +59,7 @@ class AudioManager {
 
   // --- Background Music ---
 
-  Future<void> playBgm({String track = 'bgm_main'}) async {
+  Future<void> playBgm({String track = 'bgm'}) async {
     if (_isMuted) return;
     try {
       await _bgmPlayer.play(AssetSource('audio/music/$track.mp3'),
@@ -84,7 +84,7 @@ class AudioManager {
   }
 
   Future<void> playFail() async {
-    _playSfx('ui/error');
+    _playSfx('ui/fail');
   }
 
   // --- Game Sound Effects ---
@@ -119,7 +119,7 @@ class AudioManager {
       // Create a transient player for overlapping sounds
       final player = AudioPlayer();
       player.onPlayerComplete.listen((_) => player.dispose());
-      await player.play(AssetSource('audio/$path.mp3'),
+      await player.play(AssetSource('audio/$path.wav'),
           volume: _effectsVolume * _masterVolume, mode: PlayerMode.lowLatency);
     } catch (e) {
       // Ignore missing mock file errors

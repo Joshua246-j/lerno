@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:lerno/features/gamification/domain/models/league_system.dart';
 import 'package:lerno/features/gamification/presentation/widgets/league_shield_widget.dart';
 import 'package:lerno/core/theme/app_theme.dart';
+import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/features/gamification/presentation/screens/league_leaderboard_screen.dart';
 import 'package:lerno/features/gamification/data/repositories/gamification_repository.dart';
 import 'package:lerno/core/widgets/mountain_background.dart';
+import 'package:lerno/features/social/presentation/providers/friends_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -18,9 +20,11 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userProfileProvider);
     final userName = profile?.displayName ?? 'Guest';
-    final avatar = profile?.avatarId.isNotEmpty == true
+    final avatarId = profile?.avatarId.isNotEmpty == true
         ? profile!.avatarId
-        : 'assets/svg/avatars/starter/octopus.svg';
+        : 'octopus';
+    final avatarPath = AppAssets.getAvatarPath(avatarId);
+    final friendsState = ref.watch(friendsProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FB),
@@ -52,7 +56,8 @@ class ProfileScreen extends ConsumerWidget {
           // Main Content
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 100),
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 120),
               child: Column(
                 children: [
                   const SizedBox(height: 20),
@@ -80,7 +85,7 @@ class ProfileScreen extends ConsumerWidget {
                               color: AppTheme.pastelPurple,
                             ),
                             child: ClipOval(
-                              child: SvgPicture.asset(avatar,
+                              child: SvgPicture.asset(avatarPath,
                                   fit: BoxFit.scaleDown),
                             ),
                           ),
@@ -338,12 +343,12 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 40),
 
                   // Friends list
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('My Friends (12 Online)',
-                          style: TextStyle(
+                      child: Text('My Friends (${friendsState.friends.where((f) => f.isOnline).length} Online)',
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
                               color: AppTheme.textDark)),
@@ -353,14 +358,7 @@ class ProfileScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
-                      children: [
-                        _buildFriendItem(
-                            'Luna', 'assets/svg/avatars/shop/alien.svg'),
-                        _buildFriendItem('Orion',
-                            'assets/svg/avatars/starter/astronaut.svg'),
-                        _buildFriendItem(
-                            'Comet', 'assets/svg/avatars/starter/robot.svg'),
-                      ],
+                      children: friendsState.friends.take(3).map((friend) => _buildFriendItem(context, friend)).toList(),
                     ),
                   ),
                 ],
@@ -458,7 +456,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFriendItem(String name, String avatarPath) {
+  Widget _buildFriendItem(BuildContext context, Friend friend) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -479,29 +477,30 @@ class ProfileScreen extends ConsumerWidget {
               CircleAvatar(
                 backgroundColor: AppTheme.pastelBlue,
                 radius: 22,
-                child: SvgPicture.asset(avatarPath,
+                child: SvgPicture.asset(friend.avatarUrl,
                     width: 24,
                     placeholderBuilder: (context) =>
                         const Icon(Icons.person, color: Colors.blue)),
               ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
+              if (friend.isOnline)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Text(name,
+            child: Text(friend.name,
                 style: const TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -509,7 +508,9 @@ class ProfileScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.message, color: AppTheme.primaryBlue),
-            onPressed: () {},
+            onPressed: () {
+              context.push('/chat/${friend.id}', extra: friend);
+            },
           )
         ],
       ),

@@ -88,4 +88,5 @@ For detailed technical implementation and architecture guidelines, refer to the 
 - [23_Store_and_Economy](docs/23_Store_and_Economy.md)
 - [24_Social_Features](docs/24_Social_Features.md)
 - [25_Learning_Path_System](docs/25_Learning_Path_System.md)
+- [26_Backend_Guide](docs/26_Backend_Guide.md)
 - [CHANGELOG](CHANGELOG.md)

@@ -6,6 +6,7 @@ import 'package:lerno/core/theme/app_theme.dart';
 import 'package:lerno/core/theme/app_assets.dart';
 import 'package:lerno/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:lerno/core/audio/audio_manager.dart';
+import 'package:lerno/core/mock/avatar_config.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -18,19 +19,24 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late TextEditingController _nameController;
   late String _selectedAvatar;
 
-  final List<String> _availableAvatars = [
-    'octopus',
-    'alien',
-    'astronaut',
-    'robot',
-  ];
+  List<String> _availableAvatars = [];
 
   @override
   void initState() {
     super.initState();
     final profile = ref.read(userProfileProvider);
-    _nameController = TextEditingController(text: profile?.displayName ?? '');
-    _selectedAvatar = (profile != null && profile.avatarId.isNotEmpty)
+    
+    final defaultAvatars = AvatarConfig.starterAvatars.map((e) => e.avatarId).toList();
+    _availableAvatars = [...defaultAvatars];
+    if (profile != null) {
+      for (final item in profile.inventory) {
+        if (!_availableAvatars.contains(item)) {
+          _availableAvatars.add(item);
+        }
+      }
+    }
+    
+    _selectedAvatar = (profile != null && profile.avatarId.isNotEmpty && _availableAvatars.contains(profile.avatarId))
         ? profile.avatarId
         : _availableAvatars[0];
   }
