@@ -30,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF2FA), // Light bluish background
+      backgroundColor: const Color(0xFFF4F7FB), // Crisp modern background
       body: SafeArea(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -40,12 +40,18 @@ class HomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
-                    child: _buildHeader(context, ref, user),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                    child: _buildTopNav(context),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: _buildProfileBanner(context, ref, user).animate().fadeIn().slideY(begin: -0.1),
                   ),
                   
+                  const SizedBox(height: 25),
+                  
                   // Courses (Replaces Banners)
-                  _buildSectionTitle('Courses'),
+                  _buildSectionTitle('Featured'),
                   bannersAsync.when(
                     data: (banners) => _buildBannersCarousel(context, ref, banners).animate().fadeIn().slideY(begin: 0.1),
                     loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
@@ -55,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   
                   // Subjects
-                  _buildSectionTitle('Subjects'),
+                  _buildSectionTitle('Learning Paths'),
                   coursesAsync.when(
                     data: (courses) => _buildCoursesList(courses),
                     loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
@@ -65,7 +71,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 25),
                   
                   // Activity
-                  _buildSectionTitle('Activity'),
+                  _buildSectionTitle('Quick Actions'),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: activitiesAsync.when(
@@ -78,7 +84,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 25),
                   
                   // Recommended
-                  _buildSectionTitle('Recommended'),
+                  _buildSectionTitle('Recommended for You'),
                   recommendationsAsync.when(
                     data: (recommendations) => _buildRecommendationsList(recommendations),
                     loading: () => const Center(child: CircularProgressIndicator()),
@@ -107,93 +113,148 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, WidgetRef ref, dynamic user) {
-    return Column(
+  Widget _buildTopNav(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        IconButton(
+          icon: const Icon(LucideIcons.menu, color: AppTheme.textDark, size: 28),
+          onPressed: () => context.push('/settings'), 
+        ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              icon: const Icon(LucideIcons.menu, color: AppTheme.primaryBlue, size: 28),
-              onPressed: () => context.push('/settings'), 
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 3))
+                ]
+              ),
+              child: IconButton(
+                icon: const Icon(LucideIcons.mail, color: AppTheme.primaryBlue, size: 24),
+                onPressed: () => context.push('/inbox'),
+              ),
             ),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(LucideIcons.mail, color: AppTheme.primaryBlue, size: 26),
-                  onPressed: () => context.push('/inbox'),
-                ),
-                IconButton(
-                  icon: const Icon(LucideIcons.search, color: AppTheme.primaryBlue, size: 26),
-                  onPressed: () => context.push('/search'),
-                ),
-              ],
+            const SizedBox(width: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 3))
+                ]
+              ),
+              child: IconButton(
+                icon: const Icon(LucideIcons.search, color: AppTheme.primaryBlue, size: 24),
+                onPressed: () => context.push('/search'),
+              ),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+      ],
+    );
+  }
+
+  Widget _buildProfileBanner(BuildContext context, WidgetRef ref, dynamic user) {
+    return GestureDetector(
+      onTap: () => context.push('/profile'),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryBlue.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            )
+          ],
+          border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [AppTheme.primaryBlue, AppTheme.pastelPurple],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              ),
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SvgPicture.asset(
+                      AppAssets.getAvatarPath(user.avatarId),
+                      placeholderBuilder: (_) =>
+                          const Icon(LucideIcons.user, color: AppTheme.primaryBlue)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () => context.push('/profile'),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          )
-                        ]
-                      ),
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: SvgPicture.asset(
-                              AppAssets.getAvatarPath(user.avatarId),
-                              placeholderBuilder: (_) =>
-                                  const Icon(LucideIcons.user, color: AppTheme.primaryBlue)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Text('Level ${user.stats.level} Scholar',
+                      style: const TextStyle(
+                          color: AppTheme.primaryBlue,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5)),
+                  const SizedBox(height: 2),
+                  Text(user.displayName.split(" ")[0],
+                      style: const TextStyle(
+                          color: AppTheme.textDark,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5)),
+                  const SizedBox(height: 4),
+                  Row(
                     children: [
-                      Text('Hello ${user.displayName.split(" ")[0]}',
-                          style: const TextStyle(
-                              color: AppTheme.textDark,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.5)),
-                      Text('Grade ${user.stats.level}',
+                      const Icon(Icons.stars, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text('${user.stats.xp} XP',
                           style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)),
+                              color: Colors.grey.shade700,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ],
               ),
-              const Column(
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.orange.shade200),
+              ),
+              child: Column(
                 children: [
-                  Icon(LucideIcons.trophy, color: Colors.orange, size: 26),
-                  SizedBox(height: 4),
-                  Text('Awards', style: TextStyle(color: Colors.orange, fontSize: 13, fontWeight: FontWeight.bold)),
+                  const Icon(LucideIcons.flame, color: Colors.orange, size: 24),
+                  const SizedBox(height: 2),
+                  Text('${user.stats.currentStreak}', style: const TextStyle(color: Colors.orange, fontSize: 14, fontWeight: FontWeight.w900)),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -312,7 +373,7 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildCoursesList(List<MockCourse> courses) {
     return SizedBox(
-      height: 180,
+      height: 190,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         scrollDirection: Axis.horizontal,
@@ -321,16 +382,20 @@ class HomeScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final course = courses[index];
           return Container(
-            width: 140,
-            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            width: 150,
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: BoxDecoration(
-              color: course.color,
-              borderRadius: BorderRadius.circular(28),
+              gradient: LinearGradient(
+                colors: [course.color, course.color.withValues(alpha: 0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
-                  color: course.color.withValues(alpha: 0.4),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5))
+                  color: course.color.withValues(alpha: 0.5),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8))
               ],
             ),
             child: Stack(
@@ -348,7 +413,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -356,18 +421,18 @@ class HomeScreen extends ConsumerWidget {
                         flex: 3,
                         child: SvgPicture.asset(course.svgAsset),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Text(course.title,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontWeight: FontWeight.w900,
-                              fontSize: 15,
+                              fontSize: 16,
                               letterSpacing: -0.5,
                               color: Colors.white)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Container(
                         width: double.infinity,
-                        height: 6,
+                        height: 8,
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(10),
@@ -379,6 +444,9 @@ class HomeScreen extends ConsumerWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(color: Colors.white.withValues(alpha: 0.5), blurRadius: 4)
+                              ]
                             ),
                           ),
                         ),

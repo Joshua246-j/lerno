@@ -36,53 +36,102 @@ class GamesHubScreen extends ConsumerWidget {
   }
 
   Widget _buildRankedBanner(BuildContext context, WidgetRef ref) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         ref.read(audioManagerProvider).playClick();
         context.push('/arena');
       },
-      borderRadius: BorderRadius.circular(20),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [AppTheme.primaryBlue, Colors.purpleAccent],
+            colors: [Color(0xFF6366F1), Color(0xFFA855F7), Color(0xFFEC4899)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-                color: AppTheme.primaryBlue.withValues(alpha: 0.4),
-                blurRadius: 15,
-                offset: const Offset(0, 5))
+                color: const Color(0xFFA855F7).withValues(alpha: 0.5),
+                blurRadius: 20,
+                offset: const Offset(0, 10))
           ],
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2),
         ),
-        child: Column(
+        child: Stack(
+          clipBehavior: Clip.none,
           children: [
-            const Icon(Icons.flash_on, color: Colors.amber, size: 50),
-            const SizedBox(height: 10),
-            const Text('BRAIN BATTLE ARENA',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 2)),
-            const SizedBox(height: 5),
-            const Text('Ranked 1v1 Quiz Matches',
-                style: TextStyle(color: Colors.white70, fontSize: 16)),
-            const SizedBox(height: 15),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20)),
-              child: const Text('Play Ranked',
-                  style: TextStyle(
-                      color: AppTheme.primaryBlue,
-                      fontWeight: FontWeight.bold)),
-            )
+            Positioned(
+              right: -30,
+              top: -30,
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.1),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.flash_on, color: Colors.amber, size: 28),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text('SEASON 1',
+                        style: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 2)),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                const Text('BRAIN BATTLE\nARENA',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        height: 1.1,
+                        letterSpacing: 1)),
+                const SizedBox(height: 8),
+                const Text('Ranked 1v1 Quiz Matches',
+                    style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(color: Colors.white.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))
+                      ]
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('PLAY RANKED',
+                          style: TextStyle(
+                              color: AppTheme.primaryBlue,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1)),
+                      SizedBox(width: 8),
+                      Icon(Icons.sports_esports, color: AppTheme.primaryBlue, size: 20),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
@@ -127,24 +176,23 @@ class GamesHubScreen extends ConsumerWidget {
         context.push(game.route);
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 15),
+        margin: const EdgeInsets.only(bottom: 16),
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: AppTheme.modernShadow,
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+          color: bgColor.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: bgColor.withValues(alpha: 0.3), width: 2),
         ),
         child: Row(
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 70,
+              height: 70,
               decoration: BoxDecoration(
                   color: bgColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20)),
-              child: Center(child: Icon(icon, color: bgColor, size: 40)),
+              child: Center(child: Icon(icon, color: bgColor, size: 36)),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -154,19 +202,33 @@ class GamesHubScreen extends ConsumerWidget {
                   Text(game.title,
                       style: const TextStyle(
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5,
                           color: AppTheme.textDark)),
                   const SizedBox(height: 4),
                   Text(game.subtitle,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                      style: const TextStyle(color: AppTheme.textLight, fontSize: 13, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       _buildTag(game.difficulty, bgColor),
                       const SizedBox(width: 8),
-                      _buildTag(game.estimatedTime, Colors.grey),
-                      const SizedBox(width: 8),
-                      _buildTag('+${game.xpReward} XP', Colors.amber),
+                      _buildTag(game.estimatedTime, Colors.grey.shade600),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.stars, color: Colors.amber, size: 14),
+                            const SizedBox(width: 4),
+                            Text('+${game.xpReward}', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 12)),
+                          ],
+                        ),
+                      )
                     ],
                   )
                 ],

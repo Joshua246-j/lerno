@@ -16,7 +16,7 @@ Lerno is a cross-platform children's learning application designed to make educa
 - **State Management**: Riverpod (`flutter_riverpod`)
 - **Routing**: GoRouter (`go_router`)
 - **Game Engine**: Flame (`flame`)
-- **Backend Services**: Firebase (Auth, Firestore, Realtime Database)
+- **Backend Services**: Python, FastAPI, PostgreSQL, Redis (Planned)
 - **Local Storage**: Shared Preferences & Secure Storage
 
 ## 🏛 Architecture Summary
@@ -51,7 +51,7 @@ lerno/
 ### Setup
 1. Clone the repository.
 2. Run `flutter pub get` to install dependencies.
-3. Configure Firebase (Add `google-services.json` and `GoogleService-Info.plist`).
+3. The backend is completely decoupled. Refer to `docs/03_Backend/Environment_Setup.md` for backend setup instructions.
 
 ### Build Commands
 - **Clean Build**: `flutter clean && flutter pub get`
@@ -62,31 +62,5 @@ lerno/
 - **Run App**: `flutter run`
 
 ## 📖 Documentation Index
-For detailed technical implementation and architecture guidelines, refer to the following documents:
-- [01_Project_Overview](docs/01_Project_Overview.md)
-- [02_Project_Architecture](docs/02_Project_Architecture.md)
-- [03_Tech_Stack](docs/03_Tech_Stack.md)
-- [04_Project_Structure](docs/04_Project_Structure.md)
-- [05_Frontend_Architecture](docs/05_Frontend_Architecture.md)
-- [06_Backend_Architecture](docs/06_Backend_Architecture.md)
-- [07_Database_Design](docs/07_Database_Design.md)
-- [08_API_Design](docs/08_API_Design.md)
-- [09_Authentication_System](docs/09_Authentication_System.md)
-- [10_Navigation_Flow](docs/10_Navigation_Flow.md)
-- [11_UI_Design_System](docs/11_UI_Design_System.md)
-- [12_Game_System](docs/12_Game_System.md)
-- [13_Quiz_Battle_System](docs/13_Quiz_Battle_System.md)
-- [14_Gamification_System](docs/14_Gamification_System.md)
-- [15_Profile_System](docs/15_Profile_System.md)
-- [16_Offline_Architecture](docs/16_Offline_Architecture.md)
-- [17_Mock_Backend_System](docs/17_Mock_Backend_System.md)
-- [18_Performance_Optimization](docs/18_Performance_Optimization.md)
-- [19_Security](docs/19_Security.md)
-- [20_Development_Guide](docs/20_Development_Guide.md)
-- [21_Build_Deployment](docs/21_Build_Deployment.md)
-- [22_Project_Status](docs/22_Project_Status.md)
-- [23_Store_and_Economy](docs/23_Store_and_Economy.md)
-- [24_Social_Features](docs/24_Social_Features.md)
-- [25_Learning_Path_System](docs/25_Learning_Path_System.md)
-- [26_Backend_Guide](docs/26_Backend_Guide.md)
+- [Documentation Index](docs/README.md)
 - [CHANGELOG](CHANGELOG.md)

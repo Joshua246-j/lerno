@@ -24,10 +24,7 @@ dependencies:
   flame: ^1.14.0
   
   # Backend & Auth (Firebase)
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.15.3
-  cloud_firestore: ^4.13.6
-  firebase_database: ^10.4.0
+  # REMOVED: Legacy packages purged for FastAPI transition.
   
   # Network & Security
   dio: ^5.4.3
@@ -43,8 +40,7 @@ dependencies:
   rive: ^0.13.1
   
   # Social Auth
-  google_sign_in: ^6.2.1
-  flutter_facebook_auth: ^6.0.3
+  # REMOVED: Legacy packages purged for FastAPI transition.
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_chess_board: ^1.0.1

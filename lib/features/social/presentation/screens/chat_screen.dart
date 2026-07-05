@@ -51,7 +51,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final messages = friendsState.chatHistory[widget.friend.id] ?? [];
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: Row(
           children: [
@@ -140,26 +140,32 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 18, vertical: 14),
                     decoration: BoxDecoration(
-                      color: isMe ? AppTheme.primaryBlue : Colors.white,
-                      borderRadius: BorderRadius.circular(20).copyWith(
-                        bottomRight: isMe ? const Radius.circular(4) : null,
-                        bottomLeft: !isMe ? const Radius.circular(4) : null,
+                      gradient: isMe ? const LinearGradient(
+                        colors: [AppTheme.primaryBlue, AppTheme.pastelPurple],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ) : null,
+                      color: isMe ? null : Colors.white,
+                      borderRadius: BorderRadius.circular(24).copyWith(
+                        bottomRight: isMe ? const Radius.circular(6) : null,
+                        bottomLeft: !isMe ? const Radius.circular(6) : null,
                       ),
                       boxShadow: [
                         BoxShadow(
                             color: isMe 
-                                ? AppTheme.primaryBlue.withValues(alpha: 0.2)
+                                ? AppTheme.primaryBlue.withValues(alpha: 0.3)
                                 : Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4))
+                            blurRadius: 12,
+                            offset: const Offset(0, 5))
                       ],
+                      border: Border.all(color: isMe ? Colors.transparent : Colors.grey.withValues(alpha: 0.1), width: 1.5),
                     ),
                     child: Text(
                       msg.text,
                       style: TextStyle(
                         color: isMe ? Colors.white : AppTheme.textDark,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.1),
@@ -168,18 +174,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
-                .copyWith(
-              bottom: MediaQuery.of(context).padding.bottom + 12,
+            margin: const EdgeInsets.all(16).copyWith(
+              bottom: MediaQuery.of(context).padding.bottom + 16,
             ),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, -4))
+                    color: AppTheme.primaryBlue.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8))
               ],
+              border: Border.all(color: Colors.white, width: 2),
             ),
             child: Row(
               children: [
@@ -188,23 +196,34 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     controller: _messageController,
                     decoration: InputDecoration(
                       hintText: 'Type a message...',
+                      hintStyle: const TextStyle(color: AppTheme.textLight, fontWeight: FontWeight.w500),
                       filled: true,
-                      fillColor: AppTheme.backgroundLight,
+                      fillColor: Colors.transparent,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                          horizontal: 20, vertical: 12),
                     ),
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  backgroundColor: AppTheme.primaryBlue,
+                const SizedBox(width: 4),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.primaryBlue, AppTheme.pastelPurple],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(color: AppTheme.primaryBlue.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 4))
+                    ]
+                  ),
                   child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                    icon: const Icon(Icons.send_rounded, color: Colors.white, size: 22),
                     onPressed: _sendMessage,
                   ),
                 ),

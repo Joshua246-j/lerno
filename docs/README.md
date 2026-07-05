@@ -1,91 +1,38 @@
-# Lerno - Kids Learning Application
+# Lerno Documentation Suite
 
-## 📌 Project Overview
-Lerno is a cross-platform children's learning application designed to make education engaging through gamification. It features interactive learning paths, 1v1 quiz battles, and Flame-engine powered mini-games.
+Welcome to the central documentation index for the Lerno project. 
 
-## ✨ Features
-- **Gamified Learning**: Earn XP, coins, and badges while completing lessons.
-- **Quiz Battles**: 1v1 real-time or bot-based multiplayer quiz battles.
-- **Mini-Games**: Built-in 2D games powered by the Flame engine to reinforce learning.
-- **Interactive UI**: Kid-friendly, colorful, and heavily animated user interface.
-- **Cross-Platform**: Built with Flutter for seamless iOS and Android support.
+To eliminate any ambiguity between the **current implementation** and the **long-term vision**, this repository is strictly divided into two completely isolated environments:
 
-## 🛠 Technology Stack
-- **Framework**: Flutter
-- **Language**: Dart
-- **State Management**: Riverpod (`flutter_riverpod`)
-- **Routing**: GoRouter (`go_router`)
-- **Game Engine**: Flame (`flame`)
-- **Backend Services**: Firebase (Auth, Firestore, Realtime Database)
-- **Local Storage**: Shared Preferences & Secure Storage
+---
 
-## 🏛 Architecture Summary
-The project follows a **Feature-First Clean Architecture**, deeply integrated with **Riverpod** for state management. This ensures that every feature (e.g., `auth`, `games`, `profile`) is isolated, scalable, and highly maintainable. 
+## 🏭 Production Documentation (The Final Vision)
+These documents describe the final, commercial-ready architecture we are building toward (FastAPI, PostgreSQL, Native Deployments).
 
-## 📂 Project Folder Structure
-```text
-lerno/
-├── android/             # Android native code
-├── ios/                 # iOS native code
-├── assets/              # Images, sounds, and SVGs
-├── docs/                # Comprehensive Project Documentation
-└── lib/                 # Core Flutter source code
-    ├── core/            # Global utilities, networking, and security
-    ├── data/            # Data models and DTOs
-    ├── features/        # Feature modules (auth, home, games, etc.)
-    └── shared/          # Reusable widgets and theme configurations
-```
+- **`frontend/`**: Reserved for final native UI integrations and release candidates.
+- **`backend/`**: [Architecture](production/backend/Backend_Architecture.md), [Structure](production/backend/Project_Structure.md), [Setup](production/backend/Environment_Setup.md), [Auth](production/backend/Authentication_Architecture.md), [Services](production/backend/Backend_Services.md), [WebSockets](production/backend/WebSocket_Architecture.md), [Jobs](production/backend/Background_Jobs.md), [Roadmap](production/backend/Backend_Roadmap.md).
+- **`database/`**: [Database Architecture](production/database/Database_Architecture.md), [ER Diagram](production/database/ER_Diagram.md).
+- **`api/`**: [API Standards](production/api/API_Standards.md).
+- **`architecture/`**: Reserved for final cloud data flows.
+- **`ui_ux/`**: [UI Design System](production/ui_ux/UI_Design_System.md).
+- **`game_design/`**: [Learning Philosophy](production/game_design/Learning_Philosophy.md).
+- **`product/`**: **[Project Vision](production/product/Project_Vision.md)**, [User Personas](production/product/User_Personas.md), [Engagement Strategy](production/product/Engagement_Strategy.md).
+- **`security/`**: [Security](production/security/Security.md), [JWT Flow](production/security/JWT_Flow.md).
+- **`deployment/`**: [Deployment Guide](production/deployment/Deployment_Guide.md), [Docker Guide](production/deployment/Docker_Guide.md), [CI/CD](production/deployment/CI_CD_Pipeline.md), [Build & Deployment](production/deployment/Build_Deployment.md).
+- **`testing/`**: [Testing Strategy](production/testing/Testing_Strategy.md).
 
-## 🎮 Games & Battles
-- **Learning Path**: Guided educational content.
-- **Flame Mini-Games**: Interactive games to test knowledge dynamically.
-- **1v1 Quiz Battles**: Competitive learning through ranked and casual quiz matchmaking.
+---
 
-## 🚀 Setup & Installation
+## 🧪 Development Documentation (The Current Prototype)
+These documents describe the *actual* code running in `lib/` and `pubspec.yaml` right now. This is a High-Fidelity Prototype running on Flutter and Riverpod using Mock Data and local `hive` persistence.
 
-### Prerequisites
-- Flutter SDK (>= 3.2.0)
-- Dart SDK
-- Android Studio / Xcode
-
-### Setup
-1. Clone the repository.
-2. Run `flutter pub get` to install dependencies.
-3. Configure Firebase (Add `google-services.json` and `GoogleService-Info.plist`).
-
-### Build Commands
-- **Clean Build**: `flutter clean && flutter pub get`
-- **Debug APK**: `flutter build apk --debug`
-- **Release APK**: `flutter build apk --release`
-
-### Run Commands
-- **Run App**: `flutter run`
-
-## 📖 Documentation Index
-For detailed technical implementation and architecture guidelines, refer to the following documents:
-- [01_Project_Overview](01_Project_Overview.md)
-- [02_Project_Architecture](02_Project_Architecture.md)
-- [03_Tech_Stack](03_Tech_Stack.md)
-- [04_Project_Structure](04_Project_Structure.md)
-- [05_Frontend_Architecture](05_Frontend_Architecture.md)
-- [06_Backend_Architecture](06_Backend_Architecture.md)
-- [07_Database_Design](07_Database_Design.md)
-- [08_API_Design](08_API_Design.md)
-- [09_Authentication_System](09_Authentication_System.md)
-- [10_Navigation_Flow](10_Navigation_Flow.md)
-- [11_UI_Design_System](11_UI_Design_System.md)
-- [12_Game_System](12_Game_System.md)
-- [13_Quiz_Battle_System](13_Quiz_Battle_System.md)
-- [14_Gamification_System](14_Gamification_System.md)
-- [15_Profile_System](15_Profile_System.md)
-- [16_Offline_Architecture](16_Offline_Architecture.md)
-- [17_Mock_Backend_System](17_Mock_Backend_System.md)
-- [18_Performance_Optimization](18_Performance_Optimization.md)
-- [19_Security](19_Security.md)
-- [20_Development_Guide](20_Development_Guide.md)
-- [21_Build_Deployment](21_Build_Deployment.md)
-- [22_Project_Status](22_Project_Status.md)
-- [23_Store_and_Economy](23_Store_and_Economy.md)
-- [24_Social_Features](24_Social_Features.md)
-- [25_Learning_Path_System](25_Learning_Path_System.md)
-- [CHANGELOG](../CHANGELOG.md)
+- **`dev_progress/`**: **[Current Progress](development/dev_progress/Current_Progress.md)**, [Dev Guide](development/dev_progress/Development_Guide.md).
+- **`dev_frontend/`**: [Frontend Architecture](development/dev_frontend/Frontend_Architecture.md), [Navigation](development/dev_frontend/Navigation_Flow.md), [Profiles](development/dev_frontend/Profile_System.md), [Performance](development/dev_frontend/Performance_Optimization.md).
+- **`dev_backend/`**: [Mock Backend System](development/dev_backend/Mock_Backend_System.md).
+- **`dev_database/`**: [Offline Architecture](development/dev_database/Offline_Architecture.md).
+- **`dev_api/`**: Currently empty (APIs are mocked).
+- **`dev_architecture/`**: [Project Architecture](development/dev_architecture/Project_Architecture.md), [Project Structure](development/dev_architecture/Project_Structure.md), [Tech Stack](development/dev_architecture/Tech_Stack.md).
+- **`dev_ui_ux/`**: Covered by production UI/UX documents.
+- **`dev_game_design/`**: [Game System](development/dev_game_design/Game_System.md), [Quiz Battles](development/dev_game_design/Quiz_Battle_System.md), [Gamification](development/dev_game_design/Gamification_System.md), [Learning Paths](development/dev_game_design/Learning_Path_System.md), [Social Features](development/dev_game_design/Social_Features.md).
+- **`dev_assets/`**: [Asset Guidelines](development/dev_assets/Asset_Guidelines.md).
+- **`dev_testing/`**: [Frontend Testing](development/dev_testing/Frontend_Testing.md).
